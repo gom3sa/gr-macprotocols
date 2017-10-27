@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/macprotocols/api.h
+gnuradio/attributes.h
+-
+
+../include/macprotocols/csma_ca.h
+macprotocols/api.h
+-
+gnuradio/block.h
+-
+
+/home/gnuradio/gr-macprotocols/lib/csma_ca_impl.cc
+config.h
+/home/gnuradio/gr-macprotocols/lib/config.h
+gnuradio/io_signature.h
+-
+csma_ca_impl.h
+/home/gnuradio/gr-macprotocols/lib/csma_ca_impl.h
+pmt/pmt.h
+-
+
+/home/gnuradio/gr-macprotocols/lib/csma_ca_impl.h
+macprotocols/csma_ca.h
+-
+
