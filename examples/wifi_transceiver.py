@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver
-# Generated: Sun Oct 29 17:21:34 2017
+# Generated: Sun Oct 29 18:58:48 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -25,19 +25,17 @@ from PyQt4.QtCore import QObject, pyqtSlot
 from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
-from gnuradio import qtgui
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
-from my_cs import my_cs  # grc-generated hier_block
+from hier_block import hier_block  # grc-generated hier_block
 from optparse import OptionParser
 from wifi_phy_hier import wifi_phy_hier  # grc-generated hier_block
 import foo
 import ieee802_11
 import macprotocols
 import pmt
-import sip
 import time
 
 
@@ -74,7 +72,7 @@ class wifi_transceiver(gr.top_block, Qt.QWidget):
         self.rx_gain = rx_gain = 0.75
         self.pdu_length = pdu_length = 500
         self.lo_offset = lo_offset = 0
-        self.interval = interval = 10
+        self.interval = interval = 100
         self.freq = freq = 5890000000
         self.encoding = encoding = 0
         self.chan_est = chan_est = 0
@@ -115,7 +113,7 @@ class wifi_transceiver(gr.top_block, Qt.QWidget):
         self._lo_offset_combo_box.currentIndexChanged.connect(
         	lambda i: self.set_lo_offset(self._lo_offset_options[i]))
         self.top_layout.addWidget(self._lo_offset_tool_bar)
-        self._interval_range = Range(0, 1000, 1, 10, 200)
+        self._interval_range = Range(10, 1000, 1, 100, 200)
         self._interval_win = RangeWidget(self._interval_range, self.set_interval, "interval", "counter_slider", int)
         self.top_layout.addWidget(self._interval_win)
         self._freq_options = [2412000000.0, 2417000000.0, 2422000000.0, 2427000000.0, 2432000000.0, 2437000000.0, 2442000000.0, 2447000000.0, 2452000000.0, 2457000000.0, 2462000000.0, 2467000000.0, 2472000000.0, 2484000000.0, 5170000000.0, 5180000000.0, 5190000000.0, 5200000000.0, 5210000000.0, 5220000000.0, 5230000000.0, 5240000000.0, 5250000000.0, 5260000000.0, 5270000000.0, 5280000000.0, 5290000000.0, 5300000000.0, 5310000000.0, 5320000000.0, 5500000000.0, 5510000000.0, 5520000000.0, 5530000000.0, 5540000000.0, 5550000000.0, 5560000000.0, 5570000000.0, 5580000000.0, 5590000000.0, 5600000000.0, 5610000000.0, 5620000000.0, 5630000000.0, 5640000000.0, 5660000000.0, 5670000000.0, 5680000000.0, 5690000000.0, 5700000000.0, 5710000000.0, 5720000000.0, 5745000000.0, 5755000000.0, 5765000000.0, 5775000000.0, 5785000000.0, 5795000000.0, 5805000000.0, 5825000000.0, 5860000000.0, 5870000000.0, 5880000000.0, 5890000000.0, 5900000000.0, 5910000000.0, 5920000000.0]
@@ -202,62 +200,20 @@ class wifi_transceiver(gr.top_block, Qt.QWidget):
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0.set_normalized_gain(tx_gain, 0)
-        self.qtgui_const_sink_x_0 = qtgui.const_sink_c(
-        	48*10, #size
-        	"", #name
-        	1 #number of inputs
-        )
-        self.qtgui_const_sink_x_0.set_update_time(0.10)
-        self.qtgui_const_sink_x_0.set_y_axis(-2, 2)
-        self.qtgui_const_sink_x_0.set_x_axis(-2, 2)
-        self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, "")
-        self.qtgui_const_sink_x_0.enable_autoscale(False)
-        self.qtgui_const_sink_x_0.enable_grid(False)
-        
-        if not True:
-          self.qtgui_const_sink_x_0.disable_legend()
-        
-        labels = ["", "", "", "", "",
-                  "", "", "", "", ""]
-        widths = [1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1]
-        colors = ["blue", "red", "red", "red", "red",
-                  "red", "red", "red", "red", "red"]
-        styles = [0, 0, 0, 0, 0,
-                  0, 0, 0, 0, 0]
-        markers = [0, 0, 0, 0, 0,
-                   0, 0, 0, 0, 0]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-        for i in xrange(1):
-            if len(labels[i]) == 0:
-                self.qtgui_const_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_const_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_const_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_const_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_const_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_const_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_const_sink_x_0.set_line_alpha(i, alphas[i])
-        
-        self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
-        self.my_cs_0 = my_cs(
-            cut_freq=2e6,
-            gain_disc=30,
-            samples=64,
-        )
         self.macprotocols_csma_ca_0 = macprotocols.csma_ca(9, 16, 34)
         self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, True)
         self.ieee802_11_mac_0_0 = ieee802_11.mac(([0x23, 0x23, 0x23, 0x23, 0x23, 0x23]), ([0x42, 0x42, 0x42, 0x42, 0x42, 0x42]), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
+        self.hier_block_0 = hier_block(
+            samples=64,
+            gain_disc=30,
+        )
         self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, False)
         self.foo_wireshark_connector_0 = foo.wireshark_connector(127, False)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
         self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", "", "52001", 10000, False)
-        self.blocks_pdu_to_tagged_stream_0_0 = blocks.pdu_to_tagged_stream(blocks.complex_t, "packet_len")
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
         self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("".join("a" for i in range(pdu_length))), interval)
@@ -271,22 +227,21 @@ class wifi_transceiver(gr.top_block, Qt.QWidget):
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
+        self.msg_connect((self.hier_block_0, 'out'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_csma_ca_0, 'mac in'))    
+        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.wifi_phy_hier_0, 'mac_in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'cs out'), (self.hier_block_0, 'in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'mac out'), (self.ieee802_11_mac_0_0, 'phy in'))    
-        self.msg_connect((self.macprotocols_csma_ca_0, 'cs out'), (self.my_cs_0, 'in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'phy out'), (self.wifi_phy_hier_0, 'mac_in'))    
-        self.msg_connect((self.my_cs_0, 'out'), (self.macprotocols_csma_ca_0, 'cs in'))    
-        self.msg_connect((self.wifi_phy_hier_0, 'carrier'), (self.blocks_pdu_to_tagged_stream_0_0, 'pdus'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.foo_wireshark_connector_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.ieee802_11_parse_mac_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.macprotocols_csma_ca_0, 'phy in'))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.foo_packet_pad2_0, 0))    
-        self.connect((self.blocks_pdu_to_tagged_stream_0_0, 0), (self.qtgui_const_sink_x_0, 0))    
         self.connect((self.foo_packet_pad2_0, 0), (self.uhd_usrp_sink_0, 0))    
         self.connect((self.foo_wireshark_connector_0, 0), (self.blocks_file_sink_0, 0))    
         self.connect((self.foo_wireshark_connector_0_0, 0), (self.blocks_file_sink_0_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.my_cs_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.hier_block_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.wifi_phy_hier_0, 0))    
         self.connect((self.wifi_phy_hier_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
 

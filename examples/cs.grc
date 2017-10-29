@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <?grc format='1' created='3.7.9'?>
 <flow_graph>
-  <timestamp>Tue Oct 10 14:29:55 2017</timestamp>
+  <timestamp>Sun Oct 29 17:37:28 2017</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -18,14 +18,7 @@
     </param>
     <param>
       <key>comment</key>
-      <value>Input: 
-
-1) Signal source as IQ data;
-2) Control message. Format: "threshold=&lt;dbm&gt;,time=&lt;microseconds&gt;"
-
-Output:
-
-1) Medium sensing result: BUSY or IDDLE</value>
+      <value></value>
     </param>
     <param>
       <key>description</key>
@@ -53,7 +46,7 @@ Output:
     </param>
     <param>
       <key>id</key>
-      <value>my_cs</value>
+      <value>hier_block</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -85,7 +78,7 @@ Output:
     </param>
     <param>
       <key>title</key>
-      <value>Hier Carrier Sense</value>
+      <value>Carrier Sense</value>
     </param>
   </block>
   <block>
@@ -108,7 +101,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 236)</value>
+      <value>(248, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -159,7 +152,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(800, 236)</value>
+      <value>(656, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -191,53 +184,6 @@ Output:
     </param>
   </block>
   <block>
-    <key>carriersense_cs</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(896, 400)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>270</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>gain_disc</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>carriersense_cs_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>num_samples</key>
-      <value>samples</value>
-    </param>
-  </block>
-  <block>
     <key>fft_vxx</key>
     <param>
       <key>alias</key>
@@ -265,7 +211,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(568, 208)</value>
+      <value>(424, 184)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -289,7 +235,7 @@ Output:
     </param>
     <param>
       <key>nthreads</key>
-      <value>2</value>
+      <value>1</value>
     </param>
     <param>
       <key>shift</key>
@@ -316,7 +262,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(568, 20)</value>
+      <value>(392, 6)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -344,6 +290,53 @@ Output:
     </param>
   </block>
   <block>
+    <key>macprotocols_cs</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(817, 352)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>270</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>gain_disc</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>macprotocols_cs_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_samples</key>
+      <value>samples</value>
+    </param>
+  </block>
+  <block>
     <key>pad_sink</key>
     <param>
       <key>comment</key>
@@ -355,7 +348,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(992, 580)</value>
+      <value>(904, 516)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -398,7 +391,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 236)</value>
+      <value>(104, 212)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -441,7 +434,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(48, 340)</value>
+      <value>(104, 292)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -449,7 +442,7 @@ Output:
     </param>
     <param>
       <key>id</key>
-      <value>pad_source_1</value>
+      <value>pad_source_0_0</value>
     </param>
     <param>
       <key>label</key>
@@ -488,7 +481,7 @@ Output:
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(368, 20)</value>
+      <value>(208, 6)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -523,15 +516,9 @@ Output:
   </connection>
   <connection>
     <source_block_id>blocks_vector_to_stream_0</source_block_id>
-    <sink_block_id>carriersense_cs_0</sink_block_id>
+    <sink_block_id>macprotocols_cs_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>carriersense_cs_0</source_block_id>
-    <sink_block_id>pad_sink_0</sink_block_id>
-    <source_key>out_csense</source_key>
-    <sink_key>in</sink_key>
   </connection>
   <connection>
     <source_block_id>fft_vxx_0</source_block_id>
@@ -540,14 +527,20 @@ Output:
     <sink_key>0</sink_key>
   </connection>
   <connection>
+    <source_block_id>macprotocols_cs_0</source_block_id>
+    <sink_block_id>pad_sink_0</sink_block_id>
+    <source_key>out_csense</source_key>
+    <sink_key>in</sink_key>
+  </connection>
+  <connection>
     <source_block_id>pad_source_0</source_block_id>
     <sink_block_id>blocks_stream_to_vector_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>pad_source_1</source_block_id>
-    <sink_block_id>carriersense_cs_0</sink_block_id>
+    <source_block_id>pad_source_0_0</source_block_id>
+    <sink_block_id>macprotocols_cs_0</sink_block_id>
     <source_key>out</source_key>
     <sink_key>in_control</sink_key>
   </connection>

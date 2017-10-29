@@ -54,6 +54,9 @@ class csma_ca_impl : public csma_ca {
 	boost::shared_ptr<gr::thread::thread> t_eval_buffer;
 	boost::mutex mu;
 
+	boost::condition_variable cond;
+	boost::mutex mu_cond;
+
 	public:
 		csma_ca_impl(int slot_time, int sifs, int difs) : gr::block(
 							"csma_ca",
@@ -107,28 +110,38 @@ class csma_ca_impl : public csma_ca {
 
 		void cs_in(pmt::pmt_t cs_msg) {
 			std::string str = pmt::symbol_to_string(cs_msg);
+			std::cout << "cs_in function, msg = " << str << std::endl;
 			if(str == "busy")
-				med.busy = false;
-			else
 				med.busy = true;
+			else
+				med.busy = false;
 			med.sensing = false;
+			cond.notify_all();
 		}
 
 		/*
 		 * Check if channel is busy based on Energy Detection
 		*/ 
 		bool is_channel_busy(int threshold, int time) {
+			
 			std::string str = "threshold=" + std::to_string(threshold) + ",time=" + std::to_string(time);
 			pmt::pmt_t msg = pmt::intern(str);
 			med.sensing = true;
 			message_port_pub(pmt::mp("cs out"), msg);
-
+			boost::unique_lock<boost::mutex> lock(mu_cond);
+			while(med.sensing == true) cond.wait(lock);
+			/*
+			std::cout << "Waiting for channel response..." << std::endl;
 			while(med.sensing == true);
+			std::cout << "Got a response!" << std::endl;
 
+			return med.busy;
+			*/
 			return med.busy;
 		}
 
 		void send_frame(buffer &f) {
+			std::cout << "Send frame..." << std::endl;
 			int time = difs;
 			while(is_channel_busy(THRESHOLD, time)) {
 				/*

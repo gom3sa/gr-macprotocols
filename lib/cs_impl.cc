@@ -137,7 +137,7 @@ namespace gr {
 				if ((stime - duration <= sample_duration) or (duration >= stime)) {
 					sense = false;
 					message_port_pub(pmt::mp("out_csense"), out_msg);
-					std::cout << "duration = " << duration << ", medium1 = " << out_msg << ", max power = " << max_power << ", threshold = " << threshold << ", count = " << count << std::endl;
+					std::cout << "duration = " << duration << ", medium1 = " << out_msg << ", max power = " << max_power << ", threshold = " << threshold << ", count = " << count << std::endl << std::flush;
 				}
 				
 			}
