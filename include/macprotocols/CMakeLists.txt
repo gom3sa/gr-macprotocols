@@ -22,5 +22,6 @@
 ########################################################################
 install(FILES
     api.h
-    csma_ca.h DESTINATION include/macprotocols
+    csma_ca.h
+    cs.h DESTINATION include/macprotocols
 )

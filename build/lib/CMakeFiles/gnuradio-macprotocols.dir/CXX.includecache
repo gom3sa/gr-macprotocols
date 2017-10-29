@@ -10,10 +10,40 @@
 gnuradio/attributes.h
 -
 
+../include/macprotocols/cs.h
+macprotocols/api.h
+-
+gnuradio/block.h
+-
+
 ../include/macprotocols/csma_ca.h
 macprotocols/api.h
 -
 gnuradio/block.h
+-
+
+/home/gnuradio/gr-macprotocols/lib/cs_impl.cc
+config.h
+/home/gnuradio/gr-macprotocols/lib/config.h
+chrono
+-
+gnuradio/io_signature.h
+-
+cs_impl.h
+/home/gnuradio/gr-macprotocols/lib/cs_impl.h
+math.h
+-
+pmt/pmt.h
+-
+string
+-
+iostream
+-
+stdlib.h
+-
+
+/home/gnuradio/gr-macprotocols/lib/cs_impl.h
+macprotocols/cs.h
 -
 
 /home/gnuradio/gr-macprotocols/lib/csma_ca.cc
@@ -34,5 +64,7 @@ macprotocols/csma_ca.h
 boost/thread.hpp
 -
 unistd.h
+-
+string
 -
 

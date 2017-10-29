@@ -36,6 +36,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/macprotocols" TYPE FILE FILES
     "/home/gnuradio/gr-macprotocols/include/macprotocols/api.h"
     "/home/gnuradio/gr-macprotocols/include/macprotocols/csma_ca.h"
+    "/home/gnuradio/gr-macprotocols/include/macprotocols/cs.h"
     )
 endif()
 

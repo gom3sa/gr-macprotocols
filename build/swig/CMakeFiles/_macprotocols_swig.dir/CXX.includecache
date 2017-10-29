@@ -10,6 +10,12 @@
 gnuradio/attributes.h
 -
 
+../include/macprotocols/cs.h
+macprotocols/api.h
+-
+gnuradio/block.h
+-
+
 ../include/macprotocols/csma_ca.h
 macprotocols/api.h
 -
@@ -63,6 +69,8 @@ limits.h
 -
 macprotocols/csma_ca.h
 /home/gnuradio/gr-macprotocols/build/swig/macprotocols/csma_ca.h
+macprotocols/cs.h
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols/cs.h
 float.h
 -
 math.h

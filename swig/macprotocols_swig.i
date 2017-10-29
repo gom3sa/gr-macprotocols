@@ -9,8 +9,11 @@
 
 %{
 #include "macprotocols/csma_ca.h"
+#include "macprotocols/cs.h"
 %}
 
 
 %include "macprotocols/csma_ca.h"
 GR_SWIG_BLOCK_MAGIC2(macprotocols, csma_ca);
+%include "macprotocols/cs.h"
+GR_SWIG_BLOCK_MAGIC2(macprotocols, cs);

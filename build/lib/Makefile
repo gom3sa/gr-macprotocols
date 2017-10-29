@@ -195,6 +195,33 @@ test-macprotocols/fast:
 	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/test-macprotocols.dir/build.make lib/CMakeFiles/test-macprotocols.dir/build
 .PHONY : test-macprotocols/fast
 
+cs_impl.o: cs_impl.cc.o
+
+.PHONY : cs_impl.o
+
+# target to build an object file
+cs_impl.cc.o:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/cs_impl.cc.o
+.PHONY : cs_impl.cc.o
+
+cs_impl.i: cs_impl.cc.i
+
+.PHONY : cs_impl.i
+
+# target to preprocess a source file
+cs_impl.cc.i:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/cs_impl.cc.i
+.PHONY : cs_impl.cc.i
+
+cs_impl.s: cs_impl.cc.s
+
+.PHONY : cs_impl.s
+
+# target to generate assembly for a file
+cs_impl.cc.s:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/cs_impl.cc.s
+.PHONY : cs_impl.cc.s
+
 csma_ca.o: csma_ca.cc.o
 
 .PHONY : csma_ca.o
@@ -291,6 +318,9 @@ help:
 	@echo "... test-macprotocols"
 	@echo "... install/strip"
 	@echo "... install/local"
+	@echo "... cs_impl.o"
+	@echo "... cs_impl.i"
+	@echo "... cs_impl.s"
 	@echo "... csma_ca.o"
 	@echo "... csma_ca.i"
 	@echo "... csma_ca.s"

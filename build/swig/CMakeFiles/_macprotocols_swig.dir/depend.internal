@@ -3,6 +3,7 @@
 
 swig/CMakeFiles/_macprotocols_swig.dir/macprotocols_swigPYTHON_wrap.cxx.o
  ../include/macprotocols/api.h
+ ../include/macprotocols/cs.h
  ../include/macprotocols/csma_ca.h
  /home/gnuradio/gr-macprotocols/build/swig/macprotocols_swigPYTHON_wrap.cxx
  /usr/include/gnuradio/swig/gnuradio_swig_bug_workaround.h

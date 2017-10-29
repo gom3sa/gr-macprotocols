@@ -18,5 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    macprotocols_csma_ca.xml DESTINATION share/gnuradio/grc/blocks
+    macprotocols_csma_ca.xml
+    macprotocols_cs.xml DESTINATION share/gnuradio/grc/blocks
 )

@@ -19,3 +19,4 @@ This feature uses C++11. If you find any errors refering to C++11 while compilin
 `cmake ..` <br />
 `sudo make install` <br />
 `sudo ldconfig` <br />
+`grcc ../examples/cs.grc`
