@@ -46,6 +46,8 @@ namespace gr {
       void mac_in(pmt::pmt_t frame);
 
       void phy_in(pmt::pmt_t frame);
+
+      void start_protocol();
     };
 
   } // namespace macprotocols

@@ -26,7 +26,7 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND macprotocols_sources
-    csma_ca_impl.cc
+    csma_ca.cc
 )
 
 set(macprotocols_sources "${macprotocols_sources}" PARENT_SCOPE)

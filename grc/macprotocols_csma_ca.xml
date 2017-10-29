@@ -2,7 +2,7 @@
 <block>
   <name>CSMA/CA</name>
   <key>macprotocols_csma_ca</key>
-  <category>macprotocols</category>
+  <category>[MAC Protocols]</category>
   <import>import macprotocols</import>
   <make>macprotocols.csma_ca($slot_time, $sifs, $difs)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
@@ -61,5 +61,13 @@
     <type>message</type>
     <optional>1</optional>
   </source>
+
+  <doc>
+    Values for Slot Time, SIFS, DIFS should be according to the required protocols. Some examples are shown below.
+
+    1. 802.11b: SlotTime = 20us, SIFS = 10us, DIFS = 50us
+    2. 802.11a: SlotTime = 9us, SIFS = 16us, DIFS = 34us
+    3. 802.11n: SlotTime = 9us, SIFS = 16us, DIFS = 34us
+  </doc>
 
 </block>

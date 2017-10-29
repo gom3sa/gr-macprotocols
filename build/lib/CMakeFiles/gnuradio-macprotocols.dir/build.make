@@ -57,38 +57,38 @@ include lib/CMakeFiles/gnuradio-macprotocols.dir/progress.make
 # Include the compile flags for this target's objects.
 include lib/CMakeFiles/gnuradio-macprotocols.dir/flags.make
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o: lib/CMakeFiles/gnuradio-macprotocols.dir/flags.make
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o: ../lib/csma_ca_impl.cc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gnuradio/gr-macprotocols/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o"
-	cd /home/gnuradio/gr-macprotocols/build/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o -c /home/gnuradio/gr-macprotocols/lib/csma_ca_impl.cc
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o: lib/CMakeFiles/gnuradio-macprotocols.dir/flags.make
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o: ../lib/csma_ca.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/gnuradio/gr-macprotocols/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o"
+	cd /home/gnuradio/gr-macprotocols/build/lib && /usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o -c /home/gnuradio/gr-macprotocols/lib/csma_ca.cc
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.i"
-	cd /home/gnuradio/gr-macprotocols/build/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gnuradio/gr-macprotocols/lib/csma_ca_impl.cc > CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.i
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.i"
+	cd /home/gnuradio/gr-macprotocols/build/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/gnuradio/gr-macprotocols/lib/csma_ca.cc > CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.i
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.s"
-	cd /home/gnuradio/gr-macprotocols/build/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gnuradio/gr-macprotocols/lib/csma_ca_impl.cc -o CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.s
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.s"
+	cd /home/gnuradio/gr-macprotocols/build/lib && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/gnuradio/gr-macprotocols/lib/csma_ca.cc -o CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.s
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.requires:
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.requires:
 
-.PHONY : lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.requires
+.PHONY : lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.requires
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.provides: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.requires
-	$(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.provides.build
-.PHONY : lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.provides
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.provides: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.requires
+	$(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.provides.build
+.PHONY : lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.provides
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.provides.build: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o
+lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.provides.build: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o
 
 
 # Object files for target gnuradio-macprotocols
 gnuradio__macprotocols_OBJECTS = \
-"CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o"
+"CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o"
 
 # External object files for target gnuradio-macprotocols
 gnuradio__macprotocols_EXTERNAL_OBJECTS =
 
-lib/libgnuradio-macprotocols.so: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o
+lib/libgnuradio-macprotocols.so: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o
 lib/libgnuradio-macprotocols.so: lib/CMakeFiles/gnuradio-macprotocols.dir/build.make
 lib/libgnuradio-macprotocols.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
 lib/libgnuradio-macprotocols.so: /usr/lib/x86_64-linux-gnu/libboost_system.so
@@ -103,7 +103,7 @@ lib/CMakeFiles/gnuradio-macprotocols.dir/build: lib/libgnuradio-macprotocols.so
 
 .PHONY : lib/CMakeFiles/gnuradio-macprotocols.dir/build
 
-lib/CMakeFiles/gnuradio-macprotocols.dir/requires: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o.requires
+lib/CMakeFiles/gnuradio-macprotocols.dir/requires: lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o.requires
 
 .PHONY : lib/CMakeFiles/gnuradio-macprotocols.dir/requires
 

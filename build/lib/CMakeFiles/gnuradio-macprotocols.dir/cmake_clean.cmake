@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o"
+  "CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o"
   "libgnuradio-macprotocols.pdb"
   "libgnuradio-macprotocols.so"
 )

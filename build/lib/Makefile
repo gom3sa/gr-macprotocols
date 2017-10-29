@@ -195,32 +195,32 @@ test-macprotocols/fast:
 	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/test-macprotocols.dir/build.make lib/CMakeFiles/test-macprotocols.dir/build
 .PHONY : test-macprotocols/fast
 
-csma_ca_impl.o: csma_ca_impl.cc.o
+csma_ca.o: csma_ca.cc.o
 
-.PHONY : csma_ca_impl.o
+.PHONY : csma_ca.o
 
 # target to build an object file
-csma_ca_impl.cc.o:
-	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.o
-.PHONY : csma_ca_impl.cc.o
+csma_ca.cc.o:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.o
+.PHONY : csma_ca.cc.o
 
-csma_ca_impl.i: csma_ca_impl.cc.i
+csma_ca.i: csma_ca.cc.i
 
-.PHONY : csma_ca_impl.i
+.PHONY : csma_ca.i
 
 # target to preprocess a source file
-csma_ca_impl.cc.i:
-	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.i
-.PHONY : csma_ca_impl.cc.i
+csma_ca.cc.i:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.i
+.PHONY : csma_ca.cc.i
 
-csma_ca_impl.s: csma_ca_impl.cc.s
+csma_ca.s: csma_ca.cc.s
 
-.PHONY : csma_ca_impl.s
+.PHONY : csma_ca.s
 
 # target to generate assembly for a file
-csma_ca_impl.cc.s:
-	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca_impl.cc.s
-.PHONY : csma_ca_impl.cc.s
+csma_ca.cc.s:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/csma_ca.cc.s
+.PHONY : csma_ca.cc.s
 
 qa_macprotocols.o: qa_macprotocols.cc.o
 
@@ -291,9 +291,9 @@ help:
 	@echo "... test-macprotocols"
 	@echo "... install/strip"
 	@echo "... install/local"
-	@echo "... csma_ca_impl.o"
-	@echo "... csma_ca_impl.i"
-	@echo "... csma_ca_impl.s"
+	@echo "... csma_ca.o"
+	@echo "... csma_ca.i"
+	@echo "... csma_ca.s"
 	@echo "... qa_macprotocols.o"
 	@echo "... qa_macprotocols.i"
 	@echo "... qa_macprotocols.s"

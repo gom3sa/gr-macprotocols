@@ -34,6 +34,7 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 #make sure our local CMake Modules path comes first
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
+set(CMAKE_CXX_STANDARD 11)
 ########################################################################
 # Compiler specific setup
 ########################################################################

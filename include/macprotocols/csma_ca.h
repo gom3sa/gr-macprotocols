@@ -46,6 +46,7 @@ namespace gr {
        * class. macprotocols::csma_ca::make is the public interface for
        * creating new instances.
        */
+
       static sptr make(int slot_time, int sifs, int difs);
     };
 
