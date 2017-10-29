@@ -340,7 +340,7 @@ Output:
     </param>
     <param>
       <key>value</key>
-      <value>60</value>
+      <value>30</value>
     </param>
   </block>
   <block>
@@ -512,7 +512,7 @@ Output:
     </param>
     <param>
       <key>value</key>
-      <value>256</value>
+      <value>64</value>
     </param>
   </block>
   <connection>

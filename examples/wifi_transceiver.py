@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver
-# Generated: Sun Oct 29 17:09:54 2017
+# Generated: Sun Oct 29 17:21:34 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -245,7 +245,7 @@ class wifi_transceiver(gr.top_block, Qt.QWidget):
         self.my_cs_0 = my_cs(
             cut_freq=2e6,
             gain_disc=30,
-            samples=256,
+            samples=64,
         )
         self.macprotocols_csma_ca_0 = macprotocols.csma_ca(9, 16, 34)
         self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, True)
