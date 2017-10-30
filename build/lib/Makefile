@@ -195,6 +195,33 @@ test-macprotocols/fast:
 	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/test-macprotocols.dir/build.make lib/CMakeFiles/test-macprotocols.dir/build
 .PHONY : test-macprotocols/fast
 
+ack_gen.o: ack_gen.cc.o
+
+.PHONY : ack_gen.o
+
+# target to build an object file
+ack_gen.cc.o:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/ack_gen.cc.o
+.PHONY : ack_gen.cc.o
+
+ack_gen.i: ack_gen.cc.i
+
+.PHONY : ack_gen.i
+
+# target to preprocess a source file
+ack_gen.cc.i:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/ack_gen.cc.i
+.PHONY : ack_gen.cc.i
+
+ack_gen.s: ack_gen.cc.s
+
+.PHONY : ack_gen.s
+
+# target to generate assembly for a file
+ack_gen.cc.s:
+	cd /home/gnuradio/gr-macprotocols/build && $(MAKE) -f lib/CMakeFiles/gnuradio-macprotocols.dir/build.make lib/CMakeFiles/gnuradio-macprotocols.dir/ack_gen.cc.s
+.PHONY : ack_gen.cc.s
+
 cs_impl.o: cs_impl.cc.o
 
 .PHONY : cs_impl.o
@@ -318,6 +345,9 @@ help:
 	@echo "... test-macprotocols"
 	@echo "... install/strip"
 	@echo "... install/local"
+	@echo "... ack_gen.o"
+	@echo "... ack_gen.i"
+	@echo "... ack_gen.s"
 	@echo "... cs_impl.o"
 	@echo "... cs_impl.i"
 	@echo "... cs_impl.s"

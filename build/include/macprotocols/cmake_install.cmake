@@ -37,6 +37,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
     "/home/gnuradio/gr-macprotocols/include/macprotocols/api.h"
     "/home/gnuradio/gr-macprotocols/include/macprotocols/csma_ca.h"
     "/home/gnuradio/gr-macprotocols/include/macprotocols/cs.h"
+    "/home/gnuradio/gr-macprotocols/include/macprotocols/ack_gen.h"
     )
 endif()
 

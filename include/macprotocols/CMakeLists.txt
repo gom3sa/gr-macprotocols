@@ -23,5 +23,6 @@
 install(FILES
     api.h
     csma_ca.h
-    cs.h DESTINATION include/macprotocols
+    cs.h
+    ack_gen.h DESTINATION include/macprotocols
 )

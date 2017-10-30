@@ -15,7 +15,7 @@
 #define BUFF_SIZE 64
 #define MAX_TRIES 5
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
-#define THRESHOLD -70 // Empirical
+#define THRESHOLD -80 // Empirical
 
 using namespace gr::macprotocols;
 
@@ -26,8 +26,10 @@ class buffer {
 		pmt::pmt_t frame;
 		clock_type toa; // Time Of Arrival
 		clock_type tod; // Time Of Departure
+		clock_type toack; // Time Of Ack
 		uint attempts = 0;
 		bool acked = false;
+		bool empty = true;
 };
 
 class medium {
@@ -48,10 +50,12 @@ class csma_ca_impl : public csma_ca {
 	typedef std::chrono::high_resolution_clock clock;
 	typedef std::chrono::high_resolution_clock::time_point clock_type;
 
-	boost::circular_buffer<buffer> cb{BUFF_SIZE};
+	//boost::circular_buffer<buffer> cb{BUFF_SIZE};
+	buffer b_frame;
 	medium med;
 
-	boost::shared_ptr<gr::thread::thread> t_eval_buffer;
+	//boost::shared_ptr<gr::thread::thread> t_eval_buffer;
+	boost::shared_ptr<gr::thread::thread> thread_dequeue;
 	boost::mutex mu;
 
 	boost::condition_variable cond;
@@ -82,14 +86,17 @@ class csma_ca_impl : public csma_ca {
 			message_port_register_out(pmt::mp("cs out"));
 
 			// Threads
+			/*
 			std::cout << "Thread started" << std::endl;
 			t_eval_buffer = boost::shared_ptr<gr::thread::thread>
 				(new gr::thread::thread(boost::bind(&csma_ca_impl::eval_buffer, this)));
+				*/
+			thread_dequeue = boost::shared_ptr<gr::thread::thread>(new gr::thread::thread(boost::bind(&csma_ca_impl::dequeue_frame, this)));
 		}
 
 		void mac_in(pmt::pmt_t frame) {
 			//message_port_pub(pmt::mp("phy out"), frame);
-			buffer b;
+			/*buffer b;
 			b.frame = frame;
 			b.toa = clock::now();
 			b.attempts = 0;
@@ -98,14 +105,31 @@ class csma_ca_impl : public csma_ca {
 			cb.push_back(b);
 			lock.unlock();
 
-			//std::cout << "Buffer size = " << cb.size() << "/ " << cb.capacity() << std::endl;
+			std::cout << "Buffer size = " << cb.size() << "/ " << cb.capacity() << std::endl;
 			if(cb.size() == cb.capacity())
-				std::cout << "Buffer is full!!" << std::endl;
+				std::cout << "Buffer is full!!" << std::endl;*/
+			b_frame.frame = frame;
+			b_frame.toa = clock::now();
+			b_frame.attempts = 0;
+			b_frame.acked = false;
+			b_frame.empty = false;
+			std::cout << "New frame has arrived" << std::endl;
 		}
 
 		void phy_in(pmt::pmt_t frame) {
 			//std::cout << "hello phy_in";
-			message_port_pub(pmt::mp("mac out"), frame);
+			std::string str = pmt::symbol_to_string(frame);
+			if(str == "ack") {
+				boost::unique_lock<boost::mutex> lock(mu);
+				b_frame.acked = true;
+				b_frame.toack = clock::now();
+				float duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(b_frame.toack - b_frame.tod).count();
+				lock.unlock();
+				std::cout << "Ack time = " << duration << " us" << std::endl << std::flush;
+			}
+			else {
+				message_port_pub(pmt::mp("mac out"), frame);
+			}
 		}
 
 		void cs_in(pmt::pmt_t cs_msg) {
@@ -141,6 +165,7 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		void send_frame(buffer &f) {
+			boost::unique_lock<boost::mutex> lock(mu);
 			std::cout << "Send frame..." << std::endl;
 			int time = difs;
 			while(is_channel_busy(THRESHOLD, time)) {
@@ -154,8 +179,49 @@ class csma_ca_impl : public csma_ca {
 			message_port_pub(pmt::mp("phy out"), f.frame);
 			f.attempts++;
 			f.tod = clock::now();
+			lock.unlock();
 		}
 
+		void dequeue_frame() {
+			clock_type now;
+			float duration;
+			int ack_timeout = slot_time + sifs + RxPHYDelay;
+
+			while(true) {
+				if(b_frame.empty) {
+					usleep(sifs);
+				}
+				else {
+					if(b_frame.attempts == 0) {
+						send_frame(b_frame);
+					}/*
+					else if(b_frame.attempts < MAX_TRIES and b_frame.acked == false) {
+						now = clock::now();
+						duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(now - b_frame.tod).count();
+						if(duration >= ack_timeout) {
+							send_frame(b_frame);
+						}
+					}
+					else if(b_frame.attempts == MAX_TRIES and b_frame.acked == false) {
+						now = clock::now();
+						duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(now - b_frame.tod).count();
+						if(duration >= ack_timeout) {
+							frame.attempts++;
+						}
+					}
+					else if(b_frame.attempts > MAX_TRIES and b_frame.acked == false) {
+						std::cout << "Frame dropped" << std::endl << std::flush;
+						sending = false;
+					}*/
+					else if(b_frame.acked == true) {
+						std::cout << "Frame was acked properly" << std::endl << std::flush;
+						b_frame.empty = true;
+					}
+				}
+				std::cout << std::flush;
+			}
+		}
+		/*
 		void eval_buffer() {
 			clock_type now;
 			float duration;
@@ -199,7 +265,7 @@ class csma_ca_impl : public csma_ca {
 					cb.pop_front();
 				}
 			}
-		}
+		}*/
 
 	private:
 		int slot_time, sifs, difs;

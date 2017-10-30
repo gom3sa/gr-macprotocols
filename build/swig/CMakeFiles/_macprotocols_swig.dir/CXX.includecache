@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+../include/macprotocols/ack_gen.h
+macprotocols/api.h
+-
+gnuradio/block.h
+-
+
 ../include/macprotocols/api.h
 gnuradio/attributes.h
 -
@@ -71,6 +77,8 @@ macprotocols/csma_ca.h
 /home/gnuradio/gr-macprotocols/build/swig/macprotocols/csma_ca.h
 macprotocols/cs.h
 /home/gnuradio/gr-macprotocols/build/swig/macprotocols/cs.h
+macprotocols/ack_gen.h
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols/ack_gen.h
 float.h
 -
 math.h

@@ -2,6 +2,7 @@
 /usr/local/include/macprotocols/api.h
 /usr/local/include/macprotocols/csma_ca.h
 /usr/local/include/macprotocols/cs.h
+/usr/local/include/macprotocols/ack_gen.h
 /usr/local/lib/libgnuradio-macprotocols.so
 /usr/local/lib/python2.7/dist-packages/macprotocols/_macprotocols_swig.so
 /usr/local/lib/python2.7/dist-packages/macprotocols/macprotocols_swig.py
@@ -14,3 +15,4 @@
 /usr/local/lib/python2.7/dist-packages/macprotocols/__init__.pyo
 /usr/local/share/gnuradio/grc/blocks/macprotocols_csma_ca.xml
 /usr/local/share/gnuradio/grc/blocks/macprotocols_cs.xml
+/usr/local/share/gnuradio/grc/blocks/macprotocols_ack_gen.xml

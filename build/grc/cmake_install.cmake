@@ -36,6 +36,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gnuradio/grc/blocks" TYPE FILE FILES
     "/home/gnuradio/gr-macprotocols/grc/macprotocols_csma_ca.xml"
     "/home/gnuradio/gr-macprotocols/grc/macprotocols_cs.xml"
+    "/home/gnuradio/gr-macprotocols/grc/macprotocols_ack_gen.xml"
     )
 endif()
 
