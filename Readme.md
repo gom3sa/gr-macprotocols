@@ -12,7 +12,7 @@ This is still a work in progress. The first MAC protocols should come up in the 
 
 This feature uses C++11. If you find any errors refering to C++11 while compiling, check if `set(CMAKE_CXX_STANDARD 11)` is present on file CMakeLists.txt. If everything is okay, the commands below should install this module properly.
 
-`git clone https://github.com/andreviniciusgsg/gr-csmaca.git` <br />
+`git clone https://github.com/andreviniciusgsg/gr-macprotocols.git` <br />
 `cd gr-macprotocols` <br />
 `mkdir build` <br />
 `cd build` <br />
