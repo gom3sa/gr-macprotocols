@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver
-# Generated: Mon Oct 30 20:45:27 2017
+# Generated: Wed Nov  1 12:44:16 2017
 ##################################################
 
 import os
@@ -39,7 +39,7 @@ class wifi_transceiver(gr.top_block):
         self.rx_gain = rx_gain = 750e-3
         self.pdu_length = pdu_length = 500
         self.lo_offset = lo_offset = 0
-        self.interval = interval = 1000
+        self.interval = interval = 20e3
         self.freq = freq = 5.89e9
         self.encoding = encoding = 0
         self.chan_est = chan_est = 0
@@ -93,7 +93,6 @@ class wifi_transceiver(gr.top_block):
         self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", "", "52000", 10000, False)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
-        self.blocks_message_strobe_0_0_0 = blocks.message_strobe(pmt.intern("ack"), interval + 1e3)
         self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("".join("a" for i in range(pdu_length))), interval)
         self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi.pcap", True)
         self.blocks_file_sink_0_0.set_unbuffered(True)
@@ -104,7 +103,6 @@ class wifi_transceiver(gr.top_block):
         # Connections
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.blocks_message_strobe_0_0_0, 'strobe'), (self.macprotocols_csma_ca_0, 'phy in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.hier_block_0, 'out'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
@@ -136,9 +134,9 @@ class wifi_transceiver(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.wifi_phy_hier_0.set_bandwidth(self.samp_rate)
-        self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
 
     def get_rx_gain(self):
         return self.rx_gain
@@ -160,8 +158,8 @@ class wifi_transceiver(gr.top_block):
 
     def set_lo_offset(self, lo_offset):
         self.lo_offset = lo_offset
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
+        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
 
     def get_interval(self):
         return self.interval
@@ -169,16 +167,15 @@ class wifi_transceiver(gr.top_block):
     def set_interval(self, interval):
         self.interval = interval
         self.blocks_message_strobe_0_0.set_period(self.interval)
-        self.blocks_message_strobe_0_0_0.set_period(self.interval + 1e3)
 
     def get_freq(self):
         return self.freq
 
     def set_freq(self, freq):
         self.freq = freq
+        self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.wifi_phy_hier_0.set_frequency(self.freq)
-        self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
 
     def get_encoding(self):
         return self.encoding
@@ -196,9 +193,11 @@ class wifi_transceiver(gr.top_block):
 
 
 def main(top_block_cls=wifi_transceiver, options=None):
+    if gr.enable_realtime_scheduling() != gr.RT_OK:
+        print "Error: failed to enable real-time scheduling."
 
     tb = top_block_cls()
-    tb.start()
+    tb.start(32)
     try:
         raw_input('Press Enter to quit: ')
     except EOFError:

@@ -118,7 +118,10 @@ class csma_ca_impl : public csma_ca {
 
 		void phy_in(pmt::pmt_t frame) {
 			//std::cout << "hello phy_in";
-			std::string str = pmt::symbol_to_string(frame);
+			std::string str = "";
+			try {
+				str = pmt::symbol_to_string(frame);
+			} catch (...) {}
 			if(str == "ack") {
 				boost::unique_lock<boost::mutex> lock(mu);
 				b_frame.acked = true;
@@ -127,7 +130,10 @@ class csma_ca_impl : public csma_ca {
 				lock.unlock();
 				std::cout << "Ack time = " << duration << " us" << std::endl << std::flush;
 			}
-			else {
+			else { // Received data frame. Send an ack and pass frame to app.
+				str = "ack";
+				pmt::pmt_t ack = pmt::intern(str);
+				message_port_pub(pmt::mp("phy out"), ack);
 				message_port_pub(pmt::mp("mac out"), frame);
 			}
 		}
@@ -135,10 +141,9 @@ class csma_ca_impl : public csma_ca {
 		void cs_in(pmt::pmt_t cs_msg) {
 			std::string str = pmt::symbol_to_string(cs_msg);
 			std::cout << "cs_in function, msg = " << str << std::endl;
-			if(str == "busy")
-				med.busy = true;
-			else
-				med.busy = false;
+			if(str == "busy") med.busy = true;
+			else med.busy = false;
+			
 			med.sensing = false;
 			cond.notify_all();
 		}
