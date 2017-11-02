@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="dir_348f866635e91eeef4a78e4d34778d46" kind="dir">
+    <compoundname>/home/andre/gnuradio/gr-macprotocols/include/macprotocols</compoundname>
+    <innerfile refid="ack__gen_8h">ack_gen.h</innerfile>
+    <innerfile refid="api_8h">api.h</innerfile>
+    <innerfile refid="cs_8h">cs.h</innerfile>
+    <innerfile refid="csma__ca_8h">csma_ca.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/andre/gnuradio/gr-macprotocols/include/macprotocols/"/>
+  </compounddef>
+</doxygen>

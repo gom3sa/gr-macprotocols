@@ -1,4 +1,4 @@
-# Install script for directory: /home/gnuradio/gr-macprotocols/grc
+# Install script for directory: /home/andre/gnuradio/gr-macprotocols/grc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,11 +32,11 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
   set(CMAKE_INSTALL_SO_NO_EXE "1")
 endif()
 
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
+if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gnuradio/grc/blocks" TYPE FILE FILES
-    "/home/gnuradio/gr-macprotocols/grc/macprotocols_csma_ca.xml"
-    "/home/gnuradio/gr-macprotocols/grc/macprotocols_cs.xml"
-    "/home/gnuradio/gr-macprotocols/grc/macprotocols_ack_gen.xml"
+    "/home/andre/gnuradio/gr-macprotocols/grc/macprotocols_csma_ca.xml"
+    "/home/andre/gnuradio/gr-macprotocols/grc/macprotocols_cs.xml"
+    "/home/andre/gnuradio/gr-macprotocols/grc/macprotocols_ack_gen.xml"
     )
 endif()
 

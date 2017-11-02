@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="namespacegr_1_1macprotocols" kind="namespace" language="C++">
+    <compoundname>gr::macprotocols</compoundname>
+    <innerclass refid="classgr_1_1macprotocols_1_1ack__gen" prot="public">gr::macprotocols::ack_gen</innerclass>
+    <innerclass refid="classgr_1_1macprotocols_1_1buffer" prot="public">gr::macprotocols::buffer</innerclass>
+    <innerclass refid="classgr_1_1macprotocols_1_1cs" prot="public">gr::macprotocols::cs</innerclass>
+    <innerclass refid="classgr_1_1macprotocols_1_1cs__impl" prot="public">gr::macprotocols::cs_impl</innerclass>
+    <innerclass refid="classgr_1_1macprotocols_1_1csma__ca" prot="public">gr::macprotocols::csma_ca</innerclass>
+    <innerclass refid="classgr_1_1macprotocols_1_1csma__ca__impl" prot="public">gr::macprotocols::csma_ca_impl</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="namespacegr_1_1macprotocols_1a09318843562f6ab85a67be761647bb0a" prot="public" static="no">
+        <type>std::chrono::high_resolution_clock</type>
+        <definition>typedef std::chrono::high_resolution_clock gr::macprotocols::clock</definition>
+        <argsstring></argsstring>
+        <name>clock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/andre/gnuradio/gr-macprotocols/lib/csma_ca.h" line="33" column="1" bodyfile="/home/andre/gnuradio/gr-macprotocols/lib/csma_ca.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="namespacegr_1_1macprotocols_1af362bad77bf9bb497306321e77a3e373" prot="public" static="no">
+        <type>std::chrono::high_resolution_clock::time_point</type>
+        <definition>typedef std::chrono::high_resolution_clock::time_point gr::macprotocols::clock_type</definition>
+        <argsstring></argsstring>
+        <name>clock_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/andre/gnuradio/gr-macprotocols/lib/csma_ca.h" line="34" column="1" bodyfile="/home/andre/gnuradio/gr-macprotocols/lib/csma_ca.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/andre/gnuradio/gr-macprotocols/include/macprotocols/ack_gen.h" line="29" column="1"/>
+  </compounddef>
+</doxygen>

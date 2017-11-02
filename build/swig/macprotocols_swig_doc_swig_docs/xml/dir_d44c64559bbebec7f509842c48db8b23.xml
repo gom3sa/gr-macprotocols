@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="dir_d44c64559bbebec7f509842c48db8b23" kind="dir">
+    <compoundname>/home/andre/gnuradio/gr-macprotocols/include</compoundname>
+    <innerdir refid="dir_348f866635e91eeef4a78e4d34778d46">/home/andre/gnuradio/gr-macprotocols/include/macprotocols</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/andre/gnuradio/gr-macprotocols/include/"/>
+  </compounddef>
+</doxygen>

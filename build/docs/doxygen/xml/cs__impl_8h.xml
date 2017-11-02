@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="cs__impl_8h" kind="file" language="C++">
+    <compoundname>cs_impl.h</compoundname>
+    <includes refid="cs_8h" local="no">macprotocols/cs.h</includes>
+    <incdepgraph>
+      <node id="21">
+        <label>macprotocols/cs.h</label>
+        <link refid="cs_8h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>gnuradio/attributes.h</label>
+      </node>
+      <node id="24">
+        <label>gnuradio/block.h</label>
+      </node>
+      <node id="20">
+        <label>cs_impl.h</label>
+        <link refid="cs__impl_8h"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="22">
+        <label>macprotocols/api.h</label>
+        <link refid="api_8h"/>
+        <childnode refid="23" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <innerclass refid="classgr_1_1macprotocols_1_1cs__impl" prot="public">gr::macprotocols::cs_impl</innerclass>
+    <innernamespace refid="namespacegr">gr</innernamespace>
+    <innernamespace refid="namespacegr_1_1macprotocols">gr::macprotocols</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/andre/gnuradio/gr-macprotocols/lib/cs_impl.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.13">
+  <compounddef id="ack__gen_8h" kind="file" language="C++">
+    <compoundname>ack_gen.h</compoundname>
+    <includes refid="api_8h" local="no">macprotocols/api.h</includes>
+    <includes local="no">gnuradio/block.h</includes>
+    <incdepgraph>
+      <node id="2">
+        <label>gnuradio/attributes.h</label>
+      </node>
+      <node id="0">
+        <label>ack_gen.h</label>
+        <link refid="ack__gen_8h"/>
+        <childnode refid="1" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>gnuradio/block.h</label>
+      </node>
+      <node id="1">
+        <label>macprotocols/api.h</label>
+        <link refid="api_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <innerclass refid="classgr_1_1macprotocols_1_1ack__gen" prot="public">gr::macprotocols::ack_gen</innerclass>
+    <innernamespace refid="namespacegr">gr</innernamespace>
+    <innernamespace refid="namespacegr_1_1macprotocols">gr::macprotocols</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/andre/gnuradio/gr-macprotocols/include/macprotocols/ack_gen.h"/>
+  </compounddef>
+</doxygen>

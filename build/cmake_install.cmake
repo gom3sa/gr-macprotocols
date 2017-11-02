@@ -1,4 +1,4 @@
-# Install script for directory: /home/gnuradio/gr-macprotocols
+# Install script for directory: /home/andre/gnuradio/gr-macprotocols
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,19 +32,19 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
   set(CMAKE_INSTALL_SO_NO_EXE "1")
 endif()
 
-if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/macprotocols" TYPE FILE FILES "/home/gnuradio/gr-macprotocols/cmake/Modules/macprotocolsConfig.cmake")
+if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/macprotocols" TYPE FILE FILES "/home/andre/gnuradio/gr-macprotocols/cmake/Modules/macprotocolsConfig.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/gnuradio/gr-macprotocols/build/include/macprotocols/cmake_install.cmake")
-  include("/home/gnuradio/gr-macprotocols/build/lib/cmake_install.cmake")
-  include("/home/gnuradio/gr-macprotocols/build/swig/cmake_install.cmake")
-  include("/home/gnuradio/gr-macprotocols/build/python/cmake_install.cmake")
-  include("/home/gnuradio/gr-macprotocols/build/grc/cmake_install.cmake")
-  include("/home/gnuradio/gr-macprotocols/build/apps/cmake_install.cmake")
-  include("/home/gnuradio/gr-macprotocols/build/docs/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/include/macprotocols/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/lib/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/swig/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/python/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/grc/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/apps/cmake_install.cmake")
+  include("/home/andre/gnuradio/gr-macprotocols/build/docs/cmake_install.cmake")
 
 endif()
 
@@ -56,5 +56,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/gnuradio/gr-macprotocols/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/andre/gnuradio/gr-macprotocols/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

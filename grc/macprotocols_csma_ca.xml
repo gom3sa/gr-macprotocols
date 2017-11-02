@@ -34,19 +34,13 @@
        * vlen
        * optional (set to 1 for optional inputs) -->
   <sink>
-    <name>mac in</name>
+    <name>frame from app</name>
     <type>message</type>
     <optional>1</optional>
   </sink>
 
   <sink>
-    <name>phy in</name>
-    <type>message</type>
-    <optional>1</optional>
-  </sink>
-
-  <sink>
-    <name>cs in</name>
+    <name>frame from phy</name>
     <type>message</type>
     <optional>1</optional>
   </sink>
@@ -56,20 +50,9 @@
        * type
        * vlen
        * optional (set to 1 for optional inputs) -->
-  <source>
-    <name>mac out</name>
-    <type>message</type>
-    <optional>1</optional>
-  </source>
 
   <source>
-    <name>phy out</name>
-    <type>message</type>
-    <optional>1</optional>
-  </source>
-
-  <source>
-    <name>cs out</name>
+    <name>frame to phy</name>
     <type>message</type>
     <optional>1</optional>
   </source>
