@@ -1,4 +1,4 @@
-# Install script for directory: /home/gnuradio/gr-macprotocols/include/macprotocols
+# Install script for directory: /home/andregomes/gr-macprotocols/include/macprotocols
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,11 +34,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/macprotocols" TYPE FILE FILES
-    "/home/gnuradio/gr-macprotocols/include/macprotocols/api.h"
-    "/home/gnuradio/gr-macprotocols/include/macprotocols/csma_ca.h"
-    "/home/gnuradio/gr-macprotocols/include/macprotocols/cs.h"
-    "/home/gnuradio/gr-macprotocols/include/macprotocols/ack_gen.h"
-    "/home/gnuradio/gr-macprotocols/include/macprotocols/frame_buffer.h"
+    "/home/andregomes/gr-macprotocols/include/macprotocols/api.h"
+    "/home/andregomes/gr-macprotocols/include/macprotocols/csma_ca.h"
+    "/home/andregomes/gr-macprotocols/include/macprotocols/cs.h"
+    "/home/andregomes/gr-macprotocols/include/macprotocols/ack_gen.h"
+    "/home/andregomes/gr-macprotocols/include/macprotocols/frame_buffer.h"
     )
 endif()
 

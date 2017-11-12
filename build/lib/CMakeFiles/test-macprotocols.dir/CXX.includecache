@@ -6,19 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/home/gnuradio/gr-macprotocols/lib/qa_macprotocols.cc
+/home/andregomes/gr-macprotocols/lib/qa_macprotocols.cc
 qa_macprotocols.h
-/home/gnuradio/gr-macprotocols/lib/qa_macprotocols.h
+/home/andregomes/gr-macprotocols/lib/qa_macprotocols.h
 
-/home/gnuradio/gr-macprotocols/lib/qa_macprotocols.h
+/home/andregomes/gr-macprotocols/lib/qa_macprotocols.h
 gnuradio/attributes.h
 -
 cppunit/TestSuite.h
 -
 
-/home/gnuradio/gr-macprotocols/lib/test_macprotocols.cc
+/home/andregomes/gr-macprotocols/lib/test_macprotocols.cc
 config.h
-/home/gnuradio/gr-macprotocols/lib/config.h
+/home/andregomes/gr-macprotocols/lib/config.h
 cppunit/TextTestRunner.h
 -
 cppunit/XmlOutputter.h
@@ -26,7 +26,7 @@ cppunit/XmlOutputter.h
 gnuradio/unittests.h
 -
 qa_macprotocols.h
-/home/gnuradio/gr-macprotocols/lib/qa_macprotocols.h
+/home/andregomes/gr-macprotocols/lib/qa_macprotocols.h
 iostream
 -
 fstream

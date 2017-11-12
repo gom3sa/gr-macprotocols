@@ -5095,21 +5095,25 @@ SWIGINTERN PyObject *_wrap_csma_ca_make(PyObject *SWIGUNUSEDPARM(self), PyObject
   int arg1 ;
   int arg2 ;
   int arg3 ;
+  int arg4 ;
   int val1 ;
   int ecode1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
   char *  kwnames[] = {
-    (char *) "slot_time",(char *) "sifs",(char *) "difs", NULL 
+    (char *) "slot_time",(char *) "sifs",(char *) "difs",(char *) "alpha", NULL 
   };
   gr::macprotocols::csma_ca::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOO:csma_ca_make",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOO:csma_ca_make",kwnames,&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "csma_ca_make" "', argument " "1"" of type '" "int""'");
@@ -5125,9 +5129,14 @@ SWIGINTERN PyObject *_wrap_csma_ca_make(PyObject *SWIGUNUSEDPARM(self), PyObject
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "csma_ca_make" "', argument " "3"" of type '" "int""'");
   } 
   arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "csma_ca_make" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
   {
     try {
-      result = gr::macprotocols::csma_ca::make(arg1,arg2,arg3);
+      result = gr::macprotocols::csma_ca::make(arg1,arg2,arg3,arg4);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -5345,6 +5354,7 @@ SWIGINTERN PyObject *_wrap_csma_ca_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyO
   int arg2 ;
   int arg3 ;
   int arg4 ;
+  int arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int val2 ;
@@ -5353,16 +5363,19 @@ SWIGINTERN PyObject *_wrap_csma_ca_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyO
   int ecode3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "slot_time",(char *) "sifs",(char *) "difs", NULL 
+    (char *) "self",(char *) "slot_time",(char *) "sifs",(char *) "difs",(char *) "alpha", NULL 
   };
   gr::macprotocols::csma_ca::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOO:csma_ca_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOOO:csma_ca_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_boost__shared_ptrT_gr__macprotocols__csma_ca_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csma_ca_sptr_make" "', argument " "1"" of type '" "boost::shared_ptr< gr::macprotocols::csma_ca > *""'"); 
@@ -5383,9 +5396,14 @@ SWIGINTERN PyObject *_wrap_csma_ca_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyO
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "csma_ca_sptr_make" "', argument " "4"" of type '" "int""'");
   } 
   arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "csma_ca_sptr_make" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
   {
     try {
-      result = (*arg1)->make(arg2,arg3,arg4);
+      result = (*arg1)->make(arg2,arg3,arg4,arg5);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17822,7 +17840,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"high_res_timer_now_perfmon", _wrap_high_res_timer_now_perfmon, METH_VARARGS, (char *)"high_res_timer_now_perfmon() -> gr::high_res_timer_type"},
 	 { (char *)"high_res_timer_tps", _wrap_high_res_timer_tps, METH_VARARGS, (char *)"high_res_timer_tps() -> gr::high_res_timer_type"},
 	 { (char *)"high_res_timer_epoch", _wrap_high_res_timer_epoch, METH_VARARGS, (char *)"high_res_timer_epoch() -> gr::high_res_timer_type"},
-	 { (char *)"csma_ca_make", (PyCFunction) _wrap_csma_ca_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_make(int slot_time, int sifs, int difs) -> csma_ca_sptr"},
+	 { (char *)"csma_ca_make", (PyCFunction) _wrap_csma_ca_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_make(int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"},
 	 { (char *)"delete_csma_ca", _wrap_delete_csma_ca, METH_VARARGS, (char *)"delete_csma_ca(csma_ca self)"},
 	 { (char *)"csma_ca_swigregister", csma_ca_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_csma_ca_sptr", _wrap_new_csma_ca_sptr, METH_VARARGS, (char *)"\n"
@@ -17831,7 +17849,7 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"csma_ca_sptr___deref__", _wrap_csma_ca_sptr___deref__, METH_VARARGS, (char *)"csma_ca_sptr___deref__(csma_ca_sptr self) -> csma_ca"},
 	 { (char *)"delete_csma_ca_sptr", _wrap_delete_csma_ca_sptr, METH_VARARGS, (char *)"delete_csma_ca_sptr(csma_ca_sptr self)"},
-	 { (char *)"csma_ca_sptr_make", (PyCFunction) _wrap_csma_ca_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_sptr_make(csma_ca_sptr self, int slot_time, int sifs, int difs) -> csma_ca_sptr"},
+	 { (char *)"csma_ca_sptr_make", (PyCFunction) _wrap_csma_ca_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_sptr_make(csma_ca_sptr self, int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"},
 	 { (char *)"csma_ca_sptr_history", _wrap_csma_ca_sptr_history, METH_VARARGS, (char *)"csma_ca_sptr_history(csma_ca_sptr self) -> unsigned int"},
 	 { (char *)"csma_ca_sptr_declare_sample_delay", _wrap_csma_ca_sptr_declare_sample_delay, METH_VARARGS, (char *)"\n"
 		"declare_sample_delay(int which, int delay)\n"

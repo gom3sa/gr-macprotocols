@@ -1,4 +1,4 @@
-# Install script for directory: /home/gnuradio/gr-macprotocols/python
+# Install script for directory: /home/andregomes/gr-macprotocols/python
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,13 +33,13 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE FILE FILES "/home/gnuradio/gr-macprotocols/python/__init__.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE FILE FILES "/home/andregomes/gr-macprotocols/python/__init__.py")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE FILE FILES
-    "/home/gnuradio/gr-macprotocols/build/python/__init__.pyc"
-    "/home/gnuradio/gr-macprotocols/build/python/__init__.pyo"
+    "/home/andregomes/gr-macprotocols/build/python/__init__.pyc"
+    "/home/andregomes/gr-macprotocols/build/python/__init__.pyo"
     )
 endif()
 

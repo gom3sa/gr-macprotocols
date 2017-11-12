@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/gnuradio/gr-macprotocols/lib/qa_macprotocols.cc" "/home/gnuradio/gr-macprotocols/build/lib/CMakeFiles/test-macprotocols.dir/qa_macprotocols.cc.o"
-  "/home/gnuradio/gr-macprotocols/lib/test_macprotocols.cc" "/home/gnuradio/gr-macprotocols/build/lib/CMakeFiles/test-macprotocols.dir/test_macprotocols.cc.o"
+  "/home/andregomes/gr-macprotocols/lib/qa_macprotocols.cc" "/home/andregomes/gr-macprotocols/build/lib/CMakeFiles/test-macprotocols.dir/qa_macprotocols.cc.o"
+  "/home/andregomes/gr-macprotocols/lib/test_macprotocols.cc" "/home/andregomes/gr-macprotocols/build/lib/CMakeFiles/test-macprotocols.dir/test_macprotocols.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -19,7 +19,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/gnuradio/gr-macprotocols/build/lib/CMakeFiles/gnuradio-macprotocols.dir/DependInfo.cmake"
+  "/home/andregomes/gr-macprotocols/build/lib/CMakeFiles/gnuradio-macprotocols.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

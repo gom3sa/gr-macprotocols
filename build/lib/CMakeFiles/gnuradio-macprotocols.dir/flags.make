@@ -6,5 +6,5 @@ CXX_FLAGS = -O3 -DNDEBUG -fPIC   -fvisibility=hidden -std=gnu++11
 
 CXX_DEFINES = -Dgnuradio_macprotocols_EXPORTS
 
-CXX_INCLUDES = -I/home/gnuradio/gr-macprotocols/lib -I/home/gnuradio/gr-macprotocols/include -I/home/gnuradio/gr-macprotocols/build/lib -I/home/gnuradio/gr-macprotocols/build/include 
+CXX_INCLUDES = -I/home/andregomes/gr-macprotocols/lib -I/home/andregomes/gr-macprotocols/include -I/home/andregomes/gr-macprotocols/build/lib -I/home/andregomes/gr-macprotocols/build/include 
 

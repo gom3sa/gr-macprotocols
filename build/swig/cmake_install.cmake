@@ -1,4 +1,4 @@
-# Install script for directory: /home/gnuradio/gr-macprotocols/swig
+# Install script for directory: /home/andregomes/gr-macprotocols/swig
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,12 +39,12 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols/_macprotocols_swig.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE MODULE FILES "/home/gnuradio/gr-macprotocols/build/swig/_macprotocols_swig.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE MODULE FILES "/home/andregomes/gr-macprotocols/build/swig/_macprotocols_swig.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols/_macprotocols_swig.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols/_macprotocols_swig.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols/_macprotocols_swig.so"
-         OLD_RPATH "/home/gnuradio/gr-macprotocols/build/lib:"
+         OLD_RPATH "/home/andregomes/gr-macprotocols/build/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols/_macprotocols_swig.so")
@@ -53,20 +53,20 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE FILE FILES "/home/gnuradio/gr-macprotocols/build/swig/macprotocols_swig.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE FILE FILES "/home/andregomes/gr-macprotocols/build/swig/macprotocols_swig.py")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/macprotocols" TYPE FILE FILES
-    "/home/gnuradio/gr-macprotocols/build/swig/macprotocols_swig.pyc"
-    "/home/gnuradio/gr-macprotocols/build/swig/macprotocols_swig.pyo"
+    "/home/andregomes/gr-macprotocols/build/swig/macprotocols_swig.pyc"
+    "/home/andregomes/gr-macprotocols/build/swig/macprotocols_swig.pyo"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/macprotocols/macprotocols/swig" TYPE FILE FILES
-    "/home/gnuradio/gr-macprotocols/swig/macprotocols_swig.i"
-    "/home/gnuradio/gr-macprotocols/build/swig/macprotocols_swig_doc.i"
+    "/home/andregomes/gr-macprotocols/swig/macprotocols_swig.i"
+    "/home/andregomes/gr-macprotocols/build/swig/macprotocols_swig_doc.i"
     )
 endif()
 
