@@ -53,8 +53,8 @@ class csma_ca_impl : public csma_ca {
 
 		void check_buff() {
 			while(true) {
-				if(!status) { // This means no frame has arrived to be sent. So, it will request one.
-					//message_port_pub(pmt::mp("frame resquest"), pmt::string_to_symbol("get frame"));
+				if(!status) { // This means no frame has arrived to be sent. So, it will request one to buffer.
+					message_port_pub(pmt::mp("frame resquest"), pmt::string_to_symbol("get frame"));
 				}
 				usleep((rand() % 5)*(slot_time + sifs + difs)); srand(time(NULL));
 			}
@@ -68,13 +68,6 @@ class csma_ca_impl : public csma_ca {
 
 				thread_send_frame = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::send_frame, this, frame)));
 			}
-			
-			/*buffer b; 
-			b.frame = frame;
-			b.attempts = 0;
-
-			b.tod = clock::now();
-			cb.push_back(b); send_frame(cb[0]);*/
 		}
 
 		void send_frame(pmt::pmt_t frame) {
@@ -83,23 +76,12 @@ class csma_ca_impl : public csma_ca {
 			// TODO: Implementation of: 1) Carrier sense feature, 2) Backoff
 			message_port_pub(pmt::mp("frame to phy"), frame);
 			frame_acked = true;
-			/*b_frame.attempts++;
-			// Check if channel is busy. If not, send; otherwise, backoff.
-			b_frame.tod = clock::now();
-			message_port_pub(pmt::mp("frame to phy"), b_frame.frame);*/
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
-			// Check if it is: 1) an ack, 2) a frame
+			// TODO: Check if it is: 1) an ack, 2) a frame
 			// If an ack
 				frame_acked = true; status = false;
-
-			/*// Check if it is an ack. If so, remove frame from buffer
-			float duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(clock::now() - cb[0].tod).count();
-			std::cout << std::endl << "Frame acked! ACK time = " << duration << " (us)" << std::endl;
-			boost::unique_lock<boost::mutex> lock(mu1); // In order to remove cb[0]
-			cb.pop_front();
-			lock.unlock();*/
 		}
 
 	private:
