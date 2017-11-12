@@ -17,6 +17,7 @@ This feature uses C++11. If you find any errors refering to C++11 while compilin
 `mkdir build` <br />
 `cd build` <br />
 `cmake ..` <br />
+`make` <br />
 `sudo make install` <br />
 `sudo ldconfig` <br />
 `grcc ../examples/cs.grc`
