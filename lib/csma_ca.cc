@@ -42,14 +42,19 @@ class csma_ca_impl : public csma_ca {
 			// Outputs
 			message_port_register_out(pmt::mp("frame to phy"));
 			message_port_register_out(pmt::mp("frame request"));
+		}
 
+		bool start() {
+			std::cout << std::endl << "HELLO! WE ARE HERE." << std::endl;
 			thread_check_buff = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::check_buff, this)));
+
+			return block::start();
 		}
 
 		void check_buff() {
 			while(true) {
 				if(!status) { // This means no frame has arrived to be sent. So, it will request one.
-					message_port_pub(pmt::mp("frame resquest"), pmt::string_to_symbol("get frame"));
+					//message_port_pub(pmt::mp("frame resquest"), pmt::string_to_symbol("get frame"));
 				}
 				usleep((rand() % 5)*(slot_time + sifs + difs)); srand(time(NULL));
 			}
