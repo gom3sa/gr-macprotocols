@@ -4,7 +4,7 @@
   <key>macprotocols_csma_ca</key>
   <category>[MAC Protocols]</category>
   <import>import macprotocols</import>
-  <make>macprotocols.csma_ca($slot_time, $sifs, $difs)</make>
+  <make>macprotocols.csma_ca($slot_time, $sifs, $difs, $alpha)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -25,6 +25,12 @@
   <param>
     <name>Difs (us)</name>
     <key>difs</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Alpha</name>
+    <key>alpha</key>
     <type>int</type>
   </param>
 
@@ -53,6 +59,12 @@
 
   <source>
     <name>frame to phy</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>frame request</name>
     <type>message</type>
     <optional>1</optional>
   </source>

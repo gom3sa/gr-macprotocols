@@ -1,4 +1,4 @@
-# Install script for directory: /home/andre/gnuradio/gr-macprotocols/apps
+# Install script for directory: /home/gnuradio/gr-macprotocols/apps
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

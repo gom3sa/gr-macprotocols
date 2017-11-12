@@ -23,6 +23,7 @@
 #define INCLUDED_MACPROTOCOLS_CSMA_CA_H
 
 #include <macprotocols/api.h>
+#include <macprotocols/csma_ca.h>
 #include <gnuradio/block.h>
 #include <pmt/pmt.h>
 #include <chrono>
@@ -58,7 +59,7 @@ namespace gr {
 				 * creating new instances.
 				 */
 
-				static sptr make(int slot_time, int sifs, int difs);
+				static sptr make(int slot_time, int sifs, int difs, int alpha);
 		};
 
 	} // namespace macprotocols

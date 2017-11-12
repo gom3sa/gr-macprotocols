@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.10'?>
+<?grc format='1' created='3.7.9'?>
 <flow_graph>
   <timestamp>Fri Jul 18 10:38:08 2014</timestamp>
   <block>
@@ -186,7 +186,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>5e3</value>
+      <value>1e3</value>
     </param>
   </block>
   <block>
@@ -544,7 +544,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(344, 207)</value>
+      <value>(352, 215)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -858,7 +858,7 @@
     </param>
     <param>
       <key>debug</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -892,6 +892,10 @@
   <block>
     <key>macprotocols_csma_ca</key>
     <param>
+      <key>alpha</key>
+      <value>5000</value>
+    </param>
+    <param>
       <key>alias</key>
       <value></value>
     </param>
@@ -913,7 +917,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 481)</value>
+      <value>(664, 550)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -938,6 +942,49 @@
     <param>
       <key>slot_time</key>
       <value>9</value>
+    </param>
+  </block>
+  <block>
+    <key>macprotocols_frame_buffer</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>buff_size</key>
+      <value>64</value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(664, 449)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>macprotocols_frame_buffer_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -1049,15 +1096,27 @@
   </connection>
   <connection>
     <source_block_id>ieee802_11_mac_0_0</source_block_id>
-    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
+    <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>phy out</source_key>
-    <sink_key>frame from app</sink_key>
+    <sink_key>frame in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>macprotocols_csma_ca_0</source_block_id>
+    <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
+    <source_key>frame request</source_key>
+    <sink_key>ctrl in</sink_key>
   </connection>
   <connection>
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
     <sink_block_id>wifi_phy_hier_0</sink_block_id>
     <source_key>frame to phy</source_key>
     <sink_key>mac_in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>macprotocols_frame_buffer_0</source_block_id>
+    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
+    <source_key>frame out</source_key>
+    <sink_key>frame from app</sink_key>
   </connection>
   <connection>
     <source_block_id>wifi_phy_hier_0</source_block_id>

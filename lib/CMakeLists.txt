@@ -29,6 +29,7 @@ list(APPEND macprotocols_sources
     csma_ca.cc
     cs_impl.cc
     ack_gen.cc
+    frame_buffer_impl.cc
 )
 
 set(macprotocols_sources "${macprotocols_sources}" PARENT_SCOPE)

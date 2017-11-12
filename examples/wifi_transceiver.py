@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver
-# Generated: Thu Nov  2 00:17:27 2017
+# Generated: Sun Nov 12 17:09:35 2017
 ##################################################
 
 import os
@@ -36,7 +36,7 @@ class wifi_transceiver(gr.top_block):
         self.rx_gain = rx_gain = 750e-3
         self.pdu_length = pdu_length = 500
         self.lo_offset = lo_offset = 0
-        self.interval = interval = 5e3
+        self.interval = interval = 1e3
         self.freq = freq = 5.89e9
         self.encoding = encoding = 0
         self.chan_est = chan_est = 0
@@ -51,8 +51,9 @@ class wifi_transceiver(gr.top_block):
             frequency=freq,
             sensitivity=0.56,
         )
-        self.macprotocols_csma_ca_0 = macprotocols.csma_ca(9, 16, 34)
-        self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, True)
+        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(64)
+        self.macprotocols_csma_ca_0 = macprotocols.csma_ca(9, 16, 34, 5000)
+        self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, False)
         self.ieee802_11_mac_0_0 = ieee802_11.mac(([0x23, 0x23, 0x23, 0x23, 0x23, 0x23]), ([0x42, 0x42, 0x42, 0x42, 0x42, 0x42]), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
@@ -61,13 +62,13 @@ class wifi_transceiver(gr.top_block):
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
-        self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", '', '52000', 10000, False)
+        self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", "", "52000", 10000, False)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
         self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("".join("a" for i in range(pdu_length))), interval)
-        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, '/tmp/wifi.pcap', True)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi.pcap", True)
         self.blocks_file_sink_0_0.set_unbuffered(True)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, '/tmp/wifi.pcap', True)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi.pcap", True)
         self.blocks_file_sink_0.set_unbuffered(True)
 
         ##################################################
@@ -76,8 +77,10 @@ class wifi_transceiver(gr.top_block):
         self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
-        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_csma_ca_0, 'frame from app'))    
+        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to phy'), (self.wifi_phy_hier_0, 'mac_in'))    
+        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out'), (self.macprotocols_csma_ca_0, 'frame from app'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.foo_wireshark_connector_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.ieee802_11_parse_mac_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.macprotocols_csma_ca_0, 'frame from phy'))    
@@ -99,8 +102,8 @@ class wifi_transceiver(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.wifi_phy_hier_0.set_bandwidth(self.samp_rate)
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.wifi_phy_hier_0.set_bandwidth(self.samp_rate)
 
     def get_rx_gain(self):
         return self.rx_gain
