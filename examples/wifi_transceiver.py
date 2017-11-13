@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver
-# Generated: Sun Nov 12 21:49:45 2017
+# Generated: Mon Nov 13 20:34:56 2017
 ##################################################
 
 import os
@@ -15,6 +15,7 @@ from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
+from hier_block import hier_block  # grc-generated hier_block
 from optparse import OptionParser
 from wifi_phy_hier import wifi_phy_hier  # grc-generated hier_block
 import foo
@@ -35,8 +36,9 @@ class wifi_transceiver(gr.top_block):
         self.samp_rate = samp_rate = 10e6
         self.rx_gain = rx_gain = 750e-3
         self.pdu_length = pdu_length = 500
+        self.mac_addr = mac_addr = [0x23, 0x23, 0x23, 0x23, 0x23, 0x23]
         self.lo_offset = lo_offset = 0
-        self.interval = interval = 1e3
+        self.interval = interval = 10e3
         self.freq = freq = 5.89e9
         self.encoding = encoding = 0
         self.chan_est = chan_est = 0
@@ -51,12 +53,17 @@ class wifi_transceiver(gr.top_block):
             frequency=freq,
             sensitivity=0.56,
         )
-        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(64)
-        self.macprotocols_csma_ca_0 = macprotocols.csma_ca(9, 16, 34, 5000)
+        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256)
+        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 5000, True)
         self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, False)
-        self.ieee802_11_mac_0_0 = ieee802_11.mac(([0x23, 0x23, 0x23, 0x23, 0x23, 0x23]), ([0x42, 0x42, 0x42, 0x42, 0x42, 0x42]), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
+        self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), ([0x42, 0x42, 0x42, 0x42, 0x42, 0x42]), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
+        self.hier_block_0 = hier_block(
+            debug_mode=1,
+            gain_disc=30,
+            samples=64,
+        )
         self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, False)
         self.foo_wireshark_connector_0 = foo.wireshark_connector(127, False)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
@@ -76,15 +83,18 @@ class wifi_transceiver(gr.top_block):
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
+        self.msg_connect((self.hier_block_0, 'out'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.hier_block_0, 'in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to phy'), (self.wifi_phy_hier_0, 'mac_in'))    
-        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out'), (self.macprotocols_csma_ca_0, 'frame from app'))    
+        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out'), (self.macprotocols_csma_ca_0, 'frame from buffer'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.foo_wireshark_connector_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.ieee802_11_parse_mac_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.macprotocols_csma_ca_0, 'frame from phy'))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.foo_packet_pad2_0, 0))    
+        self.connect((self.blocks_throttle_0, 0), (self.hier_block_0, 0))    
         self.connect((self.blocks_throttle_0, 0), (self.wifi_phy_hier_0, 0))    
         self.connect((self.foo_packet_pad2_0, 0), (self.blocks_throttle_0, 0))    
         self.connect((self.foo_wireshark_connector_0, 0), (self.blocks_file_sink_0, 0))    
@@ -117,6 +127,12 @@ class wifi_transceiver(gr.top_block):
     def set_pdu_length(self, pdu_length):
         self.pdu_length = pdu_length
         self.blocks_message_strobe_0_0.set_msg(pmt.intern("".join("a" for i in range(self.pdu_length))))
+
+    def get_mac_addr(self):
+        return self.mac_addr
+
+    def set_mac_addr(self, mac_addr):
+        self.mac_addr = mac_addr
 
     def get_lo_offset(self):
         return self.lo_offset

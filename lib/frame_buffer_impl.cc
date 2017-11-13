@@ -46,7 +46,7 @@ namespace gr {
 							buff_size(buff_size)
 		{
 			circ_buff.rset_capacity(buff_size);
-			std::cout << std::endl << "Buffer capacity = " << circ_buff.capacity() << std::endl;
+			std::cout << "Buffer capacity = " << circ_buff.capacity() << std::endl << std::flush;
 
 			message_port_register_in(pmt::mp("frame in"));
 			set_msg_handler(pmt::mp("frame in"), boost::bind(&frame_buffer_impl::frame_in, this, _1));
@@ -63,9 +63,9 @@ namespace gr {
 		void frame_buffer_impl::frame_in(pmt::pmt_t frame)
 		{
 			if(circ_buff.size() == buff_size)
-				std::cout << std::endl << "BUFFER IS FULL!" << std::endl;
+				std::cout << "BUFFER IS FULL!" << std::endl << std::flush;
 			circ_buff.push_back(frame);
-			//std::cout << std::endl << "A new frame arrived. Buffer size = " << circ_buff.size() << std::endl;
+			//std::cout << "A new frame arrived. Buffer size = " << circ_buff.size() << std::endl;
 		}
 
 		void frame_buffer_impl::ctrl_in(pmt::pmt_t msg)
@@ -79,7 +79,7 @@ namespace gr {
 				{
 					message_port_pub(pmt::mp("frame out"), circ_buff[0]);
 					circ_buff.pop_front();
-					//std::cout << std::endl << "Message was sent. Buffer size = " << circ_buff.size() << std::endl;
+					std::cout << "Frame was sent from BUFFER. Buffer size = " << circ_buff.size() << std::endl << std::flush;
 				}
 			}
 		}

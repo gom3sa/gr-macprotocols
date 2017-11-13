@@ -28,6 +28,16 @@
 #include <pmt/pmt.h>
 #include <chrono>
 
+struct mac_header {
+	//protocol version, type, subtype, to_ds, from_ds, ...
+	uint16_t frame_control;
+	uint16_t duration;
+	uint8_t addr1[6];
+	uint8_t addr2[6];
+	uint8_t addr3[6];
+	uint16_t seq_nr;
+}__attribute__((packed));
+
 namespace gr {
 	namespace macprotocols {
 
@@ -59,7 +69,7 @@ namespace gr {
 				 * creating new instances.
 				 */
 
-				static sptr make(int slot_time, int sifs, int difs, int alpha);
+				static sptr make(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, bool debug);
 		};
 
 	} // namespace macprotocols

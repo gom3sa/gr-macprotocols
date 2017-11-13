@@ -47,20 +47,21 @@ namespace gr {
 	int count;
 
 		cs::sptr
-		cs::make(int num_samples, int gain) {
+		cs::make(int num_samples, int gain, int debug) {
 			return gnuradio::get_initial_sptr
-				(new cs_impl(num_samples, gain));
+				(new cs_impl(num_samples, gain, debug));
 		}
 
 		/*
 		 * The private constructor
 		 */
-		cs_impl::cs_impl(int num_samples, int gain)
+		cs_impl::cs_impl(int num_samples, int gain, int debug)
 			: gr::block("my_csense",
 							gr::io_signature::make(1, 1, sizeof(gr_complex)),
 							gr::io_signature::make(0, 0, 0)),
 				l_gain(gain),
-				l_num_samples(num_samples) {
+				l_num_samples(num_samples),
+				l_debug(debug) {
 			message_port_register_in(pmt::mp("in_control"));
 			set_msg_handler(pmt::mp("in_control"), boost::bind(&cs_impl::in_control, this, _1));
 
@@ -77,6 +78,7 @@ namespace gr {
 
 		void cs_impl::in_control(pmt::pmt_t msg) {
 			if(sense == false) {
+				if(l_debug) std::cout << "Received sensing request" << std::endl << std::flush;
 				// Parsing input. Msg format: "threshold=XXX,time=XXX".
 				std::string str = pmt::symbol_to_string(msg);
 				int comma = str.find(",");
@@ -137,7 +139,7 @@ namespace gr {
 				if ((stime - duration <= sample_duration) or (duration >= stime)) {
 					sense = false;
 					message_port_pub(pmt::mp("out_csense"), out_msg);
-					std::cout << "duration = " << duration << ", medium1 = " << out_msg << ", max power = " << max_power << ", threshold = " << threshold << ", count = " << count << std::endl << std::flush;
+					if(l_debug) std::cout << "duration = " << duration << ", medium1 = " << out_msg << ", max power = " << max_power << ", threshold = " << threshold << ", count = " << count << std::endl << std::flush;
 				}
 				
 			}

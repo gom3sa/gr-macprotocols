@@ -14,7 +14,7 @@
     </param>
     <param>
       <key>category</key>
-      <value>Custom</value>
+      <value>[MAC Protocols Aux]</value>
     </param>
     <param>
       <key>comment</key>
@@ -184,6 +184,50 @@
     </param>
   </block>
   <block>
+    <key>parameter</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value>If 0, debug mode turned off;
+if 1, debug mode turned on.</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(528, 6)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>debug_mode</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Debug mode</value>
+    </param>
+    <param>
+      <key>short_id</key>
+      <value></value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>intx</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>fft_vxx</key>
     <param>
       <key>alias</key>
@@ -302,6 +346,10 @@
     <param>
       <key>affinity</key>
       <value></value>
+    </param>
+    <param>
+      <key>debug</key>
+      <value>debug_mode</value>
     </param>
     <param>
       <key>_enabled</key>

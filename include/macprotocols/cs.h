@@ -46,7 +46,7 @@ namespace gr {
        * class. macprotocols::cs::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int num_samples, int gain);
+      static sptr make(int num_samples, int gain, int debug);
     };
 
   } // namespace macprotocols

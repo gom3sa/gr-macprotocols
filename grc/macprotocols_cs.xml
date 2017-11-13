@@ -2,9 +2,9 @@
 <block>
   <name>Energy Detection</name>
   <key>macprotocols_cs</key>
-  <category>[Energy Detection]</category>
+  <category>[MAC Protocols Aux]</category>
   <import>import macprotocols</import>
-  <make>macprotocols.cs($num_samples, $gain)</make>
+  <make>macprotocols.cs($num_samples, $gain, $debug)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -18,6 +18,12 @@
   <param>
     <name>Number of samples FFT</name>
     <key>num_samples</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Debug mode</name>
+    <key>debug</key>
     <type>int</type>
   </param>
 

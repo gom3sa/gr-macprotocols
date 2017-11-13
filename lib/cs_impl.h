@@ -31,9 +31,10 @@ namespace gr {
      private:
       int l_num_samples;
       int l_gain;
+      bool l_debug;
 
      public:
-      cs_impl(int num_samples, int gain);
+      cs_impl(int num_samples, int gain, int debug);
       ~cs_impl();
 
       // Where all the action really happens

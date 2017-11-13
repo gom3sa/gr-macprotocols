@@ -47,7 +47,7 @@ namespace gr {
        * creating new instances.
        */
 
-      static sptr make(int slot_time, int sifs, int difs, int alpha);
+      static sptr make(int slot_time, int sifs, int difs, int alpha, bool debug);
     };
 
   } // namespace macprotocols
