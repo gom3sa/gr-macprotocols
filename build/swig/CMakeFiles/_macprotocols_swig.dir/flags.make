@@ -6,7 +6,7 @@ CXX_FLAGS = -O3 -DNDEBUG -fPIC   -fvisibility=hidden -std=gnu++11
 
 CXX_DEFINES = -D_macprotocols_swig_EXPORTS
 
-CXX_INCLUDES = -I/home/andregomes/gr-macprotocols/lib -I/home/andregomes/gr-macprotocols/include -I/home/andregomes/gr-macprotocols/build/lib -I/home/andregomes/gr-macprotocols/build/include -I/home/andregomes/gr-macprotocols/build/swig -I/home/andregomes/gr-macprotocols/swig -I/usr/include/gnuradio/swig -I/usr/include/python2.7 
+CXX_INCLUDES = -I/home/gnuradio/gr-macprotocols/lib -I/home/gnuradio/gr-macprotocols/include -I/home/gnuradio/gr-macprotocols/build/lib -I/home/gnuradio/gr-macprotocols/build/include -I/home/gnuradio/gr-macprotocols/build/swig -I/home/gnuradio/gr-macprotocols/swig -I/usr/include/gnuradio/swig -I/usr/include/python2.7 
 
 # Custom flags: swig/CMakeFiles/_macprotocols_swig.dir/macprotocols_swigPYTHON_wrap.cxx.o_FLAGS = -Wno-unused-but-set-variable
 

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/andregomes/gr-macprotocols
+CMAKE_SOURCE_DIR = /home/gnuradio/gr-macprotocols
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/andregomes/gr-macprotocols/build
+CMAKE_BINARY_DIR = /home/gnuradio/gr-macprotocols/build
 
 # Utility rule file for macprotocols_swig_swig_doc.
 
@@ -67,10 +67,10 @@ swig/CMakeFiles/macprotocols_swig_swig_doc.dir/build: macprotocols_swig_swig_doc
 .PHONY : swig/CMakeFiles/macprotocols_swig_swig_doc.dir/build
 
 swig/CMakeFiles/macprotocols_swig_swig_doc.dir/clean:
-	cd /home/andregomes/gr-macprotocols/build/swig && $(CMAKE_COMMAND) -P CMakeFiles/macprotocols_swig_swig_doc.dir/cmake_clean.cmake
+	cd /home/gnuradio/gr-macprotocols/build/swig && $(CMAKE_COMMAND) -P CMakeFiles/macprotocols_swig_swig_doc.dir/cmake_clean.cmake
 .PHONY : swig/CMakeFiles/macprotocols_swig_swig_doc.dir/clean
 
 swig/CMakeFiles/macprotocols_swig_swig_doc.dir/depend:
-	cd /home/andregomes/gr-macprotocols/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/andregomes/gr-macprotocols /home/andregomes/gr-macprotocols/swig /home/andregomes/gr-macprotocols/build /home/andregomes/gr-macprotocols/build/swig /home/andregomes/gr-macprotocols/build/swig/CMakeFiles/macprotocols_swig_swig_doc.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/gnuradio/gr-macprotocols/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/gnuradio/gr-macprotocols /home/gnuradio/gr-macprotocols/swig /home/gnuradio/gr-macprotocols/build /home/gnuradio/gr-macprotocols/build/swig /home/gnuradio/gr-macprotocols/build/swig/CMakeFiles/macprotocols_swig_swig_doc.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : swig/CMakeFiles/macprotocols_swig_swig_doc.dir/depend
 

@@ -34,7 +34,7 @@ macprotocols/api.h
 gnuradio/block.h
 -
 
-/home/andregomes/gr-macprotocols/build/swig/macprotocols_swigPYTHON_wrap.cxx
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols_swigPYTHON_wrap.cxx
 Python.h
 -
 Python.h
@@ -46,7 +46,7 @@ stdexcept
 string
 -
 gnuradio_swig_bug_workaround.h
-/home/andregomes/gr-macprotocols/build/swig/gnuradio_swig_bug_workaround.h
+/home/gnuradio/gr-macprotocols/build/swig/gnuradio_swig_bug_workaround.h
 cstddef
 -
 stdexcept
@@ -80,13 +80,13 @@ gnuradio/high_res_timer.h
 limits.h
 -
 macprotocols/csma_ca.h
-/home/andregomes/gr-macprotocols/build/swig/macprotocols/csma_ca.h
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols/csma_ca.h
 macprotocols/cs.h
-/home/andregomes/gr-macprotocols/build/swig/macprotocols/cs.h
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols/cs.h
 macprotocols/ack_gen.h
-/home/andregomes/gr-macprotocols/build/swig/macprotocols/ack_gen.h
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols/ack_gen.h
 macprotocols/frame_buffer.h
-/home/andregomes/gr-macprotocols/build/swig/macprotocols/frame_buffer.h
+/home/gnuradio/gr-macprotocols/build/swig/macprotocols/frame_buffer.h
 float.h
 -
 math.h

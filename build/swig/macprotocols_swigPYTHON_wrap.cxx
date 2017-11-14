@@ -4462,6 +4462,212 @@ SWIG_CanCastAsInteger(double *d, double min, double max) {
 
 
 SWIGINTERN int
+SWIG_AsVal_unsigned_SS_long (PyObject *obj, unsigned long *val) 
+{
+#if PY_VERSION_HEX < 0x03000000
+  if (PyInt_Check(obj)) {
+    long v = PyInt_AsLong(obj);
+    if (v >= 0) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      return SWIG_OverflowError;
+    }
+  } else
+#endif
+  if (PyLong_Check(obj)) {
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+      return SWIG_OverflowError;
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, ULONG_MAX)) {
+	if (val) *val = (unsigned long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_char (PyObject * obj, unsigned char *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v > UCHAR_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< unsigned char >(v);
+    }
+  }  
+  return res;
+}
+
+
+SWIGINTERNINLINE PyObject* 
+SWIG_From_unsigned_SS_long  (unsigned long value)
+{
+  return (value > LONG_MAX) ?
+    PyLong_FromUnsignedLong(value) : PyLong_FromLong(static_cast< long >(value)); 
+}
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_unsigned_SS_char  (unsigned char value)
+{    
+  return SWIG_From_unsigned_SS_long  (value);
+}
+
+
+namespace swig {
+  template <> struct traits< unsigned char > {
+    typedef value_category category;
+    static const char* type_name() { return"unsigned char"; }
+  };
+  template <>  struct traits_asval< unsigned char > {
+    typedef unsigned char value_type;
+    static int asval(PyObject *obj, value_type *val) {
+      return SWIG_AsVal_unsigned_SS_char (obj, val);
+    }
+  };
+  template <>  struct traits_from< unsigned char > {
+    typedef unsigned char value_type;
+    static PyObject *from(const value_type& val) {
+      return SWIG_From_unsigned_SS_char  (val);
+    }
+  };
+}
+
+
+namespace swig {
+  template <class SwigPySeq, class Seq>
+  inline void
+  assign(const SwigPySeq& swigpyseq, Seq* seq) {
+    // seq->assign(swigpyseq.begin(), swigpyseq.end()); // not used as not always implemented
+    typedef typename SwigPySeq::value_type value_type;
+    typename SwigPySeq::const_iterator it = swigpyseq.begin();
+    for (;it != swigpyseq.end(); ++it) {
+      seq->insert(seq->end(),(value_type)(*it));
+    }
+  }
+
+  template <class Seq, class T = typename Seq::value_type >
+  struct traits_asptr_stdseq {
+    typedef Seq sequence;
+    typedef T value_type;
+
+    static int asptr(PyObject *obj, sequence **seq) {
+      if (obj == Py_None || SWIG_Python_GetSwigThis(obj)) {
+	sequence *p;
+	if (::SWIG_ConvertPtr(obj,(void**)&p,
+			      swig::type_info<sequence>(),0) == SWIG_OK) {
+	  if (seq) *seq = p;
+	  return SWIG_OLDOBJ;
+	}
+      } else if (PySequence_Check(obj)) {
+	try {
+	  SwigPySequence_Cont<value_type> swigpyseq(obj);
+	  if (seq) {
+	    sequence *pseq = new sequence();
+	    assign(swigpyseq, pseq);
+	    *seq = pseq;
+	    return SWIG_NEWOBJ;
+	  } else {
+	    return swigpyseq.check() ? SWIG_OK : SWIG_ERROR;
+	  }
+	} catch (std::exception& e) {
+	  if (seq) {
+	    if (!PyErr_Occurred()) {
+	      PyErr_SetString(PyExc_TypeError, e.what());
+	    }
+	  }
+	  return SWIG_ERROR;
+	}
+      }
+      return SWIG_ERROR;
+    }
+  };
+
+  template <class Seq, class T = typename Seq::value_type >
+  struct traits_from_stdseq {
+    typedef Seq sequence;
+    typedef T value_type;
+    typedef typename Seq::size_type size_type;
+    typedef typename sequence::const_iterator const_iterator;
+
+    static PyObject *from(const sequence& seq) {
+#ifdef SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS
+      swig_type_info *desc = swig::type_info<sequence>();
+      if (desc && desc->clientdata) {
+	return SWIG_NewPointerObj(new sequence(seq), desc, SWIG_POINTER_OWN);
+      }
+#endif
+      size_type size = seq.size();
+      if (size <= (size_type)INT_MAX) {
+	PyObject *obj = PyTuple_New((Py_ssize_t)size);
+	Py_ssize_t i = 0;
+	for (const_iterator it = seq.begin(); it != seq.end(); ++it, ++i) {
+	  PyTuple_SetItem(obj,i,swig::from<value_type>(*it));
+	}
+	return obj;
+      } else {
+	PyErr_SetString(PyExc_OverflowError,"sequence size not valid in python");
+	return NULL;
+      }
+    }
+  };
+}
+
+
+  namespace swig {
+    template <class T>
+    struct traits_asptr<std::vector<T> >  {
+      static int asptr(PyObject *obj, std::vector<T> **vec) {
+	return traits_asptr_stdseq<std::vector<T> >::asptr(obj, vec);
+      }
+    };
+    
+    template <class T>
+    struct traits_from<std::vector<T> > {
+      static PyObject *from(const std::vector<T>& vec) {
+	return traits_from_stdseq<std::vector<T> >::from(vec);
+      }
+    };
+  }
+
+
+      namespace swig {
+	template <>  struct traits<std::vector< unsigned char, std::allocator< unsigned char > > > {
+	  typedef pointer_category category;
+	  static const char* type_name() {
+	    return "std::vector<" "unsigned char" "," "std::allocator< unsigned char >" " >";
+	  }
+	};
+      }
+    
+
+SWIGINTERN int
 SWIG_AsVal_long (PyObject *obj, long* val)
 {
 #if PY_VERSION_HEX < 0x03000000
@@ -4520,58 +4726,24 @@ SWIG_AsVal_int (PyObject * obj, int *val)
 }
 
 
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
 SWIGINTERNINLINE PyObject*
   SWIG_From_unsigned_SS_int  (unsigned int value)
 {
   return PyInt_FromSize_t((size_t) value);
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_long (PyObject *obj, unsigned long *val) 
-{
-#if PY_VERSION_HEX < 0x03000000
-  if (PyInt_Check(obj)) {
-    long v = PyInt_AsLong(obj);
-    if (v >= 0) {
-      if (val) *val = v;
-      return SWIG_OK;
-    } else {
-      return SWIG_OverflowError;
-    }
-  } else
-#endif
-  if (PyLong_Check(obj)) {
-    unsigned long v = PyLong_AsUnsignedLong(obj);
-    if (!PyErr_Occurred()) {
-      if (val) *val = v;
-      return SWIG_OK;
-    } else {
-      PyErr_Clear();
-      return SWIG_OverflowError;
-    }
-  }
-#ifdef SWIG_PYTHON_CAST_MODE
-  {
-    int dispatch = 0;
-    unsigned long v = PyLong_AsUnsignedLong(obj);
-    if (!PyErr_Occurred()) {
-      if (val) *val = v;
-      return SWIG_AddCast(SWIG_OK);
-    } else {
-      PyErr_Clear();
-    }
-    if (!dispatch) {
-      double d;
-      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
-      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, ULONG_MAX)) {
-	if (val) *val = (unsigned long)(d);
-	return res;
-      }
-    }
-  }
-#endif
-  return SWIG_TypeError;
 }
 
 
@@ -4678,103 +4850,6 @@ namespace swig {
     }
   };
 }
-
-
-namespace swig {
-  template <class SwigPySeq, class Seq>
-  inline void
-  assign(const SwigPySeq& swigpyseq, Seq* seq) {
-    // seq->assign(swigpyseq.begin(), swigpyseq.end()); // not used as not always implemented
-    typedef typename SwigPySeq::value_type value_type;
-    typename SwigPySeq::const_iterator it = swigpyseq.begin();
-    for (;it != swigpyseq.end(); ++it) {
-      seq->insert(seq->end(),(value_type)(*it));
-    }
-  }
-
-  template <class Seq, class T = typename Seq::value_type >
-  struct traits_asptr_stdseq {
-    typedef Seq sequence;
-    typedef T value_type;
-
-    static int asptr(PyObject *obj, sequence **seq) {
-      if (obj == Py_None || SWIG_Python_GetSwigThis(obj)) {
-	sequence *p;
-	if (::SWIG_ConvertPtr(obj,(void**)&p,
-			      swig::type_info<sequence>(),0) == SWIG_OK) {
-	  if (seq) *seq = p;
-	  return SWIG_OLDOBJ;
-	}
-      } else if (PySequence_Check(obj)) {
-	try {
-	  SwigPySequence_Cont<value_type> swigpyseq(obj);
-	  if (seq) {
-	    sequence *pseq = new sequence();
-	    assign(swigpyseq, pseq);
-	    *seq = pseq;
-	    return SWIG_NEWOBJ;
-	  } else {
-	    return swigpyseq.check() ? SWIG_OK : SWIG_ERROR;
-	  }
-	} catch (std::exception& e) {
-	  if (seq) {
-	    if (!PyErr_Occurred()) {
-	      PyErr_SetString(PyExc_TypeError, e.what());
-	    }
-	  }
-	  return SWIG_ERROR;
-	}
-      }
-      return SWIG_ERROR;
-    }
-  };
-
-  template <class Seq, class T = typename Seq::value_type >
-  struct traits_from_stdseq {
-    typedef Seq sequence;
-    typedef T value_type;
-    typedef typename Seq::size_type size_type;
-    typedef typename sequence::const_iterator const_iterator;
-
-    static PyObject *from(const sequence& seq) {
-#ifdef SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS
-      swig_type_info *desc = swig::type_info<sequence>();
-      if (desc && desc->clientdata) {
-	return SWIG_NewPointerObj(new sequence(seq), desc, SWIG_POINTER_OWN);
-      }
-#endif
-      size_type size = seq.size();
-      if (size <= (size_type)INT_MAX) {
-	PyObject *obj = PyTuple_New((Py_ssize_t)size);
-	Py_ssize_t i = 0;
-	for (const_iterator it = seq.begin(); it != seq.end(); ++it, ++i) {
-	  PyTuple_SetItem(obj,i,swig::from<value_type>(*it));
-	}
-	return obj;
-      } else {
-	PyErr_SetString(PyExc_OverflowError,"sequence size not valid in python");
-	return NULL;
-      }
-    }
-  };
-}
-
-
-  namespace swig {
-    template <class T>
-    struct traits_asptr<std::vector<T> >  {
-      static int asptr(PyObject *obj, std::vector<T> **vec) {
-	return traits_asptr_stdseq<std::vector<T> >::asptr(obj, vec);
-      }
-    };
-    
-    template <class T>
-    struct traits_from<std::vector<T> > {
-      static PyObject *from(const std::vector<T>& vec) {
-	return traits_from_stdseq<std::vector<T> >::from(vec);
-      }
-    };
-  }
 
 
       namespace swig {
@@ -5092,33 +5167,43 @@ fail:
 
 SWIGINTERN PyObject *_wrap_csma_ca_make(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
-  int arg1 ;
+  std::vector< uint8_t,std::allocator< uint8_t > > arg1 ;
   int arg2 ;
   int arg3 ;
   int arg4 ;
-  int val1 ;
-  int ecode1 = 0 ;
+  int arg5 ;
+  bool arg6 ;
   int val2 ;
   int ecode2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
+  bool val6 ;
+  int ecode6 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
   char *  kwnames[] = {
-    (char *) "slot_time",(char *) "sifs",(char *) "difs",(char *) "alpha", NULL 
+    (char *) "src_mac",(char *) "slot_time",(char *) "sifs",(char *) "difs",(char *) "alpha",(char *) "debug", NULL 
   };
   gr::macprotocols::csma_ca::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOO:csma_ca_make",kwnames,&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "csma_ca_make" "', argument " "1"" of type '" "int""'");
-  } 
-  arg1 = static_cast< int >(val1);
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOOOO:csma_ca_make",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4,&obj5)) SWIG_fail;
+  {
+    std::vector< unsigned char,std::allocator< unsigned char > > *ptr = (std::vector< unsigned char,std::allocator< unsigned char > > *)0;
+    int res = swig::asptr(obj0, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "csma_ca_make" "', argument " "1"" of type '" "std::vector< uint8_t,std::allocator< uint8_t > >""'"); 
+    }
+    arg1 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
   ecode2 = SWIG_AsVal_int(obj1, &val2);
   if (!SWIG_IsOK(ecode2)) {
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "csma_ca_make" "', argument " "2"" of type '" "int""'");
@@ -5134,9 +5219,19 @@ SWIGINTERN PyObject *_wrap_csma_ca_make(PyObject *SWIGUNUSEDPARM(self), PyObject
     SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "csma_ca_make" "', argument " "4"" of type '" "int""'");
   } 
   arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "csma_ca_make" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
+  ecode6 = SWIG_AsVal_bool(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "csma_ca_make" "', argument " "6"" of type '" "bool""'");
+  } 
+  arg6 = static_cast< bool >(val6);
   {
     try {
-      result = gr::macprotocols::csma_ca::make(arg1,arg2,arg3,arg4);
+      result = gr::macprotocols::csma_ca::make(arg1,arg2,arg3,arg4,arg5,arg6);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -5351,41 +5446,51 @@ fail:
 SWIGINTERN PyObject *_wrap_csma_ca_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyObject *args, PyObject *kwargs) {
   PyObject *resultobj = 0;
   boost::shared_ptr< gr::macprotocols::csma_ca > *arg1 = (boost::shared_ptr< gr::macprotocols::csma_ca > *) 0 ;
-  int arg2 ;
+  std::vector< uint8_t,std::allocator< uint8_t > > arg2 ;
   int arg3 ;
   int arg4 ;
   int arg5 ;
+  int arg6 ;
+  bool arg7 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
   int val4 ;
   int ecode4 = 0 ;
   int val5 ;
   int ecode5 = 0 ;
+  int val6 ;
+  int ecode6 = 0 ;
+  bool val7 ;
+  int ecode7 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
   PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "slot_time",(char *) "sifs",(char *) "difs",(char *) "alpha", NULL 
+    (char *) "self",(char *) "src_mac",(char *) "slot_time",(char *) "sifs",(char *) "difs",(char *) "alpha",(char *) "debug", NULL 
   };
   gr::macprotocols::csma_ca::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOOO:csma_ca_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOOOOO:csma_ca_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_boost__shared_ptrT_gr__macprotocols__csma_ca_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "csma_ca_sptr_make" "', argument " "1"" of type '" "boost::shared_ptr< gr::macprotocols::csma_ca > *""'"); 
   }
   arg1 = reinterpret_cast< boost::shared_ptr< gr::macprotocols::csma_ca > * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "csma_ca_sptr_make" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
+  {
+    std::vector< unsigned char,std::allocator< unsigned char > > *ptr = (std::vector< unsigned char,std::allocator< unsigned char > > *)0;
+    int res = swig::asptr(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "csma_ca_sptr_make" "', argument " "2"" of type '" "std::vector< uint8_t,std::allocator< uint8_t > >""'"); 
+    }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
   ecode3 = SWIG_AsVal_int(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "csma_ca_sptr_make" "', argument " "3"" of type '" "int""'");
@@ -5401,9 +5506,19 @@ SWIGINTERN PyObject *_wrap_csma_ca_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyO
     SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "csma_ca_sptr_make" "', argument " "5"" of type '" "int""'");
   } 
   arg5 = static_cast< int >(val5);
+  ecode6 = SWIG_AsVal_int(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "csma_ca_sptr_make" "', argument " "6"" of type '" "int""'");
+  } 
+  arg6 = static_cast< int >(val6);
+  ecode7 = SWIG_AsVal_bool(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "csma_ca_sptr_make" "', argument " "7"" of type '" "bool""'");
+  } 
+  arg7 = static_cast< bool >(val7);
   {
     try {
-      result = (*arg1)->make(arg2,arg3,arg4,arg5);
+      result = (*arg1)->make(arg2,arg3,arg4,arg5,arg6,arg7);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8322,18 +8437,22 @@ SWIGINTERN PyObject *_wrap_cs_make(PyObject *SWIGUNUSEDPARM(self), PyObject *arg
   PyObject *resultobj = 0;
   int arg1 ;
   int arg2 ;
+  int arg3 ;
   int val1 ;
   int ecode1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
   char *  kwnames[] = {
-    (char *) "num_samples",(char *) "gain", NULL 
+    (char *) "num_samples",(char *) "gain",(char *) "debug", NULL 
   };
   gr::macprotocols::cs::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OO:cs_make",kwnames,&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOO:cs_make",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
   ecode1 = SWIG_AsVal_int(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "cs_make" "', argument " "1"" of type '" "int""'");
@@ -8344,9 +8463,14 @@ SWIGINTERN PyObject *_wrap_cs_make(PyObject *SWIGUNUSEDPARM(self), PyObject *arg
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "cs_make" "', argument " "2"" of type '" "int""'");
   } 
   arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "cs_make" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
   {
     try {
-      result = gr::macprotocols::cs::make(arg1,arg2);
+      result = gr::macprotocols::cs::make(arg1,arg2,arg3);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8563,21 +8687,25 @@ SWIGINTERN PyObject *_wrap_cs_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyObject
   boost::shared_ptr< gr::macprotocols::cs > *arg1 = (boost::shared_ptr< gr::macprotocols::cs > *) 0 ;
   int arg2 ;
   int arg3 ;
+  int arg4 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int val2 ;
   int ecode2 = 0 ;
   int val3 ;
   int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "num_samples",(char *) "gain", NULL 
+    (char *) "self",(char *) "num_samples",(char *) "gain",(char *) "debug", NULL 
   };
   gr::macprotocols::cs::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOO:cs_sptr_make",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOO:cs_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_boost__shared_ptrT_gr__macprotocols__cs_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "cs_sptr_make" "', argument " "1"" of type '" "boost::shared_ptr< gr::macprotocols::cs > *""'"); 
@@ -8593,9 +8721,14 @@ SWIGINTERN PyObject *_wrap_cs_sptr_make(PyObject *SWIGUNUSEDPARM(self), PyObject
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "cs_sptr_make" "', argument " "3"" of type '" "int""'");
   } 
   arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "cs_sptr_make" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
   {
     try {
-      result = (*arg1)->make(arg2,arg3);
+      result = (*arg1)->make(arg2,arg3,arg4);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -17840,7 +17973,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"high_res_timer_now_perfmon", _wrap_high_res_timer_now_perfmon, METH_VARARGS, (char *)"high_res_timer_now_perfmon() -> gr::high_res_timer_type"},
 	 { (char *)"high_res_timer_tps", _wrap_high_res_timer_tps, METH_VARARGS, (char *)"high_res_timer_tps() -> gr::high_res_timer_type"},
 	 { (char *)"high_res_timer_epoch", _wrap_high_res_timer_epoch, METH_VARARGS, (char *)"high_res_timer_epoch() -> gr::high_res_timer_type"},
-	 { (char *)"csma_ca_make", (PyCFunction) _wrap_csma_ca_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_make(int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"},
+	 { (char *)"csma_ca_make", (PyCFunction) _wrap_csma_ca_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_make(std::vector< uint8_t,std::allocator< uint8_t > > src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) -> csma_ca_sptr"},
 	 { (char *)"delete_csma_ca", _wrap_delete_csma_ca, METH_VARARGS, (char *)"delete_csma_ca(csma_ca self)"},
 	 { (char *)"csma_ca_swigregister", csma_ca_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_csma_ca_sptr", _wrap_new_csma_ca_sptr, METH_VARARGS, (char *)"\n"
@@ -17849,7 +17982,7 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"csma_ca_sptr___deref__", _wrap_csma_ca_sptr___deref__, METH_VARARGS, (char *)"csma_ca_sptr___deref__(csma_ca_sptr self) -> csma_ca"},
 	 { (char *)"delete_csma_ca_sptr", _wrap_delete_csma_ca_sptr, METH_VARARGS, (char *)"delete_csma_ca_sptr(csma_ca_sptr self)"},
-	 { (char *)"csma_ca_sptr_make", (PyCFunction) _wrap_csma_ca_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_sptr_make(csma_ca_sptr self, int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"},
+	 { (char *)"csma_ca_sptr_make", (PyCFunction) _wrap_csma_ca_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_sptr_make(csma_ca_sptr self, std::vector< uint8_t,std::allocator< uint8_t > > src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) -> csma_ca_sptr"},
 	 { (char *)"csma_ca_sptr_history", _wrap_csma_ca_sptr_history, METH_VARARGS, (char *)"csma_ca_sptr_history(csma_ca_sptr self) -> unsigned int"},
 	 { (char *)"csma_ca_sptr_declare_sample_delay", _wrap_csma_ca_sptr_declare_sample_delay, METH_VARARGS, (char *)"\n"
 		"declare_sample_delay(int which, int delay)\n"
@@ -17933,7 +18066,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"csma_ca_sptr_message_ports_out", _wrap_csma_ca_sptr_message_ports_out, METH_VARARGS, (char *)"csma_ca_sptr_message_ports_out(csma_ca_sptr self) -> swig_int_ptr"},
 	 { (char *)"csma_ca_sptr_message_subscribers", (PyCFunction) _wrap_csma_ca_sptr_message_subscribers, METH_VARARGS | METH_KEYWORDS, (char *)"csma_ca_sptr_message_subscribers(csma_ca_sptr self, swig_int_ptr which_port) -> swig_int_ptr"},
 	 { (char *)"csma_ca_sptr_swigregister", csma_ca_sptr_swigregister, METH_VARARGS, NULL},
-	 { (char *)"cs_make", (PyCFunction) _wrap_cs_make, METH_VARARGS | METH_KEYWORDS, (char *)"cs_make(int num_samples, int gain) -> cs_sptr"},
+	 { (char *)"cs_make", (PyCFunction) _wrap_cs_make, METH_VARARGS | METH_KEYWORDS, (char *)"cs_make(int num_samples, int gain, int debug) -> cs_sptr"},
 	 { (char *)"delete_cs", _wrap_delete_cs, METH_VARARGS, (char *)"delete_cs(cs self)"},
 	 { (char *)"cs_swigregister", cs_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_cs_sptr", _wrap_new_cs_sptr, METH_VARARGS, (char *)"\n"
@@ -17942,7 +18075,7 @@ static PyMethodDef SwigMethods[] = {
 		""},
 	 { (char *)"cs_sptr___deref__", _wrap_cs_sptr___deref__, METH_VARARGS, (char *)"cs_sptr___deref__(cs_sptr self) -> cs"},
 	 { (char *)"delete_cs_sptr", _wrap_delete_cs_sptr, METH_VARARGS, (char *)"delete_cs_sptr(cs_sptr self)"},
-	 { (char *)"cs_sptr_make", (PyCFunction) _wrap_cs_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"cs_sptr_make(cs_sptr self, int num_samples, int gain) -> cs_sptr"},
+	 { (char *)"cs_sptr_make", (PyCFunction) _wrap_cs_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"cs_sptr_make(cs_sptr self, int num_samples, int gain, int debug) -> cs_sptr"},
 	 { (char *)"cs_sptr_history", _wrap_cs_sptr_history, METH_VARARGS, (char *)"cs_sptr_history(cs_sptr self) -> unsigned int"},
 	 { (char *)"cs_sptr_declare_sample_delay", _wrap_cs_sptr_declare_sample_delay, METH_VARARGS, (char *)"\n"
 		"declare_sample_delay(int which, int delay)\n"

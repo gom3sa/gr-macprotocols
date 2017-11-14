@@ -124,9 +124,9 @@ class csma_ca(object):
         raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
 
-    def make(slot_time, sifs, difs, alpha):
-        """make(int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"""
-        return _macprotocols_swig.csma_ca_make(slot_time, sifs, difs, alpha)
+    def make(src_mac, slot_time, sifs, difs, alpha, debug):
+        """make(std::vector< uint8_t,std::allocator< uint8_t > > src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) -> csma_ca_sptr"""
+        return _macprotocols_swig.csma_ca_make(src_mac, slot_time, sifs, difs, alpha, debug)
 
     make = staticmethod(make)
     __swig_destroy__ = _macprotocols_swig.delete_csma_ca
@@ -134,9 +134,9 @@ class csma_ca(object):
 csma_ca_swigregister = _macprotocols_swig.csma_ca_swigregister
 csma_ca_swigregister(csma_ca)
 
-def csma_ca_make(slot_time, sifs, difs, alpha):
-    """csma_ca_make(int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"""
-    return _macprotocols_swig.csma_ca_make(slot_time, sifs, difs, alpha)
+def csma_ca_make(src_mac, slot_time, sifs, difs, alpha, debug):
+    """csma_ca_make(std::vector< uint8_t,std::allocator< uint8_t > > src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) -> csma_ca_sptr"""
+    return _macprotocols_swig.csma_ca_make(src_mac, slot_time, sifs, difs, alpha, debug)
 
 class csma_ca_sptr(object):
     """Proxy of C++ boost::shared_ptr<(gr::macprotocols::csma_ca)> class."""
@@ -162,9 +162,9 @@ class csma_ca_sptr(object):
     __swig_destroy__ = _macprotocols_swig.delete_csma_ca_sptr
     __del__ = lambda self: None
 
-    def make(self, slot_time, sifs, difs, alpha):
-        """make(csma_ca_sptr self, int slot_time, int sifs, int difs, int alpha) -> csma_ca_sptr"""
-        return _macprotocols_swig.csma_ca_sptr_make(self, slot_time, sifs, difs, alpha)
+    def make(self, src_mac, slot_time, sifs, difs, alpha, debug):
+        """make(csma_ca_sptr self, std::vector< uint8_t,std::allocator< uint8_t > > src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) -> csma_ca_sptr"""
+        return _macprotocols_swig.csma_ca_sptr_make(self, src_mac, slot_time, sifs, difs, alpha, debug)
 
 
     def history(self):
@@ -484,9 +484,9 @@ class cs(object):
         raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
 
-    def make(num_samples, gain):
-        """make(int num_samples, int gain) -> cs_sptr"""
-        return _macprotocols_swig.cs_make(num_samples, gain)
+    def make(num_samples, gain, debug):
+        """make(int num_samples, int gain, int debug) -> cs_sptr"""
+        return _macprotocols_swig.cs_make(num_samples, gain, debug)
 
     make = staticmethod(make)
     __swig_destroy__ = _macprotocols_swig.delete_cs
@@ -494,9 +494,9 @@ class cs(object):
 cs_swigregister = _macprotocols_swig.cs_swigregister
 cs_swigregister(cs)
 
-def cs_make(num_samples, gain):
-    """cs_make(int num_samples, int gain) -> cs_sptr"""
-    return _macprotocols_swig.cs_make(num_samples, gain)
+def cs_make(num_samples, gain, debug):
+    """cs_make(int num_samples, int gain, int debug) -> cs_sptr"""
+    return _macprotocols_swig.cs_make(num_samples, gain, debug)
 
 class cs_sptr(object):
     """Proxy of C++ boost::shared_ptr<(gr::macprotocols::cs)> class."""
@@ -522,9 +522,9 @@ class cs_sptr(object):
     __swig_destroy__ = _macprotocols_swig.delete_cs_sptr
     __del__ = lambda self: None
 
-    def make(self, num_samples, gain):
-        """make(cs_sptr self, int num_samples, int gain) -> cs_sptr"""
-        return _macprotocols_swig.cs_sptr_make(self, num_samples, gain)
+    def make(self, num_samples, gain, debug):
+        """make(cs_sptr self, int num_samples, int gain, int debug) -> cs_sptr"""
+        return _macprotocols_swig.cs_sptr_make(self, num_samples, gain, debug)
 
 
     def history(self):

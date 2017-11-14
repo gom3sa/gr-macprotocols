@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/andregomes/gr-macprotocols
+CMAKE_SOURCE_DIR = /home/gnuradio/gr-macprotocols
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/andregomes/gr-macprotocols/build
+CMAKE_BINARY_DIR = /home/gnuradio/gr-macprotocols/build
 
 # Utility rule file for uninstall.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/andregomes/gr-macprotocols/build
 include CMakeFiles/uninstall.dir/progress.make
 
 CMakeFiles/uninstall:
-	/usr/bin/cmake -P /home/andregomes/gr-macprotocols/build/cmake_uninstall.cmake
+	/usr/bin/cmake -P /home/gnuradio/gr-macprotocols/build/cmake_uninstall.cmake
 
 uninstall: CMakeFiles/uninstall
 uninstall: CMakeFiles/uninstall.dir/build.make
@@ -71,6 +71,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /home/andregomes/gr-macprotocols/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/andregomes/gr-macprotocols /home/andregomes/gr-macprotocols /home/andregomes/gr-macprotocols/build /home/andregomes/gr-macprotocols/build /home/andregomes/gr-macprotocols/build/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/gnuradio/gr-macprotocols/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/gnuradio/gr-macprotocols /home/gnuradio/gr-macprotocols /home/gnuradio/gr-macprotocols/build /home/gnuradio/gr-macprotocols/build /home/gnuradio/gr-macprotocols/build/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 

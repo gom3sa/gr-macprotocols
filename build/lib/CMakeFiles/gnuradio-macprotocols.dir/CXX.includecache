@@ -34,9 +34,9 @@ macprotocols/api.h
 gnuradio/block.h
 -
 
-/home/andregomes/gr-macprotocols/lib/ack_gen.cc
+/home/gnuradio/gr-macprotocols/lib/ack_gen.cc
 config.h
-/home/andregomes/gr-macprotocols/lib/config.h
+/home/gnuradio/gr-macprotocols/lib/config.h
 gnuradio/io_signature.h
 -
 macprotocols/ack_gen.h
@@ -46,15 +46,15 @@ pmt/pmt.h
 string
 -
 
-/home/andregomes/gr-macprotocols/lib/cs_impl.cc
+/home/gnuradio/gr-macprotocols/lib/cs_impl.cc
 config.h
-/home/andregomes/gr-macprotocols/lib/config.h
+/home/gnuradio/gr-macprotocols/lib/config.h
 chrono
 -
 gnuradio/io_signature.h
 -
 cs_impl.h
-/home/andregomes/gr-macprotocols/lib/cs_impl.h
+/home/gnuradio/gr-macprotocols/lib/cs_impl.h
 math.h
 -
 pmt/pmt.h
@@ -66,19 +66,19 @@ iostream
 stdlib.h
 -
 
-/home/andregomes/gr-macprotocols/lib/cs_impl.h
+/home/gnuradio/gr-macprotocols/lib/cs_impl.h
 macprotocols/cs.h
 -
 
-/home/andregomes/gr-macprotocols/lib/csma_ca.cc
+/home/gnuradio/gr-macprotocols/lib/csma_ca.cc
 config.h
-/home/andregomes/gr-macprotocols/lib/config.h
+/home/gnuradio/gr-macprotocols/lib/config.h
 gnuradio/io_signature.h
 -
 gnuradio/block_detail.h
 -
 csma_ca.h
-/home/andregomes/gr-macprotocols/lib/csma_ca.h
+/home/gnuradio/gr-macprotocols/lib/csma_ca.h
 boost/thread.hpp
 -
 unistd.h
@@ -91,8 +91,10 @@ stdlib.h
 -
 time.h
 -
+boost/crc.hpp
+-
 
-/home/andregomes/gr-macprotocols/lib/csma_ca.h
+/home/gnuradio/gr-macprotocols/lib/csma_ca.h
 macprotocols/api.h
 -
 macprotocols/csma_ca.h
@@ -104,17 +106,17 @@ pmt/pmt.h
 chrono
 -
 
-/home/andregomes/gr-macprotocols/lib/frame_buffer_impl.cc
+/home/gnuradio/gr-macprotocols/lib/frame_buffer_impl.cc
 config.h
-/home/andregomes/gr-macprotocols/lib/config.h
+/home/gnuradio/gr-macprotocols/lib/config.h
 gnuradio/io_signature.h
 -
 frame_buffer_impl.h
-/home/andregomes/gr-macprotocols/lib/frame_buffer_impl.h
+/home/gnuradio/gr-macprotocols/lib/frame_buffer_impl.h
 string.h
 -
 
-/home/andregomes/gr-macprotocols/lib/frame_buffer_impl.h
+/home/gnuradio/gr-macprotocols/lib/frame_buffer_impl.h
 macprotocols/frame_buffer.h
 -
 boost/circular_buffer.hpp

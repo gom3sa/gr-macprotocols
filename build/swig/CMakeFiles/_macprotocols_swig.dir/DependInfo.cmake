@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/andregomes/gr-macprotocols/build/swig/macprotocols_swigPYTHON_wrap.cxx" "/home/andregomes/gr-macprotocols/build/swig/CMakeFiles/_macprotocols_swig.dir/macprotocols_swigPYTHON_wrap.cxx.o"
+  "/home/gnuradio/gr-macprotocols/build/swig/macprotocols_swigPYTHON_wrap.cxx" "/home/gnuradio/gr-macprotocols/build/swig/CMakeFiles/_macprotocols_swig.dir/macprotocols_swigPYTHON_wrap.cxx.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -22,7 +22,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/andregomes/gr-macprotocols/build/lib/CMakeFiles/gnuradio-macprotocols.dir/DependInfo.cmake"
+  "/home/gnuradio/gr-macprotocols/build/lib/CMakeFiles/gnuradio-macprotocols.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.
