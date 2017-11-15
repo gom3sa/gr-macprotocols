@@ -943,7 +943,7 @@
     <key>macprotocols_csma_ca</key>
     <param>
       <key>alpha</key>
-      <value>100</value>
+      <value>50000</value>
     </param>
     <param>
       <key>alias</key>

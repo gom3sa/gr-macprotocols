@@ -103,6 +103,7 @@ class csma_ca_impl : public csma_ca {
 			while(attempts < MAX_TRIES and pr_frame_acked == false) {
 				bool ch_busy = is_channel_busy(THRESHOLD, pr_sensing_time);
 				if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame ackec? " << pr_frame_acked << std::endl << std::flush;
+				
 				if(ch_busy == false  and pr_frame_acked == false) {
 					message_port_pub(msg_port_frame_to_phy, pr_frame);
 					attempts++;
@@ -127,6 +128,7 @@ class csma_ca_impl : public csma_ca {
 
 			return false;
 
+			/* UNCOMMENT
 			if(pr_debug) std::cout << "Sending pr_sensing request to carrier sense" << std::endl << std::flush;
 			message_port_pub(msg_port_request_to_cs, pmt::string_to_symbol("threshold=" + std::to_string(threshold) + ",time=" + std::to_string(time)));
 
@@ -135,6 +137,7 @@ class csma_ca_impl : public csma_ca {
 			while(pr_sensing) pr_cond1.wait(lock);
 
 			return pr_channel_busy;
+			*/
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {

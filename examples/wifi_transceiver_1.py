@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 1
-# Generated: Tue Nov 14 18:10:07 2017
+# Generated: Wed Nov 15 11:07:35 2017
 ##################################################
 
 import os
@@ -91,13 +91,11 @@ class wifi_transceiver_1(gr.top_block):
         (self.foo_packet_pad2_0_0).set_min_output_buffer(100000)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
-        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52001", 10000, False)
         self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", "", "52000", 10000, False)
         self.blocks_multiply_const_vxx_0_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0_0).set_min_output_buffer(100000)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
-        self.blocks_message_strobe_0_0_0 = blocks.message_strobe(pmt.intern("".join("a" for i in range(pdu_length))), interval)
         self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("".join("a" for i in range(pdu_length))), interval)
         self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi.pcap", True)
         self.blocks_file_sink_0_1.set_unbuffered(True)
@@ -112,9 +110,7 @@ class wifi_transceiver_1(gr.top_block):
         # Connections
         ##################################################
         self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.blocks_message_strobe_0_0_0, 'strobe'), (self.ieee802_11_mac_0_0_0, 'app in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.blocks_socket_pdu_0_0, 'pdus'), (self.ieee802_11_mac_0_0_0, 'app in'))    
         self.msg_connect((self.hier_block_0, 'out'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.hier_block_0_0, 'out'), (self.macprotocols_csma_ca_0_0, 'cs in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
@@ -174,7 +170,6 @@ class wifi_transceiver_1(gr.top_block):
     def set_pdu_length(self, pdu_length):
         self.pdu_length = pdu_length
         self.blocks_message_strobe_0_0.set_msg(pmt.intern("".join("a" for i in range(self.pdu_length))))
-        self.blocks_message_strobe_0_0_0.set_msg(pmt.intern("".join("a" for i in range(self.pdu_length))))
 
     def get_mac_addr2(self):
         return self.mac_addr2
@@ -200,7 +195,6 @@ class wifi_transceiver_1(gr.top_block):
     def set_interval(self, interval):
         self.interval = interval
         self.blocks_message_strobe_0_0.set_period(self.interval)
-        self.blocks_message_strobe_0_0_0.set_period(self.interval)
 
     def get_freq(self):
         return self.freq
