@@ -102,7 +102,7 @@ class csma_ca_impl : public csma_ca {
 
 			while(attempts < MAX_TRIES and pr_frame_acked == false) {
 				bool ch_busy = is_channel_busy(THRESHOLD, pr_sensing_time);
-				if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame ackec? " << pr_frame_acked << std::endl << std::flush;
+				if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_frame_acked << std::endl << std::flush;
 				
 				if(ch_busy == false  and pr_frame_acked == false) {
 					message_port_pub(msg_port_frame_to_phy, pr_frame);

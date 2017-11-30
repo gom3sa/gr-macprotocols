@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 2
-# Generated: Tue Nov 14 14:33:14 2017
+# Generated: Thu Nov 30 20:03:50 2017
 ##################################################
 
 import os
@@ -41,7 +41,7 @@ class wifi_transceiver_2(gr.top_block):
         self.mac_addr = mac_addr = [0x42, 0x42, 0x42, 0x42, 0x42, 0x42]
         self.lo_offset = lo_offset = 0
         self.interval = interval = 10e3
-        self.freq = freq = 5.89e9
+        self.freq = freq = 2.52e9
         self.encoding = encoding = 0
         self.chan_est = chan_est = 0
 
@@ -79,7 +79,7 @@ class wifi_transceiver_2(gr.top_block):
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256)
-        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 5000, True)
+        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 50000, True)
         self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, False)
         self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), (mac_dst), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
@@ -137,8 +137,8 @@ class wifi_transceiver_2(gr.top_block):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.uhd_usrp_sink_0_0.set_samp_rate(self.samp_rate)
-        self.wifi_phy_hier_0.set_bandwidth(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+        self.wifi_phy_hier_0.set_bandwidth(self.samp_rate)
 
     def get_rx_gain(self):
         return self.rx_gain
@@ -186,8 +186,8 @@ class wifi_transceiver_2(gr.top_block):
     def set_freq(self, freq):
         self.freq = freq
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
-        self.wifi_phy_hier_0.set_frequency(self.freq)
         self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
+        self.wifi_phy_hier_0.set_frequency(self.freq)
 
     def get_encoding(self):
         return self.encoding
