@@ -321,7 +321,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>750e-3</value>
+      <value>300e-3</value>
     </param>
   </block>
   <block>
@@ -375,7 +375,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>750e-3</value>
+      <value>1000e-3</value>
     </param>
   </block>
   <block>
@@ -638,6 +638,57 @@
     </param>
   </block>
   <block>
+    <key>blocks_vector_to_stream</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1044, 784)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>90</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>blocks_vector_to_stream_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>num_items</key>
+      <value>64</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+  </block>
+  <block>
     <key>foo_packet_pad2</key>
     <param>
       <key>alias</key>
@@ -791,57 +842,6 @@
     </param>
   </block>
   <block>
-    <key>hier_block</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>debug_mode</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(664, 673)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>180</value>
-    </param>
-    <param>
-      <key>gain_disc</key>
-      <value>30</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>hier_block_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>samples</key>
-      <value>64</value>
-    </param>
-  </block>
-  <block>
     <key>ieee802_11_mac</key>
     <param>
       <key>bss_mac</key>
@@ -940,6 +940,73 @@
     </param>
   </block>
   <block>
+    <key>logpwrfft_x</key>
+    <param>
+      <key>avg_alpha</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>average</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>fft_size</key>
+      <value>64</value>
+    </param>
+    <param>
+      <key>frame_rate</key>
+      <value>30</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(872, 889)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>logpwrfft_x_0</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ref_scale</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>sample_rate</key>
+      <value>samp_rate</value>
+    </param>
+  </block>
+  <block>
     <key>macprotocols_csma_ca</key>
     <param>
       <key>alpha</key>
@@ -1035,6 +1102,45 @@
     <param>
       <key>id</key>
       <value>macprotocols_frame_buffer_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>toolkit_cs</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(728, 681)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>toolkit_cs_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -3021,6 +3127,12 @@
     <sink_key>app in</sink_key>
   </connection>
   <connection>
+    <source_block_id>blocks_vector_to_stream_0</source_block_id>
+    <sink_block_id>toolkit_cs_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
     <source_block_id>foo_packet_pad2_0</source_block_id>
     <sink_block_id>uhd_usrp_sink_0_0</sink_block_id>
     <source_key>0</source_key>
@@ -3039,12 +3151,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>hier_block_0</source_block_id>
-    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
-    <source_key>out</source_key>
-    <sink_key>cs in</sink_key>
-  </connection>
-  <connection>
     <source_block_id>ieee802_11_mac_0_0</source_block_id>
     <sink_block_id>foo_wireshark_connector_0_0</sink_block_id>
     <source_key>app out</source_key>
@@ -3055,6 +3161,12 @@
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>phy out</source_key>
     <sink_key>frame in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>logpwrfft_x_0</source_block_id>
+    <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
@@ -3070,9 +3182,9 @@
   </connection>
   <connection>
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
-    <sink_block_id>hier_block_0</sink_block_id>
+    <sink_block_id>toolkit_cs_0</sink_block_id>
     <source_key>request to cs</source_key>
-    <sink_key>in</sink_key>
+    <sink_key>in_msg</sink_key>
   </connection>
   <connection>
     <source_block_id>macprotocols_frame_buffer_0</source_block_id>
@@ -3081,8 +3193,14 @@
     <sink_key>frame from buffer</sink_key>
   </connection>
   <connection>
+    <source_block_id>toolkit_cs_0</source_block_id>
+    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
+    <source_key>out_msg</source_key>
+    <sink_key>cs in</sink_key>
+  </connection>
+  <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>hier_block_0</sink_block_id>
+    <sink_block_id>logpwrfft_x_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

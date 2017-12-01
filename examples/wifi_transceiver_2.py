@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 2
-# Generated: Thu Nov 30 20:03:50 2017
+# Generated: Fri Dec  1 11:51:07 2017
 ##################################################
 
 import os
@@ -15,14 +15,15 @@ from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import uhd
 from gnuradio.eng_option import eng_option
+from gnuradio.fft import logpwrfft
 from gnuradio.filter import firdes
-from hier_block import hier_block  # grc-generated hier_block
 from optparse import OptionParser
 from wifi_phy_hier import wifi_phy_hier  # grc-generated hier_block
 import foo
 import ieee802_11
 import macprotocols
 import time
+import toolkit
 
 
 class wifi_transceiver_2(gr.top_block):
@@ -78,21 +79,26 @@ class wifi_transceiver_2(gr.top_block):
         self.uhd_usrp_sink_0_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
+        self.toolkit_cs_0 = toolkit.cs()
         self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256)
         self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 50000, True)
+        self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
+        	sample_rate=samp_rate,
+        	fft_size=64,
+        	ref_scale=2,
+        	frame_rate=30,
+        	avg_alpha=1.0,
+        	average=False,
+        )
         self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, False)
         self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), (mac_dst), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
-        self.hier_block_0 = hier_block(
-            debug_mode=1,
-            gain_disc=30,
-            samples=64,
-        )
         self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, False)
         self.foo_wireshark_connector_0 = foo.wireshark_connector(127, False)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
+        self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_float*1, 64)
         self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", "", "52000", 10000, False)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
@@ -105,21 +111,23 @@ class wifi_transceiver_2(gr.top_block):
         # Connections
         ##################################################
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.hier_block_0, 'out'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
-        self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.hier_block_0, 'in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.toolkit_cs_0, 'in_msg'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to phy'), (self.wifi_phy_hier_0, 'mac_in'))    
         self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out'), (self.macprotocols_csma_ca_0, 'frame from buffer'))    
+        self.msg_connect((self.toolkit_cs_0, 'out_msg'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.foo_wireshark_connector_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.ieee802_11_parse_mac_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.macprotocols_csma_ca_0, 'frame from phy'))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.foo_packet_pad2_0, 0))    
+        self.connect((self.blocks_vector_to_stream_0, 0), (self.toolkit_cs_0, 0))    
         self.connect((self.foo_packet_pad2_0, 0), (self.uhd_usrp_sink_0_0, 0))    
         self.connect((self.foo_wireshark_connector_0, 0), (self.blocks_file_sink_0, 0))    
         self.connect((self.foo_wireshark_connector_0_0, 0), (self.blocks_file_sink_0_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.hier_block_0, 0))    
+        self.connect((self.logpwrfft_x_0, 0), (self.blocks_vector_to_stream_0, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.logpwrfft_x_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.wifi_phy_hier_0, 0))    
         self.connect((self.wifi_phy_hier_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
 
@@ -137,8 +145,9 @@ class wifi_transceiver_2(gr.top_block):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.uhd_usrp_sink_0_0.set_samp_rate(self.samp_rate)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.wifi_phy_hier_0.set_bandwidth(self.samp_rate)
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+        self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
 
     def get_rx_gain(self):
         return self.rx_gain
@@ -186,8 +195,8 @@ class wifi_transceiver_2(gr.top_block):
     def set_freq(self, freq):
         self.freq = freq
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.wifi_phy_hier_0.set_frequency(self.freq)
+        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq, rf_freq = self.freq - self.lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
 
     def get_encoding(self):
         return self.encoding

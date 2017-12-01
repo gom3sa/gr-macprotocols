@@ -15,7 +15,7 @@
 
 #define MAX_TRIES 5
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
-#define THRESHOLD -80 // Empirical
+#define THRESHOLD -70 // Empirical
 #define AVG_BLOCK_DELAY 10 // (us)
 #define aCWmin 15
 #define aCWmax 1023
@@ -125,19 +125,22 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		bool is_channel_busy(int threshold, int time) {
-
 			return false;
+			if(pr_debug) std::cout << "Request carrier sensing for " << time << " (us)." << std::endl;
 
-			/* UNCOMMENT
-			if(pr_debug) std::cout << "Sending pr_sensing request to carrier sense" << std::endl << std::flush;
-			message_port_pub(msg_port_request_to_cs, pmt::string_to_symbol("threshold=" + std::to_string(threshold) + ",time=" + std::to_string(time)));
+			message_port_pub(msg_port_request_to_cs, pmt::string_to_symbol(std::to_string((float)time)));
 
-			pr_sensing = true; pr_channel_busy = false;
+			pr_sensing = true; 
 			boost::unique_lock<boost::mutex> lock(mu2);
 			while(pr_sensing) pr_cond1.wait(lock);
 
-			return pr_channel_busy;
-			*/
+			if(pr_debug) std::cout << "Avg power from medium = " << pr_avg_power << " (dB)." << std::endl;
+
+			if(pr_avg_power < threshold) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
@@ -176,13 +179,8 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		void cs_in(pmt::pmt_t msg) {
-			std::string str = pmt::symbol_to_string(msg);
-			if(str == "busy") {
-				pr_channel_busy = true;
-			}
-			else {
-				pr_channel_busy = false;
-			}
+			pr_avg_power = pmt::to_float(msg);
+			
 			pr_sensing = false;
 			pr_cond1.notify_all();
 		}
@@ -239,7 +237,8 @@ class csma_ca_impl : public csma_ca {
 
 	private:
 		int pr_slot_time, pr_sifs, pr_difs, pr_frame_id, pr_alpha;
-		bool pr_debug, pr_sensing, pr_channel_busy, pr_status, pr_frame_acked;
+		bool pr_debug, pr_sensing, pr_status, pr_frame_acked;
+		float pr_avg_power;
 		boost::condition_variable pr_cond1;
 		boost::mutex mu1, mu2;
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame;
