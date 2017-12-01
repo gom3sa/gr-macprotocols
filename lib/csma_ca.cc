@@ -125,7 +125,6 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		bool is_channel_busy(int threshold, int time) {
-			return false;
 			if(pr_debug) std::cout << "Request carrier sensing for " << time << " (us)." << std::endl;
 
 			message_port_pub(msg_port_request_to_cs, pmt::string_to_symbol(std::to_string((float)time)));
