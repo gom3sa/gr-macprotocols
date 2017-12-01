@@ -37,4 +37,4 @@ This feature uses C++11. If you find any errors refering to C++11 while compilin
 
 ## Contact 
 
-Feel free to reach me. My email address is andre.gomes@dcc.ufmg.br. You can also find more information about myself in [dcc.ufmg.br/~andre.gomes](dcc.ufmg.br/~andre.gomes). 
+Feel free to reach me. My email address is andre.gomes@dcc.ufmg.br. You can also find more information about myself in [https://homepages.dcc.ufmg.br/~andre.gomes](https://homepages.dcc.ufmg.br/~andre.gomes). 
