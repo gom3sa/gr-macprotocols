@@ -19,7 +19,5 @@
 
 install(FILES
     macprotocols_csma_ca.xml
-    macprotocols_cs.xml
-    macprotocols_ack_gen.xml
     macprotocols_frame_buffer.xml DESTINATION share/gnuradio/grc/blocks
 )

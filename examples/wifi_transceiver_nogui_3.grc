@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>wifi_transceiver_1</value>
+      <value>wifi_transceiver_3</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -228,7 +228,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 181)</value>
+      <value>(56, 173)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -240,7 +240,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[0x11, 0x11, 0x11, 0x11, 0x11, 0x11]</value>
+      <value>[0x13, 0x13, 0x13, 0x13, 0x13, 0x13]</value>
     </param>
   </block>
   <block>
@@ -267,7 +267,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[0x12, 0x12, 0x12, 0x12, 0x12, 0x12]</value>
+      <value>[0x11, 0x11, 0x11, 0x11, 0x11, 0x11]</value>
     </param>
   </block>
   <block>
@@ -500,7 +500,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 141)</value>
+      <value>(352, 133)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -516,7 +516,7 @@
     </param>
     <param>
       <key>msg</key>
-      <value>pmt.intern("".join("a" for i in range(pdu_length)))</value>
+      <value>pmt.intern("".join("c" for i in range(pdu_length)))</value>
     </param>
     <param>
       <key>minoutbuf</key>
@@ -551,7 +551,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 820)</value>
+      <value>(480, 812)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -657,7 +657,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1044, 784)</value>
+      <value>(1092, 760)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -720,7 +720,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 920)</value>
+      <value>(256, 872)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -975,7 +975,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 889)</value>
+      <value>(920, 865)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1010,7 +1010,7 @@
     <key>macprotocols_csma_ca</key>
     <param>
       <key>alpha</key>
-      <value>10000</value>
+      <value>50000</value>
     </param>
     <param>
       <key>alias</key>
@@ -1132,7 +1132,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 681)</value>
+      <value>(728, 673)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1823,7 +1823,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 897)</value>
+      <value>(440, 873)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2898,7 +2898,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 896)</value>
+      <value>(656, 872)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3069,7 +3069,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 760)</value>
+      <value>(672, 752)</value>
     </param>
     <param>
       <key>_rotation</key>

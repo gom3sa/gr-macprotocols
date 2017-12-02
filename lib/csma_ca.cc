@@ -1,3 +1,12 @@
+/*
+This CSMA/CA is based on IEEE Std 802.11-2016. Consult "IEEE Standard for Information Techonology - Local
+and Metropolitan Area Networks - Specific Requirements, part 11: Wireless LAN MAC and PHY Specifications"
+for more details. Although this is based on the mentioned document, you should keep in mind this is a 
+CSMA/CA flavour implementation. IEEE 802.11 implements DCF, which has slightly significant differences.
+
+Author: André Gomes, andre.gomes@dcc.ufmg.br - Winet Lab, Federal University of Minas Gerais, Brazil.
+*/
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -12,13 +21,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <boost/crc.hpp>
+#include <chrono>
 
 #define MAX_TRIES 5
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
 #define THRESHOLD -70 // Empirical
 #define AVG_BLOCK_DELAY 10 // (us)
-#define aCWmin 15
-#define aCWmax 1023
+#define aCWmin 16 // aCWmin + 1
+#define aCWmax 1024 // aCWmax + 1
 
 /* aCWm** from www.revolutionwifi.net/revolutionwifi/2010/08/wireless-qos-part-5-contention-window.html
     802.11b    aCWmin 31    aCWmax 1023
@@ -31,6 +41,8 @@
 using namespace gr::macprotocols;
 
 class csma_ca_impl : public csma_ca {
+
+	typedef std::chrono::high_resolution_clock clock;
 
 	public:
 		csma_ca_impl(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) : gr::block(
@@ -56,6 +68,8 @@ class csma_ca_impl : public csma_ca {
 			// Variables initialization
 			pr_status = false; // FALSE: iddle, no frame to send; TRUE: busy, trying to send a frame. 
 			pr_frame_acked = false; // TRUE: ack was just received. This is usefull for thread handling send_frame().
+			pr_cw = aCWmin;
+
 
 			for(int i = 0; i < 6; i++) pr_mac_addr[i] = src_mac[i];
 		}
@@ -96,31 +110,74 @@ class csma_ca_impl : public csma_ca {
 		void send_frame() {
 			if(pr_debug) std::cout << "Sending frame..." << std::endl << std::flush;
 
-			uint attempts = 0;
-			uint pr_sensing_time = pr_difs; 
-			uint cw = aCWmin*pr_alpha;
+			uint attempts = 0; // Counter for retransmission.
+			uint sensing_time = pr_difs; 
+			uint backoff = 0;
 
-			while(attempts < MAX_TRIES and pr_frame_acked == false) {
-				bool ch_busy = is_channel_busy(THRESHOLD, pr_sensing_time);
+			uint tot_attempts = 0; // This counter takes into account scenarios where the medium is busy. So, discard frame after a while.
+
+			while(attempts < MAX_TRIES and pr_frame_acked == false and tot_attempts < MAX_TRIES) {
+
+				// This call listens to the medium for "sensing_time" us. This is used for both DIFS and AIFS Backoff.
+				bool ch_busy = is_channel_busy(THRESHOLD, sensing_time);
+				
 				if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_frame_acked << std::endl << std::flush;
 				
-				if(ch_busy == false  and pr_frame_acked == false) {
+				if(ch_busy == false  and pr_frame_acked == false) { // Transmit
 					message_port_pub(msg_port_frame_to_phy, pr_frame);
 					attempts++;
-				}
-				int timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
-				if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;
-				usleep(timeout);
+
+					// Waiting for ack. Counting down for timeout.
+					int timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
+					if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;
+					auto start_time = clock::now();
+					auto end_time = clock::now();
+					float duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+					while(duration < timeout) {
+						end_time = clock::now();
+						duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+					}
+
+				} else if(ch_busy == true and pr_frame_acked == false) { // Randomize backoff, increment contention window (pr_cw).
+					// BackOffTime = Random() x aSlotTime, Random = [0, cw] where aCWmin <= cw <= aCWmax.
+					backoff = rand() % pr_cw;
+					pr_cw = pr_cw*2;
+					if(pr_cw >= aCWmax) pr_cw = aCWmax;
+
+					sensing_time = backoff*pr_slot_time;
+
+					if(pr_debug) std::cout << "Randomize backoff. Current value = " << sensing_time << " (us)." << std::endl << std::flush;
+
+				} /*
+					IF YOU UNCOMMENT this part, make sure to replace "sensing_time = backoff*pr_slot_time" to "sensing_time = pr_slot_time" on line above.
+						ALSO, add "and backoff <= 0" on the first if (skip debug one). REASON for letting it the way it is: checking medium
+						by a slottime at time maybe inefficient while doing carrier sensing due to timing constraints. Really hard to keep 
+						precision in such a small time window.
+
+					else if(ch_busy == false and pr_frame_acked == false and backoff > 0) { // Decrement backoff
+					backoff--;
+					if(backoff <= 0) {
+						backoff = 0;
+						sensing_time = 0;
+					} else {
+						sensing_time = pr_slot_time;
+					}
+
+					if(pr_debug) std::cout << "Decrement backoff. Current value = " << sensing_time*backoff << " (us)." << std::endl;
+				}*/
+
+				tot_attempts++;
 			}
 
 			if(pr_frame_acked) {
+				pr_cw = aCWmin; // Sucessful transmission. So, reset contention window.
 				if(pr_debug) std::cout << "Frame acked properly!" << std::endl << std::flush;
-			}
-			else if(attempts >= MAX_TRIES) {
+			} else if(attempts >= MAX_TRIES) {
 				if(pr_debug) std::cout << "Max number of retries exceeded. Frame dropped!" << std::endl << std::flush;
+			} else if(tot_attempts == MAX_TRIES) {
+				if(pr_debug) std::cout << "Medium is too busy. Frame dropped!" << std::endl << std::flush;
 			}
 
-			// TODO: 1) implementation of backoff, 2) implementation of ack arrival function, 3) implementation of send_ack()
 			pr_status = false;
 		}
 
@@ -143,8 +200,7 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
-			// TODO: Check if it is: 1) an ack, 2) a frame
-			// If an ack
+			// TODO: Check other types of frames.
 
 			uint8_t tof = type_of_frame(frame);
 
@@ -236,6 +292,7 @@ class csma_ca_impl : public csma_ca {
 
 	private:
 		int pr_slot_time, pr_sifs, pr_difs, pr_frame_id, pr_alpha;
+		uint pr_cw;
 		bool pr_debug, pr_sensing, pr_status, pr_frame_acked;
 		float pr_avg_power;
 		boost::condition_variable pr_cond1;
