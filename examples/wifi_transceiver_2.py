@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 2
-# Generated: Sat Dec  2 10:07:21 2017
+# Generated: Sat Dec  2 13:41:22 2017
 ##################################################
 
 import os
@@ -39,7 +39,7 @@ class wifi_transceiver_2(gr.top_block):
         self.samp_rate = samp_rate = 5e6
         self.rx_gain = rx_gain = 500e-3
         self.pdu_length = pdu_length = 500
-        self.mac_dst = mac_dst = [0x11, 0x11, 0x11, 0x11, 0x11, 0x11]
+        self.mac_dst = mac_dst = [0x13, 0x13, 0x13, 0x13, 0x13, 0x13]
         self.mac_addr = mac_addr = [0x12, 0x12, 0x12, 0x12, 0x12, 0x12]
         self.lo_offset = lo_offset = 0
         self.interval = interval = 1e3
@@ -82,7 +82,7 @@ class wifi_transceiver_2(gr.top_block):
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.toolkit_cs_0 = toolkit.cs()
         self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256)
-        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 50000, True)
+        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 1000, True)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
         	fft_size=64,
@@ -91,7 +91,7 @@ class wifi_transceiver_2(gr.top_block):
         	avg_alpha=1.0,
         	average=False,
         )
-        self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, True)
+        self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, False)
         self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), (mac_dst), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
@@ -104,9 +104,9 @@ class wifi_transceiver_2(gr.top_block):
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
         self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("".join("b" for i in range(pdu_length))), interval)
-        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi.pcap", True)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi_rx.pcap", False)
         self.blocks_file_sink_0_0.set_unbuffered(True)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi.pcap", True)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi_rx_all.pcap", False)
         self.blocks_file_sink_0.set_unbuffered(True)
 
         ##################################################
@@ -116,6 +116,7 @@ class wifi_transceiver_2(gr.top_block):
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.ieee802_11_mac_0_0, 'phy in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.toolkit_cs_0, 'in_msg'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to phy'), (self.wifi_phy_hier_0, 'mac_in'))    

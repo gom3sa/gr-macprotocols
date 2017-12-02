@@ -86,6 +86,12 @@
        * optional (set to 1 for optional inputs) -->
 
   <source>
+    <name>frame to app</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
     <name>frame to phy</name>
     <type>message</type>
     <optional>1</optional>

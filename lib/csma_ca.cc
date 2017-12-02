@@ -64,6 +64,7 @@ class csma_ca_impl : public csma_ca {
 			message_port_register_out(msg_port_frame_to_phy);
 			message_port_register_out(msg_port_frame_request);
 			message_port_register_out(msg_port_request_to_cs);
+			message_port_register_out(msg_port_frame_to_app);
 
 			// Variables initialization
 			pr_status = false; // FALSE: iddle, no frame to send; TRUE: busy, trying to send a frame. 
@@ -227,6 +228,7 @@ class csma_ca_impl : public csma_ca {
 				if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
 				pmt::pmt_t ack = generate_ack_frame(frame);
 				message_port_pub(msg_port_frame_to_phy, ack);
+				message_port_pub(msg_port_frame_to_app, frame);
 			}
 			else {
 				if(pr_debug) std::cout << "Unkown frame type." << std::endl << std::flush;
@@ -308,6 +310,7 @@ class csma_ca_impl : public csma_ca {
 		pmt::pmt_t msg_port_frame_to_phy = pmt::mp("frame to phy");
 		pmt::pmt_t msg_port_frame_request = pmt::mp("frame request");
 		pmt::pmt_t msg_port_request_to_cs = pmt::mp("request to cs");
+		pmt::pmt_t msg_port_frame_to_app = pmt::mp("frame to app");
 
 		// MAC addr 
 		uint8_t pr_mac_addr[6];
