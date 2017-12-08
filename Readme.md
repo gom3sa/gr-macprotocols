@@ -35,6 +35,10 @@ This feature uses C++11. If you find any errors refering to C++11 while compilin
 `sudo ldconfig` <br />
 `grcc ../examples/cs.grc`
 
+## Examples
+
+Examples are provided and can be found in folder `examples`. I suggest you to open files `wifi_transceiver_nogui_*.grc` in Gnu Radio Companion and have a look at it. These are ready-to-go examples of transcievers with Medium Access Control. 
+
 ## Contact 
 
 Feel free to reach me. My email address is andre.gomes@dcc.ufmg.br. You can also find more information about myself in [https://homepages.dcc.ufmg.br/~andre.gomes](https://homepages.dcc.ufmg.br/~andre.gomes). 
