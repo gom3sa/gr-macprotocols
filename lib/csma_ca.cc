@@ -266,7 +266,8 @@ class csma_ca_impl : public csma_ca {
 			pmt::pmt_t car_frame = pmt::car(frame);
 			pmt::pmt_t cdr_frame = pmt::cdr(frame);
 
-			size_t frame_len = pmt::blob_length(cdr_frame);
+			//size_t frame_len = pmt::blob_length(cdr_frame); // Length in bytes
+			size_t frame_len = 30;
 
 			mac_header *h = (mac_header*)pmt::blob_data(cdr_frame);
 			h->frame_control = 0x2B00; // Stands for ACK on the Frame Control
