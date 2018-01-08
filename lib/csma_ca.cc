@@ -267,7 +267,7 @@ class csma_ca_impl : public csma_ca {
 			pmt::pmt_t cdr_frame = pmt::cdr(frame);
 
 			//size_t frame_len = pmt::blob_length(cdr_frame); // Length in bytes
-			size_t frame_len = 30;
+			size_t frame_len = 24; // Length in bytes. Copy only the MAC header, first 24 bytes
 
 			mac_header *h = (mac_header*)pmt::blob_data(cdr_frame);
 			h->frame_control = 0x2B00; // Stands for ACK on the Frame Control
