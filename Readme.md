@@ -15,6 +15,7 @@ This project depends on features available on [gr-toolkit](https://github.com/an
 `git clone https://github.com/andreviniciusgsg/gr-toolkit.git` <br />
 `cd gr-toolkit` <br />
 `mkdir build` <br />
+`cd build` <br />
 `cmake ..` <br />
 `sudo make install` <br />
 `sudo ldconfig` <br />
