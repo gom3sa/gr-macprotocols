@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 1
-# Generated: Sat Dec  2 13:41:23 2017
+# Generated: Tue Jan  9 15:55:38 2018
 ##################################################
 
 import os
@@ -96,7 +96,7 @@ class wifi_transceiver_1(gr.top_block):
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
         self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, False)
-        self.foo_wireshark_connector_0 = foo.wireshark_connector(127, False)
+        self.foo_wireshark_connector_0 = foo.wireshark_connector(127, True)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
         self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_float*1, 64)

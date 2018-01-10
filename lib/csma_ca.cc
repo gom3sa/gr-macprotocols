@@ -90,7 +90,7 @@ class csma_ca_impl : public csma_ca {
 				if(!pr_status) { // This means no frame has arrived to be sent. So, it will request one to buffer.
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
 				}
-				usleep((rand() % 5)*(pr_slot_time + pr_sifs + pr_difs) + AVG_BLOCK_DELAY*pr_alpha); srand(time(NULL));
+				usleep((rand() % 5)*(pr_slot_time + pr_sifs + pr_difs) + AVG_BLOCK_DELAY); srand(time(NULL));
 			}
 		}
 
