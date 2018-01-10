@@ -35,6 +35,10 @@ This feature uses C++11. If you find any errors refering to C++11 while compilin
 `sudo make install` <br />
 `sudo ldconfig` <br />
 
+## Quick Installation
+
+In order to make life easier, we provide an installation script that installs all dependencies for running gr-macprotocols over gr-ieee802-11 but Gnu Radio. The script is called `install_gr-macprotocols.sh` and is included in this git folder.
+
 ## Examples
 
 Examples are provided and can be found in folder `examples`. I suggest you to open files `wifi_transceiver_nogui_*.grc` in Gnu Radio Companion and have a look at it. These are ready-to-go examples of transcievers with MAC protocol CSMA/CA over the PHY layer based on IEEE 802.11. In order to run these examples, **you must install** the project [gr-ieee802.11](https://github.com/bastibl/gr-ieee802-11).
