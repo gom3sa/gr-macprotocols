@@ -226,9 +226,9 @@ class csma_ca_impl : public csma_ca {
 			}
 			else if(tof == 2) {
 				if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
-				message_port_pub(msg_port_frame_to_app, frame);
 				pmt::pmt_t ack = generate_ack_frame(frame);
 				message_port_pub(msg_port_frame_to_phy, ack);
+				message_port_pub(msg_port_frame_to_app, frame);
 			}
 			else {
 				if(pr_debug) std::cout << "Unkown frame type." << std::endl << std::flush;
@@ -269,28 +269,41 @@ class csma_ca_impl : public csma_ca {
 			//size_t frame_len = pmt::blob_length(cdr_frame); // Length in bytes
 			size_t frame_len = 24; // Length in bytes. Copy only the MAC header, first 24 bytes
 
-			mac_header *h = (mac_header*)pmt::blob_data(cdr_frame);
-			h->frame_control = 0x2B00; // Stands for ACK on the Frame Control
+			mac_header *frame_header = (mac_header*)pmt::blob_data(cdr_frame);
+
+			// This avoids modifying frame while generating ack. So info is not lost when sent to app.
+			mac_header ack_header;
+			ack_header.frame_control = 0x2B00; // Stands for ACK on the Frame Control
+			ack_header.duration = frame_header->duration;
+			ack_header.seq_nr = frame_header->seq_nr;
 
 			/* Update mac addresses */
 			for(int i = 0; i < 6; i++) {
-				h->addr1[i] = h->addr2[i];
-				h->addr2[i] = pr_mac_addr[i];
+				ack_header.addr1[i] = frame_header->addr2[i];
+				ack_header.addr2[i] = pr_mac_addr[i];
+				ack_header.addr3[i] = frame_header->addr3[i];
 			}
 
 			/* Calculate new checksum */
 			boost::crc_32_type result;
-			result.process_bytes(h, frame_len);
+			result.process_bytes(&ack_header, frame_len);
 			uint32_t fcs = result.checksum();
 
 			uint8_t psdu[1528];
-			memcpy(psdu, h, frame_len);
+			memcpy(psdu, &ack_header, frame_len);
 			memcpy(psdu + frame_len, &fcs, sizeof(uint32_t));
 
-			cdr_frame = pmt::make_blob(psdu, frame_len + sizeof(uint32_t));
+			// header size is 24 and fcs size is 4 bytes, total = 28;
+			pmt::pmt_t ack = pmt::make_blob(psdu, frame_len + sizeof(uint32_t));
 			/* Done! Checksum updated. */
 
-			return pmt::cons(car_frame, cdr_frame);
+			// dict
+			pmt::pmt_t dict = pmt::make_dict();
+			dict = pmt::dict_add(dict, pmt::mp("crc_included"), pmt::PMT_T);
+
+			if (pr_debug) std::cout << "Seq num of rx frame = " << frame_header->seq_nr << std::endl;
+
+			return pmt::cons(dict, ack);
 		}
 
 	private:

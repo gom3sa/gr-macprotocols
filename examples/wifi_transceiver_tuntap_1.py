@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver Tuntap 1
-# Generated: Thu Jan 11 11:19:35 2018
+# Generated: Thu Jan 11 16:19:43 2018
 ##################################################
 
 import os
@@ -94,8 +94,8 @@ class wifi_transceiver_tuntap_1(gr.top_block):
         self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), (mac_dst), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
-        self.ieee802_11_ether_encap_0 = ieee802_11.ether_encap(False)
-        self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, False)
+        self.ieee802_11_ether_encap_0 = ieee802_11.ether_encap(True)
+        self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, True)
         self.foo_wireshark_connector_0 = foo.wireshark_connector(127, True)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
@@ -114,9 +114,9 @@ class wifi_transceiver_tuntap_1(gr.top_block):
         self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.ieee802_11_ether_encap_0, 'from tap'))    
         self.msg_connect((self.ieee802_11_ether_encap_0, 'to tap'), (self.blocks_tuntap_pdu_0, 'pdus'))    
         self.msg_connect((self.ieee802_11_ether_encap_0, 'to wifi'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
-        self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.ieee802_11_ether_encap_0, 'from wifi'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.foo_wireshark_connector_0_0, 'in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.ieee802_11_ether_encap_0, 'from wifi'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.ieee802_11_mac_0_0, 'phy in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.toolkit_cs_0, 'in_msg'))    

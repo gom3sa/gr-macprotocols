@@ -3146,18 +3146,6 @@
   </connection>
   <connection>
     <source_block_id>ieee802_11_mac_0_0</source_block_id>
-    <sink_block_id>foo_wireshark_connector_0_0</sink_block_id>
-    <source_key>app out</source_key>
-    <sink_key>in</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>ieee802_11_mac_0_0</source_block_id>
-    <sink_block_id>ieee802_11_ether_encap_0</sink_block_id>
-    <source_key>app out</source_key>
-    <sink_key>from wifi</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>ieee802_11_mac_0_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>phy out</source_key>
     <sink_key>frame in</sink_key>
@@ -3173,6 +3161,18 @@
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>frame request</source_key>
     <sink_key>ctrl in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>macprotocols_csma_ca_0</source_block_id>
+    <sink_block_id>foo_wireshark_connector_0_0</sink_block_id>
+    <source_key>frame to app</source_key>
+    <sink_key>in</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>macprotocols_csma_ca_0</source_block_id>
+    <sink_block_id>ieee802_11_ether_encap_0</sink_block_id>
+    <source_key>frame to app</source_key>
+    <sink_key>from wifi</sink_key>
   </connection>
   <connection>
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
