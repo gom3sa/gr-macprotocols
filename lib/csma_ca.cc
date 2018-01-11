@@ -226,9 +226,9 @@ class csma_ca_impl : public csma_ca {
 			}
 			else if(tof == 2) {
 				if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
+				message_port_pub(msg_port_frame_to_app, frame);
 				pmt::pmt_t ack = generate_ack_frame(frame);
 				message_port_pub(msg_port_frame_to_phy, ack);
-				message_port_pub(msg_port_frame_to_app, frame);
 			}
 			else {
 				if(pr_debug) std::cout << "Unkown frame type." << std::endl << std::flush;
