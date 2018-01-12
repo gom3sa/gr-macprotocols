@@ -47,7 +47,7 @@ namespace gr {
        * creating new instances.
        */
 
-      static sptr make(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, bool debug);
+      static sptr make(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, int threshold, bool debug);
     };
 
   } // namespace macprotocols

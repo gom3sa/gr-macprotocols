@@ -25,7 +25,6 @@ Author: André Gomes, andre.gomes@dcc.ufmg.br - Winet Lab, Federal University of
 
 #define MAX_TRIES 5
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
-#define THRESHOLD -70 // Empirical
 #define AVG_BLOCK_DELAY 10 // (us)
 #define aCWmin 16 // aCWmin + 1
 #define aCWmax 1024 // aCWmax + 1
@@ -45,11 +44,11 @@ class csma_ca_impl : public csma_ca {
 	typedef std::chrono::high_resolution_clock clock;
 
 	public:
-		csma_ca_impl(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) : gr::block(
+		csma_ca_impl(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, int threshold, bool debug) : gr::block(
 							"csma_ca",
 							gr::io_signature::make(0, 0, 0),
 							gr::io_signature::make(0, 0, 0)),
-							pr_slot_time(slot_time*alpha), pr_sifs(sifs*alpha), pr_difs(difs*alpha), pr_alpha(alpha), pr_debug(debug), pr_frame_id(0) {
+							pr_slot_time(slot_time*alpha), pr_sifs(sifs*alpha), pr_difs(difs*alpha), pr_alpha(alpha), pr_threshold(threshold), pr_debug(debug), pr_frame_id(0) {
 			// Inputs
 			message_port_register_in(msg_port_frame_from_buff);
 			set_msg_handler(msg_port_frame_from_buff, boost::bind(&csma_ca_impl::frame_from_buff, this, _1));
@@ -120,7 +119,7 @@ class csma_ca_impl : public csma_ca {
 			while(attempts < MAX_TRIES and pr_frame_acked == false and tot_attempts < MAX_TRIES) {
 
 				// This call listens to the medium for "sensing_time" us. This is used for both DIFS and AIFS Backoff.
-				bool ch_busy = is_channel_busy(THRESHOLD, sensing_time);
+				bool ch_busy = is_channel_busy(pr_threshold, sensing_time);
 				
 				if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_frame_acked << std::endl << std::flush;
 				
@@ -307,7 +306,7 @@ class csma_ca_impl : public csma_ca {
 		}
 
 	private:
-		int pr_slot_time, pr_sifs, pr_difs, pr_frame_id, pr_alpha;
+		int pr_slot_time, pr_sifs, pr_difs, pr_frame_id, pr_alpha, pr_threshold;
 		uint pr_cw;
 		bool pr_debug, pr_sensing, pr_status, pr_frame_acked;
 		float pr_avg_power;
@@ -335,6 +334,6 @@ class csma_ca_impl : public csma_ca {
 };
 
 csma_ca::sptr
-csma_ca::make(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, bool debug) {
-	return gnuradio::get_initial_sptr(new csma_ca_impl(src_mac, slot_time, sifs, difs, alpha, debug));
+csma_ca::make(std::vector<uint8_t> src_mac, int slot_time, int sifs, int difs, int alpha, int threshold, bool debug) {
+	return gnuradio::get_initial_sptr(new csma_ca_impl(src_mac, slot_time, sifs, difs, alpha, threshold, debug));
 }

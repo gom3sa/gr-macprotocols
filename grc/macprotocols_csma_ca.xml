@@ -4,7 +4,7 @@
   <key>macprotocols_csma_ca</key>
   <category>[MAC Protocols]</category>
   <import>import macprotocols</import>
-  <make>macprotocols.csma_ca($src_mac, $slot_time, $sifs, $difs, $alpha, $debug)</make>
+  <make>macprotocols.csma_ca($src_mac, $slot_time, $sifs, $difs, $alpha, $threshold, $debug)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -39,6 +39,12 @@
   <param>
     <name>Alpha</name>
     <key>alpha</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Threshold (db)</name>
+    <key>threshold</key>
     <type>int</type>
   </param>
 

@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver Tuntap 2
-# Generated: Thu Jan 11 16:19:45 2018
+# Generated: Fri Jan 12 10:14:41 2018
 ##################################################
 
 import os
@@ -34,7 +34,7 @@ class wifi_transceiver_tuntap_2(gr.top_block):
         ##################################################
         # Variables
         ##################################################
-        self.tx_gain = tx_gain = 1000e-3
+        self.tx_gain = tx_gain = 750e-3
         self.samp_rate = samp_rate = 5e6
         self.rx_gain = rx_gain = 500e-3
         self.pdu_length = pdu_length = 500
@@ -81,7 +81,7 @@ class wifi_transceiver_tuntap_2(gr.top_block):
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.toolkit_cs_0 = toolkit.cs()
         self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256)
-        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 1000, True)
+        self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 500, -60, True)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
         	fft_size=64,
