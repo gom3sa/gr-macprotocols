@@ -47,7 +47,11 @@ Examples are provided and can be found in folder `examples`. I suggest you to op
 
 It is necessary to configure a tap interface in order to run Tun/ Tap examples. A configuration script is given at the folder `apps`. You should execute script `config_interface_tuntap_X.sh` at the same machine you run example `wifi_transceiver_tuntap_X.py`, always matching the id given by X. Check `config_interface_tuntap_X.sh` to get more information about IP and MAC addresses. 
 
-If a bunch of Os is generate at screen while running the examples, you are probably experiencing overflows. It means your computer is not able to process the amount of data it has been given by Gnu Radio. Try to increase the `alpha` parameter, it may help. 
+If a bunch of Os is generated at screen while running the examples, you are probably experiencing overflows. It means your computer is not able to process the amount of data it has been given by Gnu Radio. Try to increase the `alpha` parameter, it may help. 
+
+## Thoughts on timing
+
+As pointed out by [Bloessl](https://www.researchgate.net/publication/276279753_Timings_Matter_Standard_Compliant_IEEE_80211_Channel_Access_for_a_Fully_Software-based_SDR_Architecture)'s work, timings refrain software implementations of CSMA from operating according to IEEE 802.11 standard requirement. The proposed implementation has a parameter called `alpha` that consists of a multipler of timing parameters. For example, if `SIFS = 10us` and `alpha = 100`, the considered SIFS time becomes `SIFS = 1000us`.
 
 ## Contact 
 
