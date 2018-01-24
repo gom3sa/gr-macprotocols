@@ -10,6 +10,7 @@
 %{
 #include "macprotocols/csma_ca.h"
 #include "macprotocols/frame_buffer.h"
+#include "macprotocols/tdma.h"
 %}
 
 
@@ -17,3 +18,5 @@
 GR_SWIG_BLOCK_MAGIC2(macprotocols, csma_ca);
 %include "macprotocols/frame_buffer.h"
 GR_SWIG_BLOCK_MAGIC2(macprotocols, frame_buffer);
+%include "macprotocols/tdma.h"
+GR_SWIG_BLOCK_MAGIC2(macprotocols, tdma);

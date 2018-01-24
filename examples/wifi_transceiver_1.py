@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 1
-# Generated: Fri Jan 12 10:16:39 2018
+# Generated: Wed Jan 24 13:28:44 2018
 ##################################################
 
 import os
@@ -81,7 +81,7 @@ class wifi_transceiver_1(gr.top_block):
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.toolkit_cs_0 = toolkit.cs()
-        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256)
+        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, False)
         self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 1000, -60, True)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,

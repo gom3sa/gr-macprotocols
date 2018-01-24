@@ -28,17 +28,19 @@
 namespace gr {
 	namespace macprotocols {
 
-		class frame_buffer_impl : public frame_buffer
-		{
+		class frame_buffer_impl : public frame_buffer {
 		 private:
 			int buff_size;
+			bool arp;
 			boost::circular_buffer<pmt::pmt_t> circ_buff;
 
 		 public:
-			frame_buffer_impl(int buff_size);
+			frame_buffer_impl(int buff_size, bool arp);
 			~frame_buffer_impl();
 
 			// Where all the action really happens
+
+			bool lookup_arp(uint8_t *ip, uint8_t *mac);
 
 			void frame_in(pmt::pmt_t frame);
 

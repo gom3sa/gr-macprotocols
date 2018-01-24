@@ -23,5 +23,6 @@
 install(FILES
     api.h
     csma_ca.h
-    frame_buffer.h DESTINATION include/macprotocols
+    frame_buffer.h
+    tdma.h DESTINATION include/macprotocols
 )

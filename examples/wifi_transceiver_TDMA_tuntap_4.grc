@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?grc format='1' created='3.7.9'?>
+<?grc format='1' created='3.7.11'?>
 <flow_graph>
   <timestamp>Fri Jul 18 10:38:08 2014</timestamp>
   <block>
@@ -46,7 +46,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>wifi_transceiver_3</value>
+      <value>wifi_transceiver_TDMA_tuntap_4</value>
     </param>
     <param>
       <key>max_nouts</key>
@@ -58,7 +58,7 @@
     </param>
     <param>
       <key>realtime_scheduling</key>
-      <value></value>
+      <value>1</value>
     </param>
     <param>
       <key>run_command</key>
@@ -228,7 +228,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(56, 173)</value>
+      <value>(56, 181)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -240,7 +240,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[0x13, 0x13, 0x13, 0x13, 0x13, 0x13]</value>
+      <value>[0x12,0x34,0x56,0x78,0x90,0xae]</value>
     </param>
   </block>
   <block>
@@ -267,7 +267,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>[0x11, 0x11, 0x11, 0x11, 0x11, 0x11]</value>
+      <value>[0x12,0x34,0x56,0x78,0x90,0xaa]</value>
     </param>
   </block>
   <block>
@@ -375,7 +375,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>1000e-3</value>
+      <value>750e-3</value>
     </param>
   </block>
   <block>
@@ -457,7 +457,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1072, 342)</value>
+      <value>(1136, 342)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -478,53 +478,6 @@
     <param>
       <key>vlen</key>
       <value>1</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_message_strobe</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(352, 133)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_message_strobe_0_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>msg</key>
-      <value>pmt.intern("".join("c" for i in range(pdu_length)))</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>period</key>
-      <value>interval</value>
     </param>
   </block>
   <block>
@@ -551,7 +504,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(480, 812)</value>
+      <value>(472, 820)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -579,7 +532,7 @@
     </param>
   </block>
   <block>
-    <key>blocks_socket_pdu</key>
+    <key>blocks_tuntap_pdu</key>
     <param>
       <key>alias</key>
       <value></value>
@@ -597,79 +550,28 @@
       <value>True</value>
     </param>
     <param>
-      <key>_coordinate</key>
-      <value>(352, 215)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>host</key>
-      <value></value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_socket_pdu_0</value>
-    </param>
-    <param>
-      <key>mtu</key>
-      <value>10000</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>port</key>
-      <value>52000</value>
-    </param>
-    <param>
-      <key>tcp_no_delay</key>
+      <key>istunflag</key>
       <value>False</value>
     </param>
     <param>
-      <key>type</key>
-      <value>"UDP_SERVER"</value>
-    </param>
-  </block>
-  <block>
-    <key>blocks_vector_to_stream</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(1092, 760)</value>
+      <value>(632, 86)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>90</value>
+      <value>180</value>
     </param>
     <param>
       <key>id</key>
-      <value>blocks_vector_to_stream_0</value>
+      <value>blocks_tuntap_pdu_0</value>
     </param>
     <param>
-      <key>type</key>
-      <value>float</value>
+      <key>ifn</key>
+      <value>tap0</value>
+    </param>
+    <param>
+      <key>mtu</key>
+      <value>440</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -678,14 +580,6 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
-    </param>
-    <param>
-      <key>num_items</key>
-      <value>64</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
     </param>
   </block>
   <block>
@@ -720,7 +614,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(256, 872)</value>
+      <value>(248, 920)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -763,7 +657,7 @@
     </param>
     <param>
       <key>debug</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -810,7 +704,7 @@
     </param>
     <param>
       <key>debug</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -818,7 +712,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(864, 349)</value>
+      <value>(944, 349)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -839,6 +733,49 @@
     <param>
       <key>tech</key>
       <value>127</value>
+    </param>
+  </block>
+  <block>
+    <key>ieee802_11_ether_encap</key>
+    <param>
+      <key>alias</key>
+      <value></value>
+    </param>
+    <param>
+      <key>comment</key>
+      <value></value>
+    </param>
+    <param>
+      <key>affinity</key>
+      <value></value>
+    </param>
+    <param>
+      <key>debug</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(632, 193)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>id</key>
+      <value>ieee802_11_ether_encap_0</value>
+    </param>
+    <param>
+      <key>maxoutbuf</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>minoutbuf</key>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -869,7 +806,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(624, 358)</value>
+      <value>(632, 342)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -940,140 +877,6 @@
     </param>
   </block>
   <block>
-    <key>logpwrfft_x</key>
-    <param>
-      <key>avg_alpha</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>average</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>fft_size</key>
-      <value>64</value>
-    </param>
-    <param>
-      <key>frame_rate</key>
-      <value>30</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(920, 865)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>logpwrfft_x_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ref_scale</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>sample_rate</key>
-      <value>samp_rate</value>
-    </param>
-  </block>
-  <block>
-    <key>macprotocols_csma_ca</key>
-    <param>
-      <key>alpha</key>
-      <value>1000</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>debug</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>difs</key>
-      <value>34</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(664, 550)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>macprotocols_csma_ca_0</value>
-    </param>
-    <param>
-      <key>src_mac</key>
-      <value>mac_addr</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>sifs</key>
-      <value>16</value>
-    </param>
-    <param>
-      <key>slot_time</key>
-      <value>9</value>
-    </param>
-    <param>
-      <key>threshold</key>
-      <value>-60</value>
-    </param>
-  </block>
-  <block>
     <key>macprotocols_frame_buffer</key>
     <param>
       <key>alias</key>
@@ -1109,7 +912,7 @@
     </param>
     <param>
       <key>arp</key>
-      <value>False</value>
+      <value>True</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1121,7 +924,11 @@
     </param>
   </block>
   <block>
-    <key>toolkit_cs</key>
+    <key>macprotocols_tdma</key>
+    <param>
+      <key>alpha</key>
+      <value>1000</value>
+    </param>
     <param>
       <key>alias</key>
       <value></value>
@@ -1131,8 +938,16 @@
       <value></value>
     </param>
     <param>
+      <key>is_coord</key>
+      <value>False</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
+    </param>
+    <param>
+      <key>debug</key>
+      <value>True</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1140,15 +955,19 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 673)</value>
+      <value>(640, 592)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>180</value>
+      <value>0</value>
     </param>
     <param>
       <key>id</key>
-      <value>toolkit_cs_0</value>
+      <value>macprotocols_tdma_0</value>
+    </param>
+    <param>
+      <key>src_mac</key>
+      <value>mac_addr</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -1157,6 +976,10 @@
     <param>
       <key>minoutbuf</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>slot_time</key>
+      <value>9</value>
     </param>
   </block>
   <block>
@@ -1831,7 +1654,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(440, 873)</value>
+      <value>(400, 897)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1958,6 +1781,10 @@
       <value>False</value>
     </param>
     <param>
+      <key>hide_lo_controls</key>
+      <value>True</value>
+    </param>
+    <param>
       <key>stream_args</key>
       <value></value>
     </param>
@@ -2013,6 +1840,14 @@
       <value>rx_gain</value>
     </param>
     <param>
+      <key>lo_export0</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source0</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant10</key>
       <value></value>
     </param>
@@ -2039,6 +1874,14 @@
     <param>
       <key>gain10</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export10</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source10</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant11</key>
@@ -2069,6 +1912,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export11</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source11</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant12</key>
       <value></value>
     </param>
@@ -2095,6 +1946,14 @@
     <param>
       <key>gain12</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export12</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source12</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant13</key>
@@ -2125,6 +1984,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export13</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source13</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant14</key>
       <value></value>
     </param>
@@ -2151,6 +2018,14 @@
     <param>
       <key>gain14</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export14</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source14</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant15</key>
@@ -2181,6 +2056,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export15</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source15</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant16</key>
       <value></value>
     </param>
@@ -2207,6 +2090,14 @@
     <param>
       <key>gain16</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export16</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source16</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant17</key>
@@ -2237,6 +2128,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export17</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source17</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant18</key>
       <value></value>
     </param>
@@ -2263,6 +2162,14 @@
     <param>
       <key>gain18</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export18</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source18</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant19</key>
@@ -2293,6 +2200,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export19</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source19</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant1</key>
       <value></value>
     </param>
@@ -2319,6 +2234,14 @@
     <param>
       <key>gain1</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export1</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source1</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant20</key>
@@ -2349,6 +2272,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export20</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source20</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant21</key>
       <value></value>
     </param>
@@ -2375,6 +2306,14 @@
     <param>
       <key>gain21</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export21</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source21</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant22</key>
@@ -2405,6 +2344,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export22</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source22</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant23</key>
       <value></value>
     </param>
@@ -2431,6 +2378,14 @@
     <param>
       <key>gain23</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export23</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source23</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant24</key>
@@ -2461,6 +2416,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export24</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source24</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant25</key>
       <value></value>
     </param>
@@ -2487,6 +2450,14 @@
     <param>
       <key>gain25</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export25</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source25</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant26</key>
@@ -2517,6 +2488,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export26</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source26</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant27</key>
       <value></value>
     </param>
@@ -2543,6 +2522,14 @@
     <param>
       <key>gain27</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export27</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source27</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant28</key>
@@ -2573,6 +2560,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export28</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source28</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant29</key>
       <value></value>
     </param>
@@ -2599,6 +2594,14 @@
     <param>
       <key>gain29</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export29</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source29</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant2</key>
@@ -2629,6 +2632,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export2</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source2</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant30</key>
       <value></value>
     </param>
@@ -2655,6 +2666,14 @@
     <param>
       <key>gain30</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export30</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source30</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant31</key>
@@ -2685,6 +2704,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export31</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source31</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant3</key>
       <value></value>
     </param>
@@ -2711,6 +2738,14 @@
     <param>
       <key>gain3</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export3</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source3</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant4</key>
@@ -2741,6 +2776,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export4</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source4</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant5</key>
       <value></value>
     </param>
@@ -2767,6 +2810,14 @@
     <param>
       <key>gain5</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export5</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source5</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant6</key>
@@ -2797,6 +2848,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export6</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source6</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant7</key>
       <value></value>
     </param>
@@ -2823,6 +2882,14 @@
     <param>
       <key>gain7</key>
       <value>0</value>
+    </param>
+    <param>
+      <key>lo_export7</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source7</key>
+      <value>internal</value>
     </param>
     <param>
       <key>ant8</key>
@@ -2853,6 +2920,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export8</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source8</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>ant9</key>
       <value></value>
     </param>
@@ -2881,6 +2956,14 @@
       <value>0</value>
     </param>
     <param>
+      <key>lo_export9</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>lo_source9</key>
+      <value>internal</value>
+    </param>
+    <param>
       <key>clock_rate</key>
       <value>0.0</value>
     </param>
@@ -2906,7 +2989,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(656, 872)</value>
+      <value>(608, 896)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3041,6 +3124,10 @@
       <value>False</value>
     </param>
     <param>
+      <key>hide_lo_controls</key>
+      <value>True</value>
+    </param>
+    <param>
       <key>stream_args</key>
       <value></value>
     </param>
@@ -3077,7 +3164,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 752)</value>
+      <value>(672, 760)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3117,28 +3204,16 @@
     </param>
   </block>
   <connection>
-    <source_block_id>blocks_message_strobe_0_0</source_block_id>
-    <sink_block_id>ieee802_11_mac_0_0</sink_block_id>
-    <source_key>strobe</source_key>
-    <sink_key>app in</sink_key>
-  </connection>
-  <connection>
     <source_block_id>blocks_multiply_const_vxx_0</source_block_id>
     <sink_block_id>foo_packet_pad2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blocks_socket_pdu_0</source_block_id>
-    <sink_block_id>ieee802_11_mac_0_0</sink_block_id>
+    <source_block_id>blocks_tuntap_pdu_0</source_block_id>
+    <sink_block_id>ieee802_11_ether_encap_0</sink_block_id>
     <source_key>pdus</source_key>
-    <sink_key>app in</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blocks_vector_to_stream_0</source_block_id>
-    <sink_block_id>toolkit_cs_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <sink_key>from tap</sink_key>
   </connection>
   <connection>
     <source_block_id>foo_packet_pad2_0</source_block_id>
@@ -3159,10 +3234,16 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>ieee802_11_mac_0_0</source_block_id>
-    <sink_block_id>foo_wireshark_connector_0_0</sink_block_id>
-    <source_key>app out</source_key>
-    <sink_key>in</sink_key>
+    <source_block_id>ieee802_11_ether_encap_0</source_block_id>
+    <sink_block_id>blocks_tuntap_pdu_0</sink_block_id>
+    <source_key>to tap</source_key>
+    <sink_key>pdus</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>ieee802_11_ether_encap_0</source_block_id>
+    <sink_block_id>ieee802_11_mac_0_0</sink_block_id>
+    <source_key>to wifi</source_key>
+    <sink_key>app in</sink_key>
   </connection>
   <connection>
     <source_block_id>ieee802_11_mac_0_0</source_block_id>
@@ -3171,52 +3252,34 @@
     <sink_key>frame in</sink_key>
   </connection>
   <connection>
-    <source_block_id>logpwrfft_x_0</source_block_id>
-    <sink_block_id>blocks_vector_to_stream_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
+    <source_block_id>macprotocols_frame_buffer_0</source_block_id>
+    <sink_block_id>macprotocols_tdma_0</sink_block_id>
+    <source_key>frame out</source_key>
+    <sink_key>frame from buffer</sink_key>
   </connection>
   <connection>
-    <source_block_id>macprotocols_csma_ca_0</source_block_id>
+    <source_block_id>macprotocols_tdma_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>frame request</source_key>
     <sink_key>ctrl in</sink_key>
   </connection>
   <connection>
-    <source_block_id>macprotocols_csma_ca_0</source_block_id>
-    <sink_block_id>ieee802_11_mac_0_0</sink_block_id>
+    <source_block_id>macprotocols_tdma_0</source_block_id>
+    <sink_block_id>foo_wireshark_connector_0_0</sink_block_id>
     <source_key>frame to app</source_key>
-    <sink_key>phy in</sink_key>
+    <sink_key>in</sink_key>
   </connection>
   <connection>
-    <source_block_id>macprotocols_csma_ca_0</source_block_id>
+    <source_block_id>macprotocols_tdma_0</source_block_id>
+    <sink_block_id>ieee802_11_ether_encap_0</sink_block_id>
+    <source_key>frame to app</source_key>
+    <sink_key>from wifi</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>macprotocols_tdma_0</source_block_id>
     <sink_block_id>wifi_phy_hier_0</sink_block_id>
     <source_key>frame to phy</source_key>
     <sink_key>mac_in</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>macprotocols_csma_ca_0</source_block_id>
-    <sink_block_id>toolkit_cs_0</sink_block_id>
-    <source_key>request to cs</source_key>
-    <sink_key>in_msg</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>macprotocols_frame_buffer_0</source_block_id>
-    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
-    <source_key>frame out</source_key>
-    <sink_key>frame from buffer</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>toolkit_cs_0</source_block_id>
-    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
-    <source_key>out_msg</source_key>
-    <sink_key>cs in</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>uhd_usrp_source_0</source_block_id>
-    <sink_block_id>logpwrfft_x_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>uhd_usrp_source_0</source_block_id>
@@ -3238,7 +3301,7 @@
   </connection>
   <connection>
     <source_block_id>wifi_phy_hier_0</source_block_id>
-    <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
+    <sink_block_id>macprotocols_tdma_0</sink_block_id>
     <source_key>mac_out</source_key>
     <sink_key>frame from phy</sink_key>
   </connection>

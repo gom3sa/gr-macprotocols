@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 ##################################################
 # GNU Radio Python Flow Graph
-# Title: Wifi Transceiver 3
-# Generated: Wed Jan 24 13:29:00 2018
+# Title: Wifi Transceiver Csma Tuntap Gateway
+# Generated: Wed Jan 24 13:39:44 2018
 ##################################################
 
 import os
@@ -22,25 +22,24 @@ from wifi_phy_hier import wifi_phy_hier  # grc-generated hier_block
 import foo
 import ieee802_11
 import macprotocols
-import pmt
 import time
 import toolkit
 
 
-class wifi_transceiver_3(gr.top_block):
+class wifi_transceiver_CSMA_tuntap_GATEWAY(gr.top_block):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Wifi Transceiver 3")
+        gr.top_block.__init__(self, "Wifi Transceiver Csma Tuntap Gateway")
 
         ##################################################
         # Variables
         ##################################################
-        self.tx_gain = tx_gain = 1000e-3
+        self.tx_gain = tx_gain = 750e-3
         self.samp_rate = samp_rate = 5e6
         self.rx_gain = rx_gain = 500e-3
         self.pdu_length = pdu_length = 500
-        self.mac_dst = mac_dst = [0x11, 0x11, 0x11, 0x11, 0x11, 0x11]
-        self.mac_addr = mac_addr = [0x13, 0x13, 0x13, 0x13, 0x13, 0x13]
+        self.mac_dst = mac_dst = [0x12,0x34,0x56,0x78,0x90,0xab]
+        self.mac_addr = mac_addr = [0x12,0x34,0x56,0x78,0x90,0xaa]
         self.lo_offset = lo_offset = 0
         self.interval = interval = 1e3
         self.freq = freq = 2.52e9
@@ -81,7 +80,7 @@ class wifi_transceiver_3(gr.top_block):
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.toolkit_cs_0 = toolkit.cs()
-        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, False)
+        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, True)
         self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 1000, -60, True)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
@@ -95,15 +94,15 @@ class wifi_transceiver_3(gr.top_block):
         self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), (mac_dst), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
         (self.ieee802_11_mac_0_0).set_max_output_buffer(4096)
-        self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, False)
-        self.foo_wireshark_connector_0 = foo.wireshark_connector(127, False)
+        self.ieee802_11_ether_encap_0 = ieee802_11.ether_encap(True)
+        self.foo_wireshark_connector_0_0 = foo.wireshark_connector(127, True)
+        self.foo_wireshark_connector_0 = foo.wireshark_connector(127, True)
         self.foo_packet_pad2_0 = foo.packet_pad2(False, False, 0.001, 10000, 10000)
         (self.foo_packet_pad2_0).set_min_output_buffer(100000)
         self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_float*1, 64)
-        self.blocks_socket_pdu_0 = blocks.socket_pdu("UDP_SERVER", "", "52000", 10000, False)
+        self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu("tap0", 440, False)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vcc((0.6, ))
         (self.blocks_multiply_const_vxx_0).set_min_output_buffer(100000)
-        self.blocks_message_strobe_0_0 = blocks.message_strobe(pmt.intern("".join("c" for i in range(pdu_length))), interval)
         self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi_rx.pcap", False)
         self.blocks_file_sink_0_0.set_unbuffered(True)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "/tmp/wifi_rx_all.pcap", False)
@@ -112,10 +111,12 @@ class wifi_transceiver_3(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
+        self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.ieee802_11_ether_encap_0, 'from tap'))    
+        self.msg_connect((self.ieee802_11_ether_encap_0, 'to tap'), (self.blocks_tuntap_pdu_0, 'pdus'))    
+        self.msg_connect((self.ieee802_11_ether_encap_0, 'to wifi'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.foo_wireshark_connector_0_0, 'in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.ieee802_11_ether_encap_0, 'from wifi'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.ieee802_11_mac_0_0, 'phy in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.toolkit_cs_0, 'in_msg'))    
@@ -166,7 +167,6 @@ class wifi_transceiver_3(gr.top_block):
 
     def set_pdu_length(self, pdu_length):
         self.pdu_length = pdu_length
-        self.blocks_message_strobe_0_0.set_msg(pmt.intern("".join("c" for i in range(self.pdu_length))))
 
     def get_mac_dst(self):
         return self.mac_dst
@@ -193,7 +193,6 @@ class wifi_transceiver_3(gr.top_block):
 
     def set_interval(self, interval):
         self.interval = interval
-        self.blocks_message_strobe_0_0.set_period(self.interval)
 
     def get_freq(self):
         return self.freq
@@ -219,7 +218,7 @@ class wifi_transceiver_3(gr.top_block):
         self.wifi_phy_hier_0.set_chan_est(self.chan_est)
 
 
-def main(top_block_cls=wifi_transceiver_3, options=None):
+def main(top_block_cls=wifi_transceiver_CSMA_tuntap_GATEWAY, options=None):
 
     tb = top_block_cls()
     tb.start()

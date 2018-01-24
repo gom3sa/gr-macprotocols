@@ -4,7 +4,7 @@
   <key>macprotocols_frame_buffer</key>
   <category>[MAC Protocols Aux]</category>
   <import>import macprotocols</import>
-  <make>macprotocols.frame_buffer($buff_size)</make>
+  <make>macprotocols.frame_buffer($buff_size, $arp)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -14,6 +14,20 @@
     <name>Buffer size</name>
     <key>buff_size</key>
     <type>int</type>
+  </param>
+
+  <param>
+    <name>Look up ARP table?</name>
+    <key>arp</key>
+    <type>bool</type>
+    <option>
+      <name>True</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+    </option>
   </param>
 
   <!-- Make one 'sink' node per input. Sub-nodes:

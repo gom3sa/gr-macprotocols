@@ -23,11 +23,15 @@ Author: André Gomes, andre.gomes@dcc.ufmg.br - Winet Lab, Federal University of
 #include <boost/crc.hpp>
 #include <chrono>
 
-#define MAX_TRIES 5
+#define MAX_RETRIES 5
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
 #define AVG_BLOCK_DELAY 10 // (us)
 #define aCWmin 16 // aCWmin + 1
 #define aCWmax 1024 // aCWmax + 1
+// Frame Control (FC) cheat sheet
+#define FC_ACK 0x2B00
+#define FC_DATA 0x0008
+#define FC_PROTOCOL 0x2900 // Active protocol on network
 
 /* aCWm** from www.revolutionwifi.net/revolutionwifi/2010/08/wireless-qos-part-5-contention-window.html
     802.11b    aCWmin 31    aCWmax 1023
@@ -71,7 +75,10 @@ class csma_ca_impl : public csma_ca {
 			pr_cw = aCWmin;
 
 
-			for(int i = 0; i < 6; i++) pr_mac_addr[i] = src_mac[i];
+			for(int i = 0; i < 6; i++) {
+				pr_mac_addr[i] = src_mac[i];
+				pr_broadcast_addr[i] = 0xff;
+			}
 		}
 
 		bool start() {
@@ -110,13 +117,18 @@ class csma_ca_impl : public csma_ca {
 		void send_frame() {
 			if(pr_debug) std::cout << "Sending frame..." << std::endl << std::flush;
 
+			// In order to get sequence number
+			pmt::pmt_t cdr = pmt::cdr(pr_frame);
+			mac_header *h = (mac_header*)pmt::blob_data(cdr);
+			pr_frame_seq_nr = h->seq_nr;
+
 			uint attempts = 0; // Counter for retransmission.
 			uint sensing_time = pr_difs; 
 			uint backoff = 0;
 
 			uint tot_attempts = 0; // This counter takes into account scenarios where the medium is busy. So, discard frame after a while.
 
-			while(attempts < MAX_TRIES and pr_frame_acked == false and tot_attempts < MAX_TRIES) {
+			while(attempts < MAX_RETRIES and pr_frame_acked == false and tot_attempts < MAX_RETRIES) {
 
 				// This call listens to the medium for "sensing_time" us. This is used for both DIFS and AIFS Backoff.
 				bool ch_busy = is_channel_busy(pr_threshold, sensing_time);
@@ -172,9 +184,9 @@ class csma_ca_impl : public csma_ca {
 			if(pr_frame_acked) {
 				pr_cw = aCWmin; // Sucessful transmission. So, reset contention window.
 				if(pr_debug) std::cout << "Frame acked properly!" << std::endl << std::flush;
-			} else if(attempts >= MAX_TRIES) {
+			} else if(attempts >= MAX_RETRIES) {
 				if(pr_debug) std::cout << "Max number of retries exceeded. Frame dropped!" << std::endl << std::flush;
-			} else if(tot_attempts == MAX_TRIES) {
+			} else if(tot_attempts == MAX_RETRIES) {
 				if(pr_debug) std::cout << "Medium is too busy. Frame dropped!" << std::endl << std::flush;
 			}
 
@@ -200,37 +212,44 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
-			// TODO: Check other types of frames.
+			pmt::pmt_t cdr = pmt::cdr(frame);
+			mac_header *h = (mac_header*)pmt::blob_data(cdr);
 
-			uint8_t tof = type_of_frame(frame);
+			int is_broadcast = memcmp(h->addr1, pr_broadcast_addr, 6); // 0 if frame IS for broadcast
+			int is_mine = memcmp(h->addr1, pr_mac_addr, 6); // 0 if frame IS mine
 
-			if(tof == 0) {
+			if(is_mine != 0 and is_broadcast != 0) {
 				if(pr_debug) std::cout << "This frame is not for me. Drop it!" << std::endl << std::flush;
-			} 
-			else if(tof == 1) {				
-				frame = pmt::cdr(frame);
-				mac_header *h1 = (mac_header*)pmt::blob_data(frame);
-
-				frame = pmt::cdr(pr_frame);
-				mac_header *h2 = (mac_header*)pmt::blob_data(frame);
-
-				if(h1->seq_nr == h2->seq_nr) {
-					pr_frame_acked = true; pr_status = false;
-					if(pr_debug) std::cout << "Ack for me!" << std::endl << std::flush;
-				}
-				else {
-					if(pr_debug) std::cout << "Old ack! Forget it..." << std::endl << std::flush;
-				}
-				
+				return;
 			}
-			else if(tof == 2) {
-				if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
-				pmt::pmt_t ack = generate_ack_frame(frame);
-				message_port_pub(msg_port_frame_to_phy, ack);
-				message_port_pub(msg_port_frame_to_app, frame);
-			}
-			else {
-				if(pr_debug) std::cout << "Unkown frame type." << std::endl << std::flush;
+
+			switch(h->frame_control) {
+				case FC_DATA: {
+					if(is_mine == 0) {
+						if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
+						pmt::pmt_t ack = generate_ack_frame(frame);
+						message_port_pub(msg_port_frame_to_phy, ack);
+						message_port_pub(msg_port_frame_to_app, frame);
+					}
+				} break;
+
+				case FC_ACK: {
+					if(is_mine == 0 and pr_status == true) {
+						if(h->seq_nr == pr_frame_seq_nr) { // Check if ack is for the last frame that was sent
+							pr_frame_acked = true; pr_status = false;
+							if(pr_debug) std::cout << "Ack for me!" << std::endl << std::flush;
+						}
+					}			
+				} break;
+
+				case FC_PROTOCOL: {
+					// TODO
+				} break;
+
+				default: {
+					if(pr_debug) std::cout << "Unkown frame type." << std::endl << std::flush;
+					return;
+				}
 			}
 		}
 
@@ -239,26 +258,6 @@ class csma_ca_impl : public csma_ca {
 			
 			pr_sensing = false;
 			pr_cond1.notify_all();
-		}
-
-		int8_t type_of_frame(pmt::pmt_t frame) {
-			/* Output meaning
-			 * 0: Not for me
-			 * 1: Ack for me
-			 * 2: Data frame for me
-			 * 3: Unkown frame type
-			*/
-			frame = pmt::cdr(frame);
-			mac_header *h = (mac_header*)pmt::blob_data(frame);
-
-			for(int i = 0; i < 6; i++) // Destination mac is not my mac addr
-				if(h->addr1[i] != pr_mac_addr[i]) return 0;
-
-			switch(h->frame_control) {
-				case 0x2B00: return 1;
-				case 0x0008: return 2;
-				default: return 3;
-			}
 		}
 
 		pmt::pmt_t generate_ack_frame(pmt::pmt_t frame) {
@@ -277,11 +276,9 @@ class csma_ca_impl : public csma_ca {
 			ack_header.seq_nr = frame_header->seq_nr;
 
 			/* Update mac addresses */
-			for(int i = 0; i < 6; i++) {
-				ack_header.addr1[i] = frame_header->addr2[i];
-				ack_header.addr2[i] = pr_mac_addr[i];
-				ack_header.addr3[i] = frame_header->addr3[i];
-			}
+			memcpy(ack_header.addr1, frame_header->addr2, 6);
+			memcpy(ack_header.addr2, pr_mac_addr, 6);
+			memcpy(ack_header.addr3, frame_header->addr3, 6);
 
 			/* Calculate new checksum */
 			boost::crc_32_type result;
@@ -326,10 +323,11 @@ class csma_ca_impl : public csma_ca {
 		pmt::pmt_t msg_port_frame_to_app = pmt::mp("frame to app");
 
 		// MAC addr 
-		uint8_t pr_mac_addr[6];
+		uint8_t pr_mac_addr[6], pr_broadcast_addr[6];
 
 		// Frame to be sent
 		pmt::pmt_t pr_frame;
+		uint16_t pr_frame_seq_nr;
 
 };
 

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<block>
+  <name>TDMA</name>
+  <key>macprotocols_tdma</key>
+  <category>[MAC Protocols]</category>
+  <import>import macprotocols</import>
+  <make>macprotocols.tdma($is_coord, $src_mac, $slot_time, $alpha, $debug)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Coordinator</name>
+    <key>is_coord</key>
+    <type>bool</type>
+    <option>
+      <name>True</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Mac addr</name>
+    <key>src_mac</key>
+    <value>[0x23, 0x23, 0x23, 0x23, 0x23, 0x23]</value>
+    <type>int_vector</type>
+  </param>
+
+  <param>
+    <name>Slot Time (us)</name>
+    <key>slot_time</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Alpha</name>
+    <key>alpha</key>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Debug mode</name>
+    <key>debug</key>
+    <type>bool</type>
+    <option>
+      <name>True</name>
+      <key>True</key>
+    </option>
+    <option>
+      <name>False</name>
+      <key>False</key>
+    </option>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>frame from buffer</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <sink>
+    <name>frame from phy</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>frame to app</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>frame to phy</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>frame request</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+</block>
