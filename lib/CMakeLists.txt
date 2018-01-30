@@ -27,8 +27,9 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND macprotocols_sources
     csma_ca.cc
-    frame_buffer_impl.cc
+    frame_buffer.cc
     tdma.cc
+    myswitch.cc
 )
 
 set(macprotocols_sources "${macprotocols_sources}" PARENT_SCOPE)

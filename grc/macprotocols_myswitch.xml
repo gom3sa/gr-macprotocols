@@ -1,54 +1,20 @@
 <?xml version="1.0"?>
 <block>
-  <name>Frame buffer/ Switch</name>
-  <key>macprotocols_frame_buffer</key>
+  <name>My Switch</name>
+  <key>macprotocols_myswitch</key>
   <category>[MAC Protocols Aux]</category>
   <import>import macprotocols</import>
-  <make>macprotocols.frame_buffer($buff_size, $arp, $portid, $debug)</make>
+  <make>macprotocols.myswitch($portid)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
        * key (makes the value accessible as $keyname, e.g. in the make node)
        * type -->
   <param>
-    <name>Buffer size</name>
-    <key>buff_size</key>
-    <type>int</type>
-  </param>
-
-  <param>
     <name>Default port ID</name>
     <key>portid</key>
     <type>int</type>
   </param>
-
-  <param>
-    <name>Look up ARP table?</name>
-    <key>arp</key>
-    <type>bool</type>
-    <option>
-      <name>True</name>
-      <key>True</key>
-    </option>
-    <option>
-      <name>False</name>
-      <key>False</key>
-    </option>
-  </param>
-
-  <param>
-    <name>Debug mode</name>
-    <key>debug</key>
-    <type>bool</type>
-    <option>
-      <name>True</name>
-      <key>True</key>
-    </option>
-    <option>
-      <name>False</name>
-      <key>False</key>
-    </option>
-  </param>  
 
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
@@ -56,54 +22,71 @@
        * vlen
        * optional (set to 1 for optional inputs) -->
   <sink>
-    <name>app in</name>
+    <name>in0</name>
     <type>message</type>
     <optional>1</optional>
   </sink>
 
+  <sink>
+    <name>in1</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <sink>
+    <name>in2</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <sink>
+    <name>in3</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+
+  <sink>
+    <name>in4</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
+  
   <sink>
     <name>ctrl in</name>
     <type>message</type>
     <optional>1</optional>
   </sink>
-
-  <sink>
-    <name>req in 0</name>
-    <type>message</type>
-    <optional>1</optional>
-  </sink>
-
-  <sink>
-    <name>req in 1</name>
-    <type>message</type>
-    <optional>1</optional>
-  </sink>
-
-  <sink>
-    <name>req in 2</name>
-    <type>message</type>
-    <optional>1</optional>
-  </sink>
-
   <!-- Make one 'source' node per output. Sub-nodes:
        * name (an identifier for the GUI)
        * type
        * vlen
        * optional (set to 1 for optional inputs) -->
   <source>
-    <name>frame out 0</name>
+    <name>out0</name>
     <type>message</type>
     <optional>1</optional>
   </source>
 
   <source>
-    <name>frame out 1</name>
+    <name>out1</name>
     <type>message</type>
     <optional>1</optional>
   </source>
 
   <source>
-    <name>frame out 2</name>
+    <name>out2</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>out3</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+  <source>
+    <name>out4</name>
     <type>message</type>
     <optional>1</optional>
   </source>

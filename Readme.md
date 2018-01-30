@@ -1,10 +1,8 @@
-Hi! 
+Hi! This is still a work in progress. The first MAC protocols should come up in the next weeks. The expected release order is:
 
-This is still a work in progress. The first MAC protocols should come up in the next weeks. The expected release order is:
-
-1. CSMA/CA
-2. DCF
-3. TDMA
+1. CSMA/CA 	(done!)
+2. TDMA		(done!)
+3. DCF
 4. CDMA
 5. Not defined yet
 
@@ -45,14 +43,19 @@ Examples are provided and can be found in folder `examples`. I suggest you to op
 
 ### Tun/ Tap Examples
 
-It is necessary to configure a tap interface in order to run Tun/ Tap examples. A configuration script is given at the folder `apps`. You should execute script `config_interface_tuntap_X.sh` at the same machine you run example `wifi_transceiver_tuntap_X.py`, always matching the id given by X. Check `config_interface_tuntap_X.sh` to get more information about IP and MAC addresses. 
+It is necessary to configure a tap interface in order to run Tun/ Tap examples. A configuration script is given at the folder `apps`. You should execute script `config_interface_tuntap_X.sh` at the same machine you run example `wifi_transceiver_tuntap_X.py`, always matching the id given by X. Check `config_interface_tuntap_X.sh` to get more information about IP and MAC addresses.
+
+## Overflows
 
 If a bunch of Os is generated at screen while running the examples, you are probably experiencing overflows. It means your computer is not able to process the amount of data it has been given by Gnu Radio. Try to increase the `alpha` parameter, it may help. 
 
 ## Thoughts on timing
 
-As pointed out by [Bloessl](https://www.researchgate.net/publication/276279753_Timings_Matter_Standard_Compliant_IEEE_80211_Channel_Access_for_a_Fully_Software-based_SDR_Architecture)'s work, timings refrain software implementations of CSMA from operating according to IEEE 802.11 standard requirement. The proposed implementation has a parameter called `alpha` that consists of a multipler of timing parameters. For example, if `SIFS = 10us` and `alpha = 100`, the considered SIFS time becomes `SIFS = 1000us`.
+As pointed out by [Bloessl](https://www.researchgate.net/publication/276279753_Timings_Matter_Standard_Compliant_IEEE_80211_Channel_Access_for_a_Fully_Software-based_SDR_Architecture)'s work, timings refrain software implementations of MAC protocols from operating according to IEEE 802.11 standard requirement. The proposed implementation has a parameter called `alpha` that consists of a multiplier of timing parameters. For example, if `SIFS = 10us` and `alpha = 100`, the considered SIFS time becomes `SIFS = 1000us` in respect of CSMA/CA.
 
-## Contact 
+## Author and Contact
+
+Author: André Vinícius Gomes Santos Gonçalves
+Work address: Winet research group of the Computer Science Department of the Federal University of Minas Gerais
 
 Feel free to reach me. My email address is andre.gomes@dcc.ufmg.br. You can also find more information about myself in [https://homepages.dcc.ufmg.br/~andre.gomes](https://homepages.dcc.ufmg.br/~andre.gomes). 

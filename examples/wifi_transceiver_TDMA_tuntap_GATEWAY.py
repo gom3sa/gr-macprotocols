@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver Tdma Tuntap Gateway
-# Generated: Wed Jan 24 10:05:11 2018
+# Generated: Thu Jan 25 16:01:08 2018
 ##################################################
 
 import os
@@ -78,7 +78,7 @@ class wifi_transceiver_TDMA_tuntap_GATEWAY(gr.top_block):
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.macprotocols_tdma_0 = macprotocols.tdma(True, (mac_addr), 9, 1000, True)
-        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, True)
+        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, True, 0, True)
         self.ieee802_11_parse_mac_0 = ieee802_11.parse_mac(False, False)
         self.ieee802_11_mac_0_0 = ieee802_11.mac((mac_addr), (mac_dst), ([0xff, 0xff, 0xff, 0xff, 0xff, 255]))
         (self.ieee802_11_mac_0_0).set_min_output_buffer(256)
@@ -102,11 +102,11 @@ class wifi_transceiver_TDMA_tuntap_GATEWAY(gr.top_block):
         self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.ieee802_11_ether_encap_0, 'from tap'))    
         self.msg_connect((self.ieee802_11_ether_encap_0, 'to tap'), (self.blocks_tuntap_pdu_0, 'pdus'))    
         self.msg_connect((self.ieee802_11_ether_encap_0, 'to wifi'), (self.ieee802_11_mac_0_0, 'app in'))    
-        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
-        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out'), (self.macprotocols_tdma_0, 'frame from buffer'))    
+        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'app in'))    
+        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out 0'), (self.macprotocols_tdma_0, 'frame from buffer'))    
         self.msg_connect((self.macprotocols_tdma_0, 'frame to app'), (self.foo_wireshark_connector_0_0, 'in'))    
         self.msg_connect((self.macprotocols_tdma_0, 'frame to app'), (self.ieee802_11_ether_encap_0, 'from wifi'))    
-        self.msg_connect((self.macprotocols_tdma_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
+        self.msg_connect((self.macprotocols_tdma_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'req in 0'))    
         self.msg_connect((self.macprotocols_tdma_0, 'frame to phy'), (self.wifi_phy_hier_0, 'mac_in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.foo_wireshark_connector_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.ieee802_11_parse_mac_0, 'in'))    

@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Wifi Transceiver 2
-# Generated: Wed Jan 24 13:28:53 2018
+# Generated: Thu Jan 25 15:53:03 2018
 ##################################################
 
 import os
@@ -81,7 +81,7 @@ class wifi_transceiver_2(gr.top_block):
         self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(freq, rf_freq = freq - lo_offset, rf_freq_policy=uhd.tune_request.POLICY_MANUAL), 0)
         self.uhd_usrp_sink_0_0.set_normalized_gain(tx_gain, 0)
         self.toolkit_cs_0 = toolkit.cs()
-        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, False)
+        self.macprotocols_frame_buffer_0 = macprotocols.frame_buffer(256, False, 0, True)
         self.macprotocols_csma_ca_0 = macprotocols.csma_ca((mac_addr), 9, 16, 34, 1000, -60, True)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
@@ -115,12 +115,12 @@ class wifi_transceiver_2(gr.top_block):
         self.msg_connect((self.blocks_message_strobe_0_0, 'strobe'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.blocks_socket_pdu_0, 'pdus'), (self.ieee802_11_mac_0_0, 'app in'))    
         self.msg_connect((self.ieee802_11_mac_0_0, 'app out'), (self.foo_wireshark_connector_0_0, 'in'))    
-        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'frame in'))    
+        self.msg_connect((self.ieee802_11_mac_0_0, 'phy out'), (self.macprotocols_frame_buffer_0, 'app in'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to app'), (self.ieee802_11_mac_0_0, 'phy in'))    
-        self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'ctrl in'))    
+        self.msg_connect((self.macprotocols_csma_ca_0, 'frame request'), (self.macprotocols_frame_buffer_0, 'req in 0'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'request to cs'), (self.toolkit_cs_0, 'in_msg'))    
         self.msg_connect((self.macprotocols_csma_ca_0, 'frame to phy'), (self.wifi_phy_hier_0, 'mac_in'))    
-        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out'), (self.macprotocols_csma_ca_0, 'frame from buffer'))    
+        self.msg_connect((self.macprotocols_frame_buffer_0, 'frame out 0'), (self.macprotocols_csma_ca_0, 'frame from buffer'))    
         self.msg_connect((self.toolkit_cs_0, 'out_msg'), (self.macprotocols_csma_ca_0, 'cs in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.foo_wireshark_connector_0, 'in'))    
         self.msg_connect((self.wifi_phy_hier_0, 'mac_out'), (self.ieee802_11_parse_mac_0, 'in'))    

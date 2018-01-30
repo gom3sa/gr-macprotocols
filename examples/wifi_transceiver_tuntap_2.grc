@@ -1080,12 +1080,20 @@
       <value></value>
     </param>
     <param>
+      <key>debug</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>portid</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 449)</value>
+      <value>(960, 449)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1094,6 +1102,10 @@
     <param>
       <key>id</key>
       <value>macprotocols_frame_buffer_0</value>
+    </param>
+    <param>
+      <key>arp</key>
+      <value>True</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -3152,7 +3164,7 @@
     <source_block_id>ieee802_11_mac_0_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>phy out</source_key>
-    <sink_key>frame in</sink_key>
+    <sink_key>app in</sink_key>
   </connection>
   <connection>
     <source_block_id>logpwrfft_x_0</source_block_id>
@@ -3164,7 +3176,7 @@
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>frame request</source_key>
-    <sink_key>ctrl in</sink_key>
+    <sink_key>req in 0</sink_key>
   </connection>
   <connection>
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
@@ -3199,7 +3211,7 @@
   <connection>
     <source_block_id>macprotocols_frame_buffer_0</source_block_id>
     <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
-    <source_key>frame out</source_key>
+    <source_key>frame out 0</source_key>
     <sink_key>frame from buffer</sink_key>
   </connection>
   <connection>

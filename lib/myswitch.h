@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2017 <+YOU OR YOUR COMPANY+>.
+ * Copyright 2018 <+YOU OR YOUR COMPANY+>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
  */
 
 
-#ifndef INCLUDED_MACPROTOCOLS_FRAME_BUFFER_H
-#define INCLUDED_MACPROTOCOLS_FRAME_BUFFER_H
+#ifndef INCLUDED_MACPROTOCOLS_MYSWITCH_H
+#define INCLUDED_MACPROTOCOLS_MYSWITCH_H
 
 #include <macprotocols/api.h>
 #include <gnuradio/block.h>
@@ -33,24 +33,24 @@ namespace gr {
      * \ingroup macprotocols
      *
      */
-    class MACPROTOCOLS_API frame_buffer : virtual public gr::block
+    class MACPROTOCOLS_API myswitch : virtual public gr::block
     {
      public:
-      typedef boost::shared_ptr<frame_buffer> sptr;
+      typedef boost::shared_ptr<myswitch> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of macprotocols::frame_buffer.
+       * \brief Return a shared_ptr to a new instance of macprotocols::myswitch.
        *
-       * To avoid accidental use of raw pointers, macprotocols::frame_buffer's
+       * To avoid accidental use of raw pointers, macprotocols::myswitch's
        * constructor is in a private implementation
-       * class. macprotocols::frame_buffer::make is the public interface for
+       * class. macprotocols::myswitch::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int buff_size, bool arp, uint8_t portid, bool debug);
+      static sptr make(uint8_t portid);
     };
 
   } // namespace macprotocols
 } // namespace gr
 
-#endif /* INCLUDED_MACPROTOCOLS_FRAME_BUFFER_H */
+#endif /* INCLUDED_MACPROTOCOLS_MYSWITCH_H */
 

@@ -406,7 +406,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(32, 566)</value>
+      <value>(32, 574)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -457,7 +457,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1136, 342)</value>
+      <value>(1136, 262)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -504,7 +504,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(472, 820)</value>
+      <value>(472, 828)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -555,7 +555,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 86)</value>
+      <value>(632, 6)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -602,7 +602,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1044, 784)</value>
+      <value>(1044, 792)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -665,7 +665,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 920)</value>
+      <value>(248, 928)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -716,7 +716,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(216, 573)</value>
+      <value>(216, 581)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -763,7 +763,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(944, 349)</value>
+      <value>(944, 269)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -810,7 +810,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 193)</value>
+      <value>(632, 113)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -857,7 +857,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(632, 342)</value>
+      <value>(632, 262)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -904,7 +904,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(248, 653)</value>
+      <value>(248, 661)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -963,7 +963,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(872, 889)</value>
+      <value>(872, 897)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1026,7 +1026,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 550)</value>
+      <value>(664, 561)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1080,12 +1080,20 @@
       <value></value>
     </param>
     <param>
+      <key>debug</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>portid</key>
+      <value>0</value>
+    </param>
+    <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(664, 449)</value>
+      <value>(664, 377)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1128,7 +1136,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(728, 681)</value>
+      <value>(728, 689)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1819,7 +1827,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(400, 897)</value>
+      <value>(400, 905)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2894,7 +2902,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(608, 896)</value>
+      <value>(608, 904)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3065,7 +3073,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(672, 760)</value>
+      <value>(672, 768)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3156,7 +3164,7 @@
     <source_block_id>ieee802_11_mac_0_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>phy out</source_key>
-    <sink_key>frame in</sink_key>
+    <sink_key>app in</sink_key>
   </connection>
   <connection>
     <source_block_id>logpwrfft_x_0</source_block_id>
@@ -3168,7 +3176,7 @@
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>frame request</source_key>
-    <sink_key>ctrl in</sink_key>
+    <sink_key>req in 0</sink_key>
   </connection>
   <connection>
     <source_block_id>macprotocols_csma_ca_0</source_block_id>
@@ -3203,7 +3211,7 @@
   <connection>
     <source_block_id>macprotocols_frame_buffer_0</source_block_id>
     <sink_block_id>macprotocols_csma_ca_0</sink_block_id>
-    <source_key>frame out</source_key>
+    <source_key>frame out 0</source_key>
     <sink_key>frame from buffer</sink_key>
   </connection>
   <connection>
