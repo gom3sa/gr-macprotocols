@@ -55,7 +55,7 @@ As pointed out by [Bloessl](https://www.researchgate.net/publication/276279753_T
 
 ## Author and Contact
 
-Author: André Vinícius Gomes Santos Gonçalves
+Author: André Vinícius Gomes Santos Gonçalves <br />
 Work address: Winet research group of the Computer Science Department of the Federal University of Minas Gerais
 
 Feel free to reach me. My email address is andre.gomes@dcc.ufmg.br. You can also find more information about myself in [https://homepages.dcc.ufmg.br/~andre.gomes](https://homepages.dcc.ufmg.br/~andre.gomes). 
