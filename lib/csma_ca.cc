@@ -139,6 +139,11 @@ class csma_ca_impl : public csma_ca {
 					message_port_pub(msg_port_frame_to_phy, pr_frame);
 					attempts++;
 
+					if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
+						pr_frame_acked = true;
+						if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
+					}
+
 					// Waiting for ack. Counting down for timeout.
 					int timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
 					if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;

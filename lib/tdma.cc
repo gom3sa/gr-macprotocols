@@ -142,6 +142,11 @@ class tdma_impl : public tdma {
 					message_port_pub(msg_port_frame_to_phy, pr_frame);
 					count_tx++;
 					if(pr_debug) std::cout << "Transmitting frame for the " << count_tx << "th time." << std::endl << std::flush;
+
+					if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
+						pr_frame_acked = true;
+						if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
+					}
 				}
 
 				pr_comm_started = false; // Anyway, wait until next communication interval

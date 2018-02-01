@@ -84,6 +84,12 @@
     <type>message</type>
     <optional>1</optional>
   </sink>
+  
+  <sink>
+    <name>broad in</name>
+    <type>message</type>
+    <optional>1</optional>
+  </sink>
 
   <!-- Make one 'source' node per output. Sub-nodes:
        * name (an identifier for the GUI)
@@ -107,5 +113,18 @@
     <type>message</type>
     <optional>1</optional>
   </source>
+
+  <doc>
+  This block has been extended in order to support a further project. If
+you are interested only in the MAC protocols, ignore ports/functions
+"ctrl in", "broad in", "req in +1" and "frame out +1". They are not 
+relevant to gr-macprotocols at all.
+  Look up ARP is useful if you intend to use the tun/tap feature. Originally,
+the project ieee802_11 is embedded with the block WIFI MAC. It is responsible
+for constructing the Data Link frame. However, it uses a fix MAC addr as 
+destination. Look up ARP changes the destination MAC addr acoording to 
+the ARP table. This is meant to run in linux based system, where ARP table
+is locatted at /proc/net/arp.
+</doc>
 
 </block>

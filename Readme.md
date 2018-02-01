@@ -53,6 +53,10 @@ If a bunch of Os is generated at screen while running the examples, you are prob
 
 As pointed out by [Bloessl](https://www.researchgate.net/publication/276279753_Timings_Matter_Standard_Compliant_IEEE_80211_Channel_Access_for_a_Fully_Software-based_SDR_Architecture)'s work, timings refrain software implementations of MAC protocols from operating according to IEEE 802.11 standard requirement. The proposed implementation has a parameter called `alpha` that consists of a multiplier of timing parameters. For example, if `SIFS = 10us` and `alpha = 100`, the considered SIFS time becomes `SIFS = 1000us` in respect of CSMA/CA.
 
+## Trobleshooting
+
+The error `Error in xml in file /*/gr-macprotocols/build/swig/macprotocols_swig_doc_swig_docs/xml/_8__frame__buffer_8h.xml` is bypassed adding the flag `-DENABLE_DOXYGEN=False` to `cmake ..`, more precisely `cmake -DENABLE_DOXYGEN=False ..`.
+
 ## Author and Contact
 
 Author: André Vinícius Gomes Santos Gonçalves <br />

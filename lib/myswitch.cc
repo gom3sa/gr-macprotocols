@@ -66,7 +66,8 @@ class myswitch_impl : public myswitch {
 		void ctrlin(pmt::pmt_t ctrl_msg) {
 			std::string str = pmt::symbol_to_string(ctrl_msg);
 			
-			if(str == "portid0") pr_portid = 0;
+			if(str == "portid-1") pr_portid = -1; // This means there is no chosen protocol
+			else if(str == "portid0") pr_portid = 0;
 			else if(str == "portid1") pr_portid = 1;
 			else if(str == "portid2") pr_portid = 2;
 			else if(str == "portid3") pr_portid = 3;

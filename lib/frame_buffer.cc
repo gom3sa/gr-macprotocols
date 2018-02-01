@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2017 <+YOU OR YOUR COMPANY+>.
+ * Copyright 2018 André Gomes, UFMG - <andre.gomes@dcc.ufmg.br>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,19 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+
+/* -*- -*- Notes on Frame Buffer -*- -*-
+ 	This block has been extended in order to support a further project. If
+you are interested only in the MAC protocols, ignore ports/functions
+"ctrl in", "broad in", "req in +1" and "frame out +1". They are not 
+relevant to gr-macprotocols at all.
+	Look up ARP is useful if you intend to use the tun/tap feature. Originally,
+the project ieee802_11 is embedded with the block WIFI MAC. It is responsible
+for constructing the Data Link frame. However, it uses a fix MAC addr as 
+destination. Look up ARP changes the destination MAC addr acoording to 
+the ARP table. This is meant to run in linux based system, where ARP table
+is locatted at /proc/net/arp.
+*/
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -62,6 +75,9 @@ class frame_buffer_impl : public frame_buffer {
 
 			message_port_register_in(msg_port_req2);
 			set_msg_handler(msg_port_req2, boost::bind(&frame_buffer_impl::req2, this, _1));
+
+			message_port_register_in(msg_port_broad);
+			set_msg_handler(msg_port_broad, boost::bind(&frame_buffer_impl::broad, this, _1));
 
 			// Output msg ports
 			message_port_register_out(msg_port_frame0);
@@ -132,7 +148,8 @@ class frame_buffer_impl : public frame_buffer {
 		void ctrlin(pmt::pmt_t ctrl_msg) {
 			std::string str = pmt::symbol_to_string(ctrl_msg);
 			
-			if(str == "portid0") pr_portid = 0;
+			if(str == "portid-1") pr_portid = -1; // This means there is no chosen protocol
+			else if(str == "portid0") pr_portid = 0;
 			else if(str == "portid1") pr_portid = 1;
 			else if(str == "portid2") pr_portid = 2;
 			else return;
@@ -175,6 +192,10 @@ class frame_buffer_impl : public frame_buffer {
 			}
 		}
 
+		void broad(pmt::pmt_t broad_frame) { // Broadcasting frame, it bypasses the queue
+			pr_circ_buff.push_front(broad_frame);
+		}
+
 	private:
 		// Internal variables
 		bool pr_arp, pr_debug;
@@ -190,6 +211,7 @@ class frame_buffer_impl : public frame_buffer {
 		pmt::pmt_t msg_port_req0 = pmt::mp("req in 0");
 		pmt::pmt_t msg_port_req1 = pmt::mp("req in 1");
 		pmt::pmt_t msg_port_req2 = pmt::mp("req in 2");
+		pmt::pmt_t msg_port_broad = pmt::mp("broad in");
 
 		// Output ports
 		pmt::pmt_t msg_port_frame0 = pmt::mp("frame out 0");
