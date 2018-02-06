@@ -87,6 +87,7 @@ class csma_ca_impl : public csma_ca {
 			 * This ensures the scheduler first deals with the msg port, then the thread is created.
 			*/
 			thread_check_buff = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::check_buff, this)));
+			thread_send_frame = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::send_frame, this)));
 			return block::start();
 		}
 
@@ -101,101 +102,108 @@ class csma_ca_impl : public csma_ca {
 		}
 
 		void frame_from_buff(pmt::pmt_t frame) {
-			boost::unique_lock<boost::mutex> lock(mu1);
+			boost::unique_lock<boost::mutex> lock(pr_mu1);
 			if(pr_debug) std::cout << "New frame from app" << std::endl << std::flush;
 
 			if(!pr_status) {
-				pr_status = true; // This means that there is already one frame to be sent. No more frames will be requested meanwhile.
 				pr_frame_acked = false;
 				pr_frame = frame; // Frame to be sent.
-				thread_send_frame = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::send_frame, this)));
+				pr_status = true; // This means that there is already one frame to be sent. No more frames will be requested meanwhile.
+				pr_cond2.notify_all();
 			}
 
 			lock.unlock();
 		}
 
 		void send_frame() {
+			uint attempts, sensing_time, backoff, tot_attempts;
 			if(pr_debug) std::cout << "Sending frame..." << std::endl << std::flush;
 
-			// In order to get sequence number
-			pmt::pmt_t cdr = pmt::cdr(pr_frame);
-			mac_header *h = (mac_header*)pmt::blob_data(cdr);
-			pr_frame_seq_nr = h->seq_nr;
+			while(true) {
+				// Waiting for a new frame
+				boost::unique_lock<boost::mutex> lock(pr_mu3);
+				while(!pr_status) pr_cond2.wait(lock);
 
-			uint attempts = 0; // Counter for retransmission.
-			uint sensing_time = pr_difs; 
-			uint backoff = 0;
+				// In order to get sequence number
+				pmt::pmt_t cdr = pmt::cdr(pr_frame);
+				mac_header *h = (mac_header*)pmt::blob_data(cdr);
+				pr_frame_seq_nr = h->seq_nr;
 
-			uint tot_attempts = 0; // This counter takes into account scenarios where the medium is busy. So, discard frame after a while.
+				attempts = 0; // Counter for retransmission.
+				sensing_time = pr_difs; 
+				backoff = 0;
 
-			while(attempts < MAX_RETRIES and pr_frame_acked == false and tot_attempts < MAX_RETRIES) {
+				tot_attempts = 0; // This counter takes into account scenarios where the medium is busy. So, discard frame after a while.
 
-				// This call listens to the medium for "sensing_time" us. This is used for both DIFS and AIFS Backoff.
-				bool ch_busy = is_channel_busy(pr_threshold, sensing_time);
-				
-				if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_frame_acked << std::endl << std::flush;
-				
-				if(ch_busy == false  and pr_frame_acked == false) { // Transmit
-					message_port_pub(msg_port_frame_to_phy, pr_frame);
-					attempts++;
+				while(attempts < MAX_RETRIES and pr_frame_acked == false and tot_attempts < MAX_RETRIES) {
 
-					if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
-						pr_frame_acked = true;
-						if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
-					}
+					// This call listens to the medium for "sensing_time" us. This is used for both DIFS and AIFS Backoff.
+					bool ch_busy = is_channel_busy(pr_threshold, sensing_time);
+					
+					if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_frame_acked << std::endl << std::flush;
+					
+					if(ch_busy == false  and pr_frame_acked == false) { // Transmit
+						message_port_pub(msg_port_frame_to_phy, pr_frame);
+						attempts++;
 
-					// Waiting for ack. Counting down for timeout.
-					int timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
-					if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;
-					auto start_time = clock::now();
-					auto end_time = clock::now();
-					float duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-					while(duration < timeout) {
-						end_time = clock::now();
-						duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-					}
+						if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
+							pr_frame_acked = true;
+							if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
+						}
 
-				} else if(ch_busy == true and pr_frame_acked == false) { // Randomize backoff, increment contention window (pr_cw).
-					// BackOffTime = Random() x aSlotTime, Random = [0, cw] where aCWmin <= cw <= aCWmax.
-					backoff = rand() % pr_cw;
-					pr_cw = pr_cw*2;
-					if(pr_cw >= aCWmax) pr_cw = aCWmax;
+						// Waiting for ack. Counting down for timeout.
+						int timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
+						if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;
+						auto start_time = clock::now();
+						auto end_time = clock::now();
+						float duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+						while(duration < timeout) {
+							end_time = clock::now();
+							duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+						}
 
-					sensing_time = backoff*pr_slot_time;
+					} else if(ch_busy == true and pr_frame_acked == false) { // Randomize backoff, increment contention window (pr_cw).
+						// BackOffTime = Random() x aSlotTime, Random = [0, cw] where aCWmin <= cw <= aCWmax.
+						backoff = rand() % pr_cw;
+						pr_cw = pr_cw*2;
+						if(pr_cw >= aCWmax) pr_cw = aCWmax;
 
-					if(pr_debug) std::cout << "Randomize backoff. Current value = " << sensing_time << " (us)." << std::endl << std::flush;
+						sensing_time = backoff*pr_slot_time;
 
-				} /*
-					IF YOU UNCOMMENT this part, make sure to replace "sensing_time = backoff*pr_slot_time" to "sensing_time = pr_slot_time" on line above.
-						ALSO, add "and backoff <= 0" on the first if (skip debug one). REASON for letting it the way it is: checking medium
-						by a slottime at time maybe inefficient while doing carrier sensing due to timing constraints. Really hard to keep 
-						precision in such a small time window.
+						if(pr_debug) std::cout << "Randomize backoff. Current value = " << sensing_time << " (us)." << std::endl << std::flush;
 
-					else if(ch_busy == false and pr_frame_acked == false and backoff > 0) { // Decrement backoff
-					backoff--;
-					if(backoff <= 0) {
-						backoff = 0;
-						sensing_time = 0;
-					} else {
-						sensing_time = pr_slot_time;
-					}
+					} /*
+						IF YOU UNCOMMENT this part, make sure to replace "sensing_time = backoff*pr_slot_time" to "sensing_time = pr_slot_time" on line above.
+							ALSO, add "and backoff <= 0" on the first if (skip debug one). REASON for letting it the way it is: checking medium
+							by a slottime at time maybe inefficient while doing carrier sensing due to timing constraints. Really hard to keep 
+							precision in such a small time window.
 
-					if(pr_debug) std::cout << "Decrement backoff. Current value = " << sensing_time*backoff << " (us)." << std::endl;
-				}*/
+						else if(ch_busy == false and pr_frame_acked == false and backoff > 0) { // Decrement backoff
+						backoff--;
+						if(backoff <= 0) {
+							backoff = 0;
+							sensing_time = 0;
+						} else {
+							sensing_time = pr_slot_time;
+						}
 
-				tot_attempts++;
+						if(pr_debug) std::cout << "Decrement backoff. Current value = " << sensing_time*backoff << " (us)." << std::endl;
+					}*/
+
+					tot_attempts++;
+				}
+
+				if(pr_frame_acked) {
+					pr_cw = aCWmin; // Sucessful transmission. So, reset contention window.
+					if(pr_debug) std::cout << "Frame acked properly!" << std::endl << std::flush;
+				} else if(attempts >= MAX_RETRIES) {
+					if(pr_debug) std::cout << "Max number of retries exceeded. Frame dropped!" << std::endl << std::flush;
+				} else if(tot_attempts == MAX_RETRIES) {
+					if(pr_debug) std::cout << "Medium is too busy. Frame dropped!" << std::endl << std::flush;
+				}
+
+				pr_status = false;
 			}
-
-			if(pr_frame_acked) {
-				pr_cw = aCWmin; // Sucessful transmission. So, reset contention window.
-				if(pr_debug) std::cout << "Frame acked properly!" << std::endl << std::flush;
-			} else if(attempts >= MAX_RETRIES) {
-				if(pr_debug) std::cout << "Max number of retries exceeded. Frame dropped!" << std::endl << std::flush;
-			} else if(tot_attempts == MAX_RETRIES) {
-				if(pr_debug) std::cout << "Medium is too busy. Frame dropped!" << std::endl << std::flush;
-			}
-
-			pr_status = false;
 		}
 
 		bool is_channel_busy(int threshold, int time) {
@@ -204,7 +212,7 @@ class csma_ca_impl : public csma_ca {
 			message_port_pub(msg_port_request_to_cs, pmt::string_to_symbol(std::to_string((float)time)));
 
 			pr_sensing = true; 
-			boost::unique_lock<boost::mutex> lock(mu2);
+			boost::unique_lock<boost::mutex> lock(pr_mu2);
 			while(pr_sensing) pr_cond1.wait(lock);
 
 			if(pr_debug) std::cout << "Avg power from medium = " << pr_avg_power << " (dB)." << std::endl;
@@ -241,7 +249,7 @@ class csma_ca_impl : public csma_ca {
 				case FC_ACK: {
 					if(is_mine == 0 and pr_status == true) {
 						if(h->seq_nr == pr_frame_seq_nr) { // Check if ack is for the last frame that was sent
-							pr_frame_acked = true; pr_status = false;
+							pr_frame_acked = true;
 							if(pr_debug) std::cout << "Ack for me!" << std::endl << std::flush;
 						}
 					}			
@@ -312,8 +320,8 @@ class csma_ca_impl : public csma_ca {
 		uint pr_cw;
 		bool pr_debug, pr_sensing, pr_status, pr_frame_acked;
 		float pr_avg_power;
-		boost::condition_variable pr_cond1;
-		boost::mutex mu1, mu2;
+		boost::condition_variable pr_cond1, pr_cond2;
+		boost::mutex pr_mu1, pr_mu2, pr_mu3;
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame;
 
 		// Input ports

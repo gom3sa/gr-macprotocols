@@ -55,9 +55,6 @@ make
 sudo make install 
 sudo ldconfig
 
-cd ../examples
-grcc data_link.grc
-
 echo ""
 echo "Done! You should be able to use gr-macprotocols based on gr-ieee802-11 right now. Please, report any problems <andre.gomes@dcc.ufmg.br>."
 echo ""

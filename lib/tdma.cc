@@ -87,8 +87,8 @@ class tdma_impl : public tdma {
 			 * The use of start() prevents the thread bellow to access the message port in check_buff() before it even exists. 
 			 * This ensures the scheduler first deals with the msg port, then the thread is created.
 			*/
-			// TODO: check if thread_sync will consume too much while another protocol is active rather than TDMA
 			if(pr_is_coord) thread_sync = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&tdma_impl::sync_func, this)));
+			thread_send_frame = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&tdma_impl::send_frame, this)));
 			thread_check_buff = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&tdma_impl::check_buff, this)));
 			return block::start();
 		}
@@ -108,53 +108,61 @@ class tdma_impl : public tdma {
 			if(pr_debug) std::cout << "New frame from app" << std::endl << std::flush;
 
 			if(!pr_status) {
-				pr_status = true; // This means that there is already one frame to be sent. No more frames will be requested meanwhile.
 				pr_frame_acked = false;
 				pr_comm_started = false;
 				pr_frame = frame; // Frame to be sent.
-				thread_send_frame = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&tdma_impl::send_frame, this)));
+				pr_status = true; // This means that there is already one frame to be sent. No more frames will be requested meanwhile.
+				pr_cond2.notify_all();
 			}
 
 			lock.unlock();
 		}
 
 		void send_frame() {
-			// Register frame sequence number
-			pmt::pmt_t cdr = pmt::cdr(pr_frame);
-			mac_header *h = (mac_header*)pmt::blob_data(cdr);
-			pr_frame_seq_nr = h->seq_nr;		
-
-			// Attempt to transmit
 			decltype(clock::now()) toc;
 			float elapsed_time, tx_time0;
-			int count_tx = 0;
-			while(!pr_frame_acked and count_tx < MAX_RETRIES) {
-				boost::unique_lock<boost::mutex> lock(pr_mu2);
-				while(!pr_comm_started) pr_cond1.wait(lock); // Waits for the beggining of Communication Interval
+			int count_tx;	
 
-				do { // Waits for the beginning of the allocated comm slot
-					toc = clock::now();
-					elapsed_time = (float) std::chrono::duration_cast<std::chrono::microseconds>(toc - pr_comm_time0).count();
-					tx_time0 = pr_tx_order*pr_comm_slot;
-				} while(elapsed_time < tx_time0);
+			while(true) {
+				// Waiting for a new frame
+				boost::unique_lock<boost::mutex> lock0(pr_mu4);
+				while(!pr_status) pr_cond2.wait(lock0);
 
-				if(elapsed_time - tx_time0 <= pr_guard_time) { // Guarantees transmission will be done within the correct comm slot
-					message_port_pub(msg_port_frame_to_phy, pr_frame);
-					count_tx++;
-					if(pr_debug) std::cout << "Transmitting frame for the " << count_tx << "th time." << std::endl << std::flush;
+				// Register frame sequence number
+				pmt::pmt_t cdr = pmt::cdr(pr_frame);
+				mac_header *h = (mac_header*)pmt::blob_data(cdr);
+				pr_frame_seq_nr = h->seq_nr;
+				count_tx = 0;
 
-					if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
-						pr_frame_acked = true;
-						if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
+				// Attempt to transmit
+				while(!pr_frame_acked and count_tx < MAX_RETRIES) {
+					boost::unique_lock<boost::mutex> lock1(pr_mu2);
+					while(!pr_comm_started) pr_cond1.wait(lock1); // Waits for the beggining of Communication Interval
+
+					do { // Waits for the beginning of the allocated comm slot
+						toc = clock::now();
+						elapsed_time = (float) std::chrono::duration_cast<std::chrono::microseconds>(toc - pr_comm_time0).count();
+						tx_time0 = pr_tx_order*pr_comm_slot;
+					} while(elapsed_time < tx_time0 and !pr_frame_acked);
+
+					if(elapsed_time - tx_time0 <= pr_guard_time and !pr_frame_acked) { // Guarantees transmission will be done within the correct comm slot
+						message_port_pub(msg_port_frame_to_phy, pr_frame);
+						count_tx++;
+						if(pr_debug) std::cout << "Transmitting frame for the " << count_tx << "th time." << std::endl << std::flush;
+
+						if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
+							pr_frame_acked = true;
+							if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
+						}
 					}
+
+					pr_comm_started = false; // Anyway, wait until next communication interval
 				}
+				if(pr_debug and count_tx >= MAX_RETRIES) std::cout << "Max number of retries exceeded. Drop frame!" << std::endl << std::flush;
 
-				pr_comm_started = false; // Anyway, wait until next communication interval
+				pr_status = false; // A new frame from buffer may arrive for transmission.
+				pr_frame_acked = false;
 			}
-			if(pr_debug and count_tx >= MAX_RETRIES) std::cout << "Max number of retries exceeded. Drop frame!" << std::endl << std::flush;
-
-			pr_status = false; // A new frame from buffer may arrive for transmission.
-			pr_frame_acked = false;
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
@@ -185,7 +193,6 @@ class tdma_impl : public tdma {
 
 						if((h->seq_nr == pr_frame_seq_nr) and !pr_frame_acked and pr_status) { // This means I'm waiting for this ack (Right seq_nr, not acked yet and it has not been dropped).
 							pr_frame_acked = true;
-							pr_status = false; // A new frame from buffer may arrive for transmission.
 							if(pr_debug) std::cout << "Frame was acked properly!" << std::endl << std::flush;
 						}
 					}
@@ -431,8 +438,8 @@ class tdma_impl : public tdma {
 		pmt::pmt_t msg_port_frame_to_app = pmt::mp("frame to app");
 
 		// Mutex & Threads & Cond variables
-		boost::mutex pr_mu1, pr_mu2, pr_mu3;
-		boost::condition_variable pr_cond1;
+		boost::mutex pr_mu1, pr_mu2, pr_mu3, pr_mu4;
+		boost::condition_variable pr_cond1, pr_cond2;
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame, thread_sync;
 
 		// Frame to be sent
