@@ -96,10 +96,15 @@ class tdma_impl : public tdma {
 		void check_buff() {
 			// TODO: Find a more efficient way to get data from buffer only if block is iddle and buffer not empty
 			while(true) {
-				if(!pr_status) { // This means no frame has arrived to be sent. So, it will request one to buffer.
+				if(pr_status) { // Frame buffer is probably not empty, mind the queue carefully
+					boost::unique_lock<boost::mutex> lock(pr_mu5);
+					while(pr_status) pr_cond3.wait(lock); // send_frame has already a frame, wait until it gets available
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
+					usleep(pr_comm_slot + pr_sync_time);
+				} else { // This means no frame has arrived to be sent. So, it will request one to buffer.
+					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
+					usleep((rand() % 5)*(pr_slot_time + pr_sync_time + pr_data_time) + AVG_BLOCK_DELAY); srand(time(NULL));
 				}
-				usleep((rand() % 5)*(pr_slot_time + pr_sync_time + pr_data_time) + AVG_BLOCK_DELAY); srand(time(NULL));
 			}
 		}
 
@@ -162,6 +167,7 @@ class tdma_impl : public tdma {
 
 				pr_status = false; // A new frame from buffer may arrive for transmission.
 				pr_frame_acked = false;
+				pr_cond3.notify_all();
 			}
 		}
 
@@ -438,8 +444,8 @@ class tdma_impl : public tdma {
 		pmt::pmt_t msg_port_frame_to_app = pmt::mp("frame to app");
 
 		// Mutex & Threads & Cond variables
-		boost::mutex pr_mu1, pr_mu2, pr_mu3, pr_mu4;
-		boost::condition_variable pr_cond1, pr_cond2;
+		boost::mutex pr_mu1, pr_mu2, pr_mu3, pr_mu4, pr_mu5;
+		boost::condition_variable pr_cond1, pr_cond2, pr_cond3;
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame, thread_sync;
 
 		// Frame to be sent

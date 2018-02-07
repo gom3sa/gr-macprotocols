@@ -86,18 +86,23 @@ class csma_ca_impl : public csma_ca {
 			 * The use of start() prevents the thread bellow to access the message port in check_buff() before it even exists. 
 			 * This ensures the scheduler first deals with the msg port, then the thread is created.
 			*/
-			thread_check_buff = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::check_buff, this)));
 			thread_send_frame = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::send_frame, this)));
+			thread_check_buff = boost::shared_ptr<gr::thread::thread> (new gr::thread::thread(boost::bind(&csma_ca_impl::check_buff, this)));
 			return block::start();
 		}
 
 		void check_buff() {
 			// TODO: Find a more efficient way to get data from buffer only if block is iddle and buffer not empty
 			while(true) {
-				if(!pr_status) { // This means no frame has arrived to be sent. So, it will request one to buffer.
+				if(pr_status) { // Frame buffer is probably not empty, mind the queue carefully
+					boost::unique_lock<boost::mutex> lock(pr_mu4);
+					while(pr_status) pr_cond3.wait(lock); // send_frame has already a frame, wait until it gets available
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
+					usleep(pr_difs + AVG_BLOCK_DELAY);
+				} else { // Frame buffer is probably empty, request and wait a random time
+					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
+					usleep((rand() % 5)*(pr_slot_time + pr_sifs + pr_difs) + AVG_BLOCK_DELAY); srand(time(NULL));
 				}
-				usleep((rand() % 5)*(pr_slot_time + pr_sifs + pr_difs) + AVG_BLOCK_DELAY); srand(time(NULL));
 			}
 		}
 
@@ -122,7 +127,7 @@ class csma_ca_impl : public csma_ca {
 			while(true) {
 				// Waiting for a new frame
 				boost::unique_lock<boost::mutex> lock(pr_mu3);
-				while(!pr_status) pr_cond2.wait(lock);
+				while(!pr_status) pr_cond2.wait(lock); 
 
 				// In order to get sequence number
 				pmt::pmt_t cdr = pmt::cdr(pr_frame);
@@ -203,6 +208,7 @@ class csma_ca_impl : public csma_ca {
 				}
 
 				pr_status = false;
+				pr_cond3.notify_all();
 			}
 		}
 
@@ -320,8 +326,8 @@ class csma_ca_impl : public csma_ca {
 		uint pr_cw;
 		bool pr_debug, pr_sensing, pr_status, pr_frame_acked;
 		float pr_avg_power;
-		boost::condition_variable pr_cond1, pr_cond2;
-		boost::mutex pr_mu1, pr_mu2, pr_mu3;
+		boost::condition_variable pr_cond1, pr_cond2, pr_cond3;
+		boost::mutex pr_mu1, pr_mu2, pr_mu3, pr_mu4;
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame;
 
 		// Input ports
