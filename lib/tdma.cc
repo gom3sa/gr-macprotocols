@@ -58,7 +58,7 @@ class tdma_impl : public tdma {
 							gr::io_signature::make(0, 0, 0),
 							gr::io_signature::make(0, 0, 0)),
 							pr_is_coord(is_coord), pr_slot_time(alpha*slot_time), pr_debug(debug),
-								pr_sync_time(2*alpha*slot_time), pr_data_time(4*alpha*slot_time), pr_ack_time(2*alpha*slot_time) , pr_alloc_slot(2*alpha*slot_time), 
+								pr_sync_time(alpha*slot_time), pr_data_time(alpha*slot_time), pr_ack_time(alpha*slot_time) , pr_alloc_slot(alpha*slot_time), 
 								pr_status(false), pr_frame_acked(false), pr_num_active_addr(0), pr_num_alloc_addr(0), pr_sync_time0(clock::now()), pr_comm_time0(clock::now()),
 								pr_tx_order(0), pr_comm_started(false) {
 			// Inputs
@@ -79,7 +79,6 @@ class tdma_impl : public tdma {
 			}
 
 			pr_comm_slot = pr_data_time + pr_ack_time;
-			pr_guard_time = 0.1*pr_comm_slot;
 		}
 
 		bool start() {
@@ -150,7 +149,7 @@ class tdma_impl : public tdma {
 						tx_time0 = pr_tx_order*pr_comm_slot;
 					} while(elapsed_time < tx_time0 and !pr_frame_acked);
 
-					if(elapsed_time - tx_time0 <= pr_guard_time and !pr_frame_acked) { // Guarantees transmission will be done within the correct comm slot
+					if(!pr_frame_acked) { // Guarantees transmission will be done within the correct comm slot
 						message_port_pub(msg_port_frame_to_phy, pr_frame);
 						count_tx++;
 						if(pr_debug) std::cout << "Transmitting frame for the " << count_tx << "th time." << std::endl << std::flush;
@@ -376,7 +375,7 @@ class tdma_impl : public tdma {
 				if(pr_debug) std::cout << "COMM Slot was allocated. Node will be the " << pr_tx_order << "th to transmit." << std::endl << std::flush;
 				
 				// Wait before starting another super frame
-				waiting_time = pr_comm_slot*(pr_num_active_addr + 1); // The last one is reserved for coordinator.
+				waiting_time = pr_comm_slot*(pr_num_active_addr + 1); // The last one is reserved for coordinator; +slot_time to avoid overlap
 				usleep(waiting_time); // It seems this one does not need too much accuracy. Change to busy waiting if necessary. (Uncomment bellow)
 				/* Busy waiting
 				do {
