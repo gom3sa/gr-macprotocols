@@ -22,10 +22,12 @@ Author: André Gomes, andre.gomes@dcc.ufmg.br - Winet Lab, Federal University of
 #include <time.h>
 #include <boost/crc.hpp>
 #include <chrono>
+#include <boost/circular_buffer.hpp>
 
+#define MAX_LOCAL_BUFF 3
+#define AVG_BLOCK_DELAY 1000 // us, so 1ms
 #define MAX_RETRIES 5
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
-#define AVG_BLOCK_DELAY 10 // (us)
 #define aCWmin 16 // aCWmin + 1
 #define aCWmax 1024 // aCWmax + 1
 // Frame Control (FC) cheat sheet
@@ -70,8 +72,7 @@ class csma_ca_impl : public csma_ca {
 			message_port_register_out(msg_port_frame_to_app);
 
 			// Variables initialization
-			pr_status = false; // FALSE: iddle, no frame to send; TRUE: busy, trying to send a frame. 
-			pr_frame_acked = false; // TRUE: ack was just received. This is usefull for thread handling send_frame().
+			pr_acked = false; // TRUE: ack was just received. This is usefull for thread handling send_frame().
 			pr_cw = aCWmin;
 
 
@@ -79,6 +80,9 @@ class csma_ca_impl : public csma_ca {
 				pr_mac_addr[i] = src_mac[i];
 				pr_broadcast_addr[i] = 0xff;
 			}
+
+			// Set local buffer capacity, should be the smallest possible
+			pr_buff.rset_capacity(MAX_LOCAL_BUFF);
 		}
 
 		bool start() {
@@ -94,43 +98,40 @@ class csma_ca_impl : public csma_ca {
 		void check_buff() {
 			// TODO: Find a more efficient way to get data from buffer only if block is iddle and buffer not empty
 			while(true) {
-				if(pr_status) { // Frame buffer is probably not empty, mind the queue carefully
-					boost::unique_lock<boost::mutex> lock(pr_mu4);
-					while(pr_status) pr_cond3.wait(lock); // send_frame has already a frame, wait until it gets available
+				if(pr_buff.size() < MAX_LOCAL_BUFF) {
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep(pr_difs + AVG_BLOCK_DELAY);
-				} else { // Frame buffer is probably empty, request and wait a random time
-					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep((rand() % 5)*(pr_slot_time + pr_sifs + pr_difs) + AVG_BLOCK_DELAY); srand(time(NULL));
+					usleep(AVG_BLOCK_DELAY);
+				} else {
+					usleep((pr_slot_time + pr_sifs + pr_difs) * (MAX_LOCAL_BUFF*0.8));
 				}
 			}
 		}
 
 		void frame_from_buff(pmt::pmt_t frame) {
-			boost::unique_lock<boost::mutex> lock(pr_mu1);
-			if(pr_debug) std::cout << "New frame from app" << std::endl << std::flush;
-
-			if(!pr_status) {
-				pr_frame_acked = false;
-				pr_frame = frame; // Frame to be sent.
-				pr_status = true; // This means that there is already one frame to be sent. No more frames will be requested meanwhile.
-				pr_cond2.notify_all();
+			if(pr_buff.size() < MAX_LOCAL_BUFF) {
+				pr_buff.push_back(frame);
+				pr_new_frame_cond.notify_all(); // In case send_frame() is waiting for a new frame
+			} else {
+				if(pr_debug) std::cout << "Local buffer is already FULL!" << std::endl << std::flush;
 			}
-
-			lock.unlock();
 		}
 
 		void send_frame() {
 			uint attempts, sensing_time, backoff, tot_attempts;
+			bool ch_busy;
+			int timeout;
+			decltype(clock::now()) tic, toc;
+			float dt; 
+			boost::unique_lock<boost::mutex> lock0(pr_mu0);
+
 			if(pr_debug) std::cout << "Sending frame..." << std::endl << std::flush;
 
 			while(true) {
 				// Waiting for a new frame
-				boost::unique_lock<boost::mutex> lock(pr_mu3);
-				while(!pr_status) pr_cond2.wait(lock); 
+				while(pr_buff.size() <= 0) pr_new_frame_cond.wait(lock0); 
 
 				// In order to get sequence number
-				pmt::pmt_t cdr = pmt::cdr(pr_frame);
+				pmt::pmt_t cdr = pmt::cdr(pr_buff[0]);
 				mac_header *h = (mac_header*)pmt::blob_data(cdr);
 				pr_frame_seq_nr = h->seq_nr;
 
@@ -140,34 +141,32 @@ class csma_ca_impl : public csma_ca {
 
 				tot_attempts = 0; // This counter takes into account scenarios where the medium is busy. So, discard frame after a while.
 
-				while(attempts < MAX_RETRIES and pr_frame_acked == false and tot_attempts < MAX_RETRIES) {
+				while(attempts < MAX_RETRIES and pr_acked == false and tot_attempts < MAX_RETRIES) {
 
 					// This call listens to the medium for "sensing_time" us. This is used for both DIFS and AIFS Backoff.
-					bool ch_busy = is_channel_busy(pr_threshold, sensing_time);
+					ch_busy = is_channel_busy(pr_threshold, sensing_time);
 					
-					if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_frame_acked << std::endl << std::flush;
+					if(pr_debug) std::cout << "Is channel busy? " << ch_busy << ", frame acked? " << pr_acked << std::endl << std::flush;
 					
-					if(ch_busy == false  and pr_frame_acked == false) { // Transmit
-						message_port_pub(msg_port_frame_to_phy, pr_frame);
+					if(ch_busy == false  and pr_acked == false) { // Transmit
+						message_port_pub(msg_port_frame_to_phy, pr_buff[0]);
 						attempts++;
 
 						if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
-							pr_frame_acked = true;
+							pr_acked = true;
 							if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
 						}
 
 						// Waiting for ack. Counting down for timeout.
-						int timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
+						timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
 						if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;
-						auto start_time = clock::now();
-						auto end_time = clock::now();
-						float duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-						while(duration < timeout) {
-							end_time = clock::now();
-							duration = (float) std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-						}
+						tic = clock::now();
+						do {
+							toc = clock::now();
+							dt = (float) std::chrono::duration_cast<std::chrono::microseconds>(toc - tic).count();
+						} while(dt < timeout);
 
-					} else if(ch_busy == true and pr_frame_acked == false) { // Randomize backoff, increment contention window (pr_cw).
+					} else if(ch_busy == true and pr_acked == false) { // Randomize backoff, increment contention window (pr_cw).
 						// BackOffTime = Random() x aSlotTime, Random = [0, cw] where aCWmin <= cw <= aCWmax.
 						backoff = rand() % pr_cw;
 						pr_cw = pr_cw*2;
@@ -183,7 +182,7 @@ class csma_ca_impl : public csma_ca {
 							by a slottime at time maybe inefficient while doing carrier sensing due to timing constraints. Really hard to keep 
 							precision in such a small time window.
 
-						else if(ch_busy == false and pr_frame_acked == false and backoff > 0) { // Decrement backoff
+						else if(ch_busy == false and pr_acked == false and backoff > 0) { // Decrement backoff
 						backoff--;
 						if(backoff <= 0) {
 							backoff = 0;
@@ -198,7 +197,7 @@ class csma_ca_impl : public csma_ca {
 					tot_attempts++;
 				}
 
-				if(pr_frame_acked) {
+				if(pr_acked) {
 					pr_cw = aCWmin; // Sucessful transmission. So, reset contention window.
 					if(pr_debug) std::cout << "Frame acked properly!" << std::endl << std::flush;
 				} else if(attempts >= MAX_RETRIES) {
@@ -207,8 +206,8 @@ class csma_ca_impl : public csma_ca {
 					if(pr_debug) std::cout << "Medium is too busy. Frame dropped!" << std::endl << std::flush;
 				}
 
-				pr_status = false;
-				pr_cond3.notify_all();
+				pr_acked = false;
+				pr_buff.pop_front();
 			}
 		}
 
@@ -218,8 +217,8 @@ class csma_ca_impl : public csma_ca {
 			message_port_pub(msg_port_request_to_cs, pmt::string_to_symbol(std::to_string((float)time)));
 
 			pr_sensing = true; 
-			boost::unique_lock<boost::mutex> lock(pr_mu2);
-			while(pr_sensing) pr_cond1.wait(lock);
+			boost::unique_lock<boost::mutex> lock(pr_mu1);
+			while(pr_sensing) pr_cs_cond.wait(lock);
 
 			if(pr_debug) std::cout << "Avg power from medium = " << pr_avg_power << " (dB)." << std::endl;
 
@@ -234,17 +233,26 @@ class csma_ca_impl : public csma_ca {
 			pmt::pmt_t cdr = pmt::cdr(frame);
 			mac_header *h = (mac_header*)pmt::blob_data(cdr);
 
-			int is_broadcast = memcmp(h->addr1, pr_broadcast_addr, 6); // 0 if frame IS for broadcast
-			int is_mine = memcmp(h->addr1, pr_mac_addr, 6); // 0 if frame IS mine
+			bool is_mine, is_broadcast;
+			if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) {
+				is_broadcast = true;
+			} else {
+				is_broadcast = false;
+			}
+			if(memcmp(h->addr1, pr_mac_addr, 6) == 0) {
+				is_mine = true;
+			} else {
+				is_mine = false;
+			}
 
-			if(is_mine != 0 and is_broadcast != 0) {
+			if(!is_mine and !is_broadcast) {
 				if(pr_debug) std::cout << "This frame is not for me. Drop it!" << std::endl << std::flush;
 				return;
 			}
 
 			switch(h->frame_control) {
 				case FC_DATA: {
-					if(is_mine == 0) {
+					if(is_mine) {
 						if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
 						pmt::pmt_t ack = generate_ack_frame(frame);
 						message_port_pub(msg_port_frame_to_phy, ack);
@@ -253,11 +261,9 @@ class csma_ca_impl : public csma_ca {
 				} break;
 
 				case FC_ACK: {
-					if(is_mine == 0 and pr_status == true) {
-						if(h->seq_nr == pr_frame_seq_nr) { // Check if ack is for the last frame that was sent
-							pr_frame_acked = true;
-							if(pr_debug) std::cout << "Ack for me!" << std::endl << std::flush;
-						}
+					if(is_mine and h->seq_nr == pr_frame_seq_nr and pr_buff.size() > 0) {
+						pr_acked = true;
+						if(pr_debug) std::cout << "Ack for me!" << std::endl << std::flush;
 					}			
 				} break;
 
@@ -276,7 +282,7 @@ class csma_ca_impl : public csma_ca {
 			pr_avg_power = pmt::to_float(msg);
 			
 			pr_sensing = false;
-			pr_cond1.notify_all();
+			pr_cs_cond.notify_all();
 		}
 
 		pmt::pmt_t generate_ack_frame(pmt::pmt_t frame) {
@@ -324,10 +330,10 @@ class csma_ca_impl : public csma_ca {
 	private:
 		int pr_slot_time, pr_sifs, pr_difs, pr_frame_id, pr_alpha, pr_threshold;
 		uint pr_cw;
-		bool pr_debug, pr_sensing, pr_status, pr_frame_acked;
+		bool pr_debug, pr_sensing, pr_acked;
 		float pr_avg_power;
-		boost::condition_variable pr_cond1, pr_cond2, pr_cond3;
-		boost::mutex pr_mu1, pr_mu2, pr_mu3, pr_mu4;
+		boost::condition_variable pr_cs_cond, pr_new_frame_cond;
+		boost::mutex pr_mu0, pr_mu1;
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame;
 
 		// Input ports
@@ -345,9 +351,10 @@ class csma_ca_impl : public csma_ca {
 		uint8_t pr_mac_addr[6], pr_broadcast_addr[6];
 
 		// Frame to be sent
-		pmt::pmt_t pr_frame;
 		uint16_t pr_frame_seq_nr;
 
+		// Local buffer
+		boost::circular_buffer<pmt::pmt_t> pr_buff;
 };
 
 csma_ca::sptr

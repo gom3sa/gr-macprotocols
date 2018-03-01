@@ -27,10 +27,13 @@
 #include <boost/thread.hpp>
 #include <chrono>
 #include <boost/crc.hpp>
+#include <boost/circular_buffer.hpp>
 
 #define MAX_NUM_NODES 64
-#define PHY_DELAY 10000 // 10ms, mostly on Gnu Radio (empirical)
+#define PHY_DELAY 50000 // 10ms, mostly on Gnu Radio (empirical)
 #define MAX_RETRIES 5
+#define MAX_LOCAL_BUFF 3
+#define AVG_BLOCK_DELAY 1000 // us, so 1ms
 
 #define FC_ACK 0x2B00
 #define FC_DATA 0x0008
@@ -63,7 +66,6 @@ class naive_tdma_impl : public naive_tdma {
 				pr_broadcast_addr[i] = 0xff;
 			}
 
-			pr_status = false; // No frame on tx queue
 			pr_acked = true;
 
 			// Inputs
@@ -77,6 +79,9 @@ class naive_tdma_impl : public naive_tdma {
 			message_port_register_out(msg_port_frame_to_phy);
 			message_port_register_out(msg_port_frame_request);
 			message_port_register_out(msg_port_frame_to_app);
+
+			// Set local buffer capacity, should be the smallest possible
+			pr_buff.rset_capacity(MAX_LOCAL_BUFF);
 		}
 
 		bool start() {
@@ -90,30 +95,22 @@ class naive_tdma_impl : public naive_tdma {
 		void check_buff() {
 			// TODO: Find a more efficient way to get data from buffer only if block is iddle and buffer not empty
 			while(true) {
-				if(pr_status) { // Frame buffer is probably not empty, mind the queue carefully
-					boost::unique_lock<boost::mutex> lock2(pr_mu2);
-					while(pr_status) pr_status_cond.wait(lock2); // send_frame has already a frame, wait until it gets available
+				if(pr_buff.size() < MAX_LOCAL_BUFF) {
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep(pr_comm_time + pr_sync_time);
-				} else { // This means no frame has arrived to be sent. So, it will request one to buffer.
-					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep((rand() % 5)*(pr_sync_time + pr_comm_time)); srand(time(NULL));
+					usleep(AVG_BLOCK_DELAY);
+				} else {
+					usleep((pr_sync_time + pr_comm_time) * (MAX_LOCAL_BUFF*0.8));
 				}
 			}
 		}
 
 		void frame_from_buff(pmt::pmt_t frame) {
-			boost::unique_lock<boost::mutex> lock3(pr_mu3);
-			if(pr_debug) std::cout << "New frame from app" << std::endl << std::flush;
-
-			if(!pr_status) {
-				pr_acked = false;
-				pr_frame = frame; // Frame to be sent.
-				pr_status = true; // This means that there is already one frame to be sent. No more frames will be requested meanwhile.
-				pr_new_frame_cond.notify_all();
+			if(pr_buff.size() < MAX_LOCAL_BUFF) {
+				pr_buff.push_back(frame);
+				pr_new_frame_cond.notify_all(); // In case send_frame() is waiting for a new frame
+			} else {
+				if(pr_debug) std::cout << "Local buffer is already FULL!" << std::endl << std::flush;
 			}
-
-			lock3.unlock();
 		}
 
 		void send_frame() {
@@ -123,13 +120,14 @@ class naive_tdma_impl : public naive_tdma {
 			decltype(clock::now()) tnow;
 			float wait_time, dt;
 			bool is_broadcast;
+			boost::unique_lock<boost::mutex> lock0(pr_mu0);
+			boost::unique_lock<boost::mutex> lock1(pr_mu1);
 
 			while(true) {
 				// Waiting a new frame
-				boost::unique_lock<boost::mutex> lock0(pr_mu0);
-				while(!pr_status) pr_new_frame_cond.wait(lock0);
+				while(pr_buff.size() <= 0) pr_new_frame_cond.wait(lock0);
 
-				cdr = pmt::cdr(pr_frame);
+				cdr = pmt::cdr(pr_buff[0]);
 				h = (mac_header*)pmt::blob_data(cdr);
 				pr_frame_seq_nr = h->seq_nr;
 				count = 0;
@@ -142,7 +140,6 @@ class naive_tdma_impl : public naive_tdma {
 
 				// Attempt to transmit
 				while(!pr_acked and count < MAX_RETRIES) {
-					boost::unique_lock<boost::mutex> lock1(pr_mu1);
 					while(!pr_tx) pr_tx_cond.wait(lock1); // Has super frame started? Wait for it!
 					pr_tx = false;
 
@@ -157,7 +154,7 @@ class naive_tdma_impl : public naive_tdma {
 					if(pr_debug) std::cout << "It should wait for " << wait_time << " us, it has waited for " << dt << std::endl << std::flush;
 
 					if(!pr_acked) {
-						message_port_pub(msg_port_frame_to_phy, pr_frame);
+						message_port_pub(msg_port_frame_to_phy, pr_buff[0]);
 						count++;
 
 						if(is_broadcast) {
@@ -169,9 +166,8 @@ class naive_tdma_impl : public naive_tdma {
 				if(pr_debug and count >= MAX_RETRIES) std::cout << "Max # of attempts exceeded. Drop the frame!" << std::endl << std::flush;
 
 				// Resetting counters
-				pr_status = false;
+				pr_buff.pop_front();
 				pr_acked = false;
-				pr_status_cond.notify_all();
 			}
 		}
 
@@ -186,7 +182,9 @@ class naive_tdma_impl : public naive_tdma {
 				tnow = clock::now();
 				dt = (float) std::chrono::duration_cast<std::chrono::microseconds>(tnow - pr_sync0).count();
 			} while(dt < wait_time);
+
 			message_port_pub(msg_port_frame_to_phy, skip_frame);
+			if(pr_debug) std::cout << "SKIP frame sent" << std::endl << std::flush; 
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
@@ -233,7 +231,7 @@ class naive_tdma_impl : public naive_tdma {
 					if(is_mine) {
 						if(pr_debug) std::cout << "ACK for me!" << std::endl << std::flush;
 
-						if((h->seq_nr == pr_frame_seq_nr) and !pr_acked and pr_status) {
+						if((h->seq_nr == pr_frame_seq_nr) and !pr_acked and (pr_buff.size() > 0)) {
 							pr_acked = true;
 							if(pr_debug) std::cout << "Frame was acked properly!" << std::endl << std::flush;
 						}
@@ -260,7 +258,7 @@ class naive_tdma_impl : public naive_tdma {
 							}
 						}
 
-						if(pr_status) { // There is a frame to be transmitted
+						if(pr_buff.size() > 0) { // There is a frame to be transmitted
 							pr_tx = true;
 							pr_tx_cond.notify_all();
 						} else { // No frame to be transmitted; transmit SKIP msg
@@ -274,6 +272,10 @@ class naive_tdma_impl : public naive_tdma {
 						if(pr_debug) std::cout << "Skip frame was received" << std::endl << std::flush;
 					}
 				} break; 
+
+				case FC_PROTOCOL: {
+					// TODO
+				} break;
 
 				default: {
 					if(pr_debug) std::cout << "Unkown frame type." << std::endl << std::flush;
@@ -309,7 +311,7 @@ class naive_tdma_impl : public naive_tdma {
 				sleep_time = pr_sync_time + pr_comm_time * (pr_act_nodes_count + 2); // +2: 1 slot reserved to coord; 1 slot reserved to new nodes
 				pr_act_nodes_count = 0;
 
-				if(pr_status) { 
+				if(pr_buff.size() > 0) { 
 					pr_tx = true;
 					pr_tx_cond.notify_all();
 				}
@@ -366,12 +368,11 @@ class naive_tdma_impl : public naive_tdma {
 
 		// Variables
 		int pr_slot_time, pr_ack_time, pr_sync_time, pr_comm_time, pr_tx_order;
-		bool pr_is_coord, pr_debug, pr_status, pr_acked, pr_tx;
+		bool pr_is_coord, pr_debug, pr_acked, pr_tx;
 		decltype(clock::now()) pr_sync0;
 		uint8_t pr_act_nodes[6*MAX_NUM_NODES];
 		int pr_act_nodes_count; 
 		uint16_t pr_frame_seq_nr;
-		pmt::pmt_t pr_frame;
 
 		// Output ports
 		pmt::pmt_t msg_port_frame_to_phy = pmt::mp("frame to phy");
@@ -383,13 +384,16 @@ class naive_tdma_impl : public naive_tdma {
 		pmt::pmt_t msg_port_frame_from_phy = pmt::mp("frame from phy");
 
 		// Conditional variables
-		boost::condition_variable pr_tx_cond, pr_new_frame_cond, pr_status_cond;
+		boost::condition_variable pr_tx_cond, pr_new_frame_cond;
 
 		// Locks
-		boost::mutex pr_mu0, pr_mu1, pr_mu2, pr_mu3;
+		boost::mutex pr_mu0, pr_mu1;
 
 		// Threads
 		boost::shared_ptr<gr::thread::thread> thread_check_buff, thread_send_frame, thread_sync;
+
+		// Local buffer
+		boost::circular_buffer<pmt::pmt_t> pr_buff;
 };
 
 naive_tdma::sptr
