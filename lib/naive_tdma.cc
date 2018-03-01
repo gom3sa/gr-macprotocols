@@ -97,7 +97,7 @@ class naive_tdma_impl : public naive_tdma {
 					usleep(pr_comm_time + pr_sync_time);
 				} else { // This means no frame has arrived to be sent. So, it will request one to buffer.
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep((rand() % 5)*(pr_sync_time + pr_comm_time + PHY_DELAY)); srand(time(NULL));
+					usleep((rand() % 5)*(pr_sync_time + pr_comm_time)); srand(time(NULL));
 				}
 			}
 		}
