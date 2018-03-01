@@ -430,57 +430,6 @@
     </param>
   </block>
   <block>
-    <key>blocks_file_sink</key>
-    <param>
-      <key>append</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>/tmp/wifi_rx.pcap</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1136, 342)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>blocks_file_sink_0_0</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>unbuffered</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-  </block>
-  <block>
     <key>blocks_multiply_const_vxx</key>
     <param>
       <key>alias</key>
@@ -657,7 +606,7 @@
     </param>
     <param>
       <key>debug</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -674,53 +623,6 @@
     <param>
       <key>id</key>
       <value>foo_wireshark_connector_0</value>
-    </param>
-    <param>
-      <key>maxoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>minoutbuf</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>tech</key>
-      <value>127</value>
-    </param>
-  </block>
-  <block>
-    <key>foo_wireshark_connector</key>
-    <param>
-      <key>alias</key>
-      <value></value>
-    </param>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>affinity</key>
-      <value></value>
-    </param>
-    <param>
-      <key>debug</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(944, 349)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>foo_wireshark_connector_0_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -932,7 +834,7 @@
     </param>
   </block>
   <block>
-    <key>macprotocols_tdma</key>
+    <key>macprotocols_naive_tdma</key>
     <param>
       <key>alpha</key>
       <value>1000</value>
@@ -955,7 +857,7 @@
     </param>
     <param>
       <key>debug</key>
-      <value>True</value>
+      <value>False</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -963,7 +865,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(640, 640)</value>
+      <value>(632, 640)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -971,7 +873,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>macprotocols_tdma_0</value>
+      <value>macprotocols_naive_tdma_0</value>
     </param>
     <param>
       <key>src_mac</key>
@@ -2972,12 +2874,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>foo_wireshark_connector_0_0</source_block_id>
-    <sink_block_id>blocks_file_sink_0_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>ieee802_11_ether_encap_0</source_block_id>
     <sink_block_id>blocks_tuntap_pdu_0</sink_block_id>
     <source_key>to tap</source_key>
@@ -2997,30 +2893,24 @@
   </connection>
   <connection>
     <source_block_id>macprotocols_frame_buffer_0</source_block_id>
-    <sink_block_id>macprotocols_tdma_0</sink_block_id>
+    <sink_block_id>macprotocols_naive_tdma_0</sink_block_id>
     <source_key>frame out 0</source_key>
     <sink_key>frame from buffer</sink_key>
   </connection>
   <connection>
-    <source_block_id>macprotocols_tdma_0</source_block_id>
+    <source_block_id>macprotocols_naive_tdma_0</source_block_id>
     <sink_block_id>macprotocols_frame_buffer_0</sink_block_id>
     <source_key>frame request</source_key>
     <sink_key>req in 0</sink_key>
   </connection>
   <connection>
-    <source_block_id>macprotocols_tdma_0</source_block_id>
-    <sink_block_id>foo_wireshark_connector_0_0</sink_block_id>
-    <source_key>frame to app</source_key>
-    <sink_key>in</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>macprotocols_tdma_0</source_block_id>
+    <source_block_id>macprotocols_naive_tdma_0</source_block_id>
     <sink_block_id>ieee802_11_ether_encap_0</sink_block_id>
     <source_key>frame to app</source_key>
     <sink_key>from wifi</sink_key>
   </connection>
   <connection>
-    <source_block_id>macprotocols_tdma_0</source_block_id>
+    <source_block_id>macprotocols_naive_tdma_0</source_block_id>
     <sink_block_id>wifi_phy_hier_0</sink_block_id>
     <source_key>frame to phy</source_key>
     <sink_key>mac_in</sink_key>
@@ -3045,7 +2935,7 @@
   </connection>
   <connection>
     <source_block_id>wifi_phy_hier_0</source_block_id>
-    <sink_block_id>macprotocols_tdma_0</sink_block_id>
+    <sink_block_id>macprotocols_naive_tdma_0</sink_block_id>
     <source_key>mac_out</source_key>
     <sink_key>frame from phy</sink_key>
   </connection>

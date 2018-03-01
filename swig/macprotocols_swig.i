@@ -12,6 +12,7 @@
 #include "macprotocols/frame_buffer.h"
 #include "macprotocols/tdma.h"
 #include "macprotocols/myswitch.h"
+#include "macprotocols/naive_tdma.h"
 %}
 
 
@@ -23,3 +24,5 @@ GR_SWIG_BLOCK_MAGIC2(macprotocols, frame_buffer);
 GR_SWIG_BLOCK_MAGIC2(macprotocols, tdma);
 %include "macprotocols/myswitch.h"
 GR_SWIG_BLOCK_MAGIC2(macprotocols, myswitch);
+%include "macprotocols/naive_tdma.h"
+GR_SWIG_BLOCK_MAGIC2(macprotocols, naive_tdma);

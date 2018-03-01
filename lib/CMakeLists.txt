@@ -30,6 +30,7 @@ list(APPEND macprotocols_sources
     frame_buffer.cc
     tdma.cc
     myswitch.cc
+    naive_tdma.cc
 )
 
 set(macprotocols_sources "${macprotocols_sources}" PARENT_SCOPE)

@@ -21,5 +21,6 @@ install(FILES
     macprotocols_csma_ca.xml
     macprotocols_frame_buffer.xml
     macprotocols_tdma.xml
-    macprotocols_myswitch.xml DESTINATION share/gnuradio/grc/blocks
+    macprotocols_myswitch.xml
+    macprotocols_naive_tdma.xml DESTINATION share/gnuradio/grc/blocks
 )

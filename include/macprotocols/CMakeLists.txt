@@ -25,5 +25,6 @@ install(FILES
     csma_ca.h
     frame_buffer.h
     tdma.h
-    myswitch.h DESTINATION include/macprotocols
+    myswitch.h
+    naive_tdma.h DESTINATION include/macprotocols
 )
