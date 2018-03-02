@@ -29,7 +29,7 @@
 #include <boost/crc.hpp>
 #include <boost/circular_buffer.hpp>
 
-#define MAX_NUM_NODES 64
+#define MAX_NUM_NODES 10
 #define PHY_DELAY 50000 // 10ms, mostly on Gnu Radio (empirical)
 #define MAX_RETRIES 5
 #define MAX_LOCAL_BUFF 3
@@ -82,6 +82,9 @@ class naive_tdma_impl : public naive_tdma {
 
 			// Set local buffer capacity, should be the smallest possible
 			pr_buff.rset_capacity(MAX_LOCAL_BUFF);
+
+			// For fixed TDMA
+			pr_act_nodes_count = MAX_NUM_NODES;
 		}
 
 		bool start() {
@@ -205,12 +208,12 @@ class naive_tdma_impl : public naive_tdma {
 			}
 
 			// Coordinator keeps track of active nodes
-			if(pr_is_coord and (memcmp(h->addr2, pr_mac_addr, 6) != 0) 
+			/*if(pr_is_coord and (memcmp(h->addr2, pr_mac_addr, 6) != 0) 
 					and (h->frame_control == FC_DATA or h->frame_control == FC_SKIP)) {
 				if(pr_debug) std::cout << "Recording active node on network" << std::endl << std::flush;
 				memcpy(pr_act_nodes + pr_act_nodes_count * 6, h->addr2, 6);
 				pr_act_nodes_count++;
-			}
+			}*/
 
 			// Discard frame
 			if(!is_broadcast and !is_mine) {
@@ -308,8 +311,8 @@ class naive_tdma_impl : public naive_tdma {
 				message_port_pub(msg_port_frame_to_phy, sync_frame);
 
 				// Reset counters
-				sleep_time = pr_sync_time + pr_comm_time * (pr_act_nodes_count + 2); // +2: 1 slot reserved to coord; 1 slot reserved to new nodes
-				pr_act_nodes_count = 0;
+				sleep_time = pr_sync_time + pr_comm_time * (pr_act_nodes_count + 1); // +2: 1 slot reserved to coord; 1 slot reserved to new nodes
+				//pr_act_nodes_count = 0;
 
 				if(pr_buff.size() > 0) { 
 					pr_tx = true;
@@ -370,7 +373,9 @@ class naive_tdma_impl : public naive_tdma {
 		int pr_slot_time, pr_ack_time, pr_sync_time, pr_comm_time, pr_tx_order;
 		bool pr_is_coord, pr_debug, pr_acked, pr_tx;
 		decltype(clock::now()) pr_sync0;
-		uint8_t pr_act_nodes[6*MAX_NUM_NODES];
+		uint8_t pr_act_nodes[6*MAX_NUM_NODES] = {0x12,0x34,0x56,0x78,0x90,0xab, 0x12,0x34,0x56,0x78,0x90,0xac, 0x12,0x34,0x56,0x78,0x90,0xad, 0x12,0x34,0x56,0x78,0x90,0xae, 
+				0x12,0x34,0x56,0x78,0x90,0xaf, 0x12,0x34,0x56,0x78,0x90,0xba, 0x12,0x34,0x56,0x78,0x90,0xbb, 0x12,0x34,0x56,0x78,0x90,0xbc,
+				0x12,0x34,0x56,0x78,0x90,0xbd, 0x12,0x34,0x56,0x78,0x90,0xbe};
 		int pr_act_nodes_count; 
 		uint16_t pr_frame_seq_nr;
 
