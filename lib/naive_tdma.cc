@@ -66,6 +66,7 @@ class naive_tdma_impl : public naive_tdma {
 				pr_broadcast_addr[i] = 0xff;
 			}
 
+			pr_is_skip = false;
 			pr_acked = true;
 
 			// Inputs
@@ -110,7 +111,7 @@ class naive_tdma_impl : public naive_tdma {
 		void frame_from_buff(pmt::pmt_t frame) {
 			if(pr_buff.size() < MAX_LOCAL_BUFF) {
 				pr_buff.push_back(frame);
-				pr_new_frame_cond.notify_all(); // In case send_frame() is waiting for a new frame
+				pr_frame_ready_cond.notify_all(); // In case send_frame() is waiting for a new frame
 			} else {
 				if(pr_debug) std::cout << "Local buffer is already FULL!" << std::endl << std::flush;
 			}
@@ -122,15 +123,17 @@ class naive_tdma_impl : public naive_tdma {
 			int count;
 			decltype(clock::now()) tnow;
 			float wait_time, dt;
-			bool is_broadcast;
+			bool is_broadcast, is_skip;
 			boost::unique_lock<boost::mutex> lock0(pr_mu0);
 			boost::unique_lock<boost::mutex> lock1(pr_mu1);
 
 			while(true) {
-				// Waiting a new frame
-				while(pr_buff.size() <= 0) pr_new_frame_cond.wait(lock0);
+				// Waiting for either a new frame or a skip frame
+				while(pr_buff.size() <= 0 and !pr_is_skip) pr_frame_ready_cond.wait(lock0);
 
-				cdr = pmt::cdr(pr_buff[0]);
+				if(!pr_is_skip) pr_frame = pr_buff[0]; // If it is not true, pr_frame was got from "case FC_SYNC:"
+				
+				cdr = pmt::cdr(pr_frame);
 				h = (mac_header*)pmt::blob_data(cdr);
 				pr_frame_seq_nr = h->seq_nr;
 				count = 0;
@@ -157,10 +160,10 @@ class naive_tdma_impl : public naive_tdma {
 					if(pr_debug) std::cout << "It should wait for " << wait_time << " us, it has waited for " << dt << std::endl << std::flush;
 
 					if(!pr_acked) {
-						message_port_pub(msg_port_frame_to_phy, pr_buff[0]);
+						message_port_pub(msg_port_frame_to_phy, pr_frame);
 						count++;
 
-						if(is_broadcast) {
+						if(is_broadcast or pr_is_skip) {
 							pr_acked = true;
 							if(pr_debug) std::cout << "A broadcast frame was sent" << std::endl << std::flush;
 						}
@@ -169,25 +172,10 @@ class naive_tdma_impl : public naive_tdma {
 				if(pr_debug and count >= MAX_RETRIES) std::cout << "Max # of attempts exceeded. Drop the frame!" << std::endl << std::flush;
 
 				// Resetting counters
-				pr_buff.pop_front();
+				if(!pr_is_skip) pr_buff.pop_front();
+				pr_is_skip = false;
 				pr_acked = false;
 			}
-		}
-
-		void send_skip_frame(uint8_t *dst_addr) {
-			decltype(clock::now()) tnow;
-			float dt;
-			float wait_time = pr_sync_time + pr_tx_order * pr_comm_time;
-
-			uint8_t *msdu;
-			pmt::pmt_t skip_frame = generate_frame(msdu, 0, FC_SKIP, 0x0000, dst_addr);
-			do {
-				tnow = clock::now();
-				dt = (float) std::chrono::duration_cast<std::chrono::microseconds>(tnow - pr_sync0).count();
-			} while(dt < wait_time);
-
-			message_port_pub(msg_port_frame_to_phy, skip_frame);
-			if(pr_debug) std::cout << "SKIP frame sent" << std::endl << std::flush; 
 		}
 
 		void frame_from_phy(pmt::pmt_t frame) {
@@ -265,7 +253,11 @@ class naive_tdma_impl : public naive_tdma {
 							pr_tx = true;
 							pr_tx_cond.notify_all();
 						} else { // No frame to be transmitted; transmit SKIP msg
-							send_skip_frame(h->addr2);
+							uint8_t *msdu;
+							pr_frame = generate_frame(msdu, 0, FC_SKIP, 0x0000, h->addr2);
+							pr_is_skip = true;
+							pr_tx = true;
+							pr_frame_ready_cond.notify_all();
 						}
 					}
 				} break;
@@ -371,7 +363,7 @@ class naive_tdma_impl : public naive_tdma {
 
 		// Variables
 		int pr_slot_time, pr_ack_time, pr_sync_time, pr_comm_time, pr_tx_order;
-		bool pr_is_coord, pr_debug, pr_acked, pr_tx;
+		bool pr_is_coord, pr_debug, pr_acked, pr_tx, pr_is_skip;
 		decltype(clock::now()) pr_sync0;
 		uint8_t pr_act_nodes[6*MAX_NUM_NODES] = {0x12,0x34,0x56,0x78,0x90,0xab, 0x12,0x34,0x56,0x78,0x90,0xac, 0x12,0x34,0x56,0x78,0x90,0xad, 0x12,0x34,0x56,0x78,0x90,0xae, 
 				0x12,0x34,0x56,0x78,0x90,0xaf, 0x12,0x34,0x56,0x78,0x90,0xba, 0x12,0x34,0x56,0x78,0x90,0xbb, 0x12,0x34,0x56,0x78,0x90,0xbc,
@@ -389,7 +381,7 @@ class naive_tdma_impl : public naive_tdma {
 		pmt::pmt_t msg_port_frame_from_phy = pmt::mp("frame from phy");
 
 		// Conditional variables
-		boost::condition_variable pr_tx_cond, pr_new_frame_cond;
+		boost::condition_variable pr_tx_cond, pr_frame_ready_cond;
 
 		// Locks
 		boost::mutex pr_mu0, pr_mu1;
@@ -399,6 +391,9 @@ class naive_tdma_impl : public naive_tdma {
 
 		// Local buffer
 		boost::circular_buffer<pmt::pmt_t> pr_buff;
+
+		// Frame to be sent
+		pmt::pmt_t pr_frame;
 };
 
 naive_tdma::sptr
