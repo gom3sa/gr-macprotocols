@@ -118,7 +118,7 @@ class csma_ca_impl : public csma_ca {
 
 		void send_frame() {
 			uint attempts, sensing_time, backoff, tot_attempts;
-			bool ch_busy;
+			bool ch_busy, is_broadcast;
 			int timeout;
 			decltype(clock::now()) tic, toc;
 			float dt; 
@@ -134,6 +134,9 @@ class csma_ca_impl : public csma_ca {
 				pmt::pmt_t cdr = pmt::cdr(pr_buff[0]);
 				mac_header *h = (mac_header*)pmt::blob_data(cdr);
 				pr_frame_seq_nr = h->seq_nr;
+
+				is_broadcast = false;
+				if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) is_broadcast = true;
 
 				attempts = 0; // Counter for retransmission.
 				sensing_time = pr_difs; 
@@ -152,7 +155,7 @@ class csma_ca_impl : public csma_ca {
 						message_port_pub(msg_port_frame_to_phy, pr_buff[0]);
 						attempts++;
 
-						if(memcmp(h->addr1, pr_broadcast_addr, 6) == 0) { // Broadcast frame, no ACK expected
+						if(is_broadcast) { // No ACK is expected from broadcast frames
 							pr_acked = true;
 							if(pr_debug) std::cout << "Broadcast frame was sent!" << std::endl << std::flush;
 						}
@@ -194,11 +197,11 @@ class csma_ca_impl : public csma_ca {
 						if(pr_debug) std::cout << "Decrement backoff. Current value = " << sensing_time*backoff << " (us)." << std::endl;
 					}*/
 
-					tot_attempts++;
+					if(!is_broadcast) tot_attempts++; // Persistent on broadcast frames
 				}
 
-				if(pr_acked) {
-					pr_cw = aCWmin; // Sucessful transmission. So, reset contention window.
+				if(pr_acked) { // Sucessful transmission. So, reset contention window.
+					pr_cw = aCWmin;
 					if(pr_debug) std::cout << "Frame acked properly!" << std::endl << std::flush;
 				} else if(attempts >= MAX_RETRIES) {
 					if(pr_debug) std::cout << "Max number of retries exceeded. Frame dropped!" << std::endl << std::flush;
