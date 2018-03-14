@@ -30,7 +30,7 @@
 #include <boost/circular_buffer.hpp>
 
 #define MAX_NUM_NODES 10
-#define PHY_DELAY 50000 // 10ms, mostly on Gnu Radio (empirical)
+#define GUARD_INTERVAL 50000 // 10ms, mostly on Gnu Radio (empirical)
 #define MAX_RETRIES 5
 #define MAX_LOCAL_BUFF 3
 #define AVG_BLOCK_DELAY 1000 // us, so 1ms
@@ -168,6 +168,8 @@ class naive_tdma_impl : public naive_tdma {
 							if(pr_debug) std::cout << "A broadcast frame was sent" << std::endl << std::flush;
 						}
 					}
+
+					usleep(pr_comm_time + GUARD_INTERVAL*0.8);
 				}
 				if(pr_debug and count >= MAX_RETRIES) std::cout << "Max # of attempts exceeded. Drop the frame!" << std::endl << std::flush;
 
@@ -311,7 +313,7 @@ class naive_tdma_impl : public naive_tdma {
 					pr_tx_cond.notify_all();
 				}
 				// Wait until super frame ends to start a new one
-				usleep(sleep_time + PHY_DELAY); // Accuracy should not be crucial here.
+				usleep(sleep_time + GUARD_INTERVAL); // Accuracy should not be crucial here.
 			}
 		}
 
