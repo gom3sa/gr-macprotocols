@@ -60,7 +60,7 @@ class naive_tdma_impl : public naive_tdma {
 			pr_sync_time = 2*pr_slot_time;
 			pr_ack_time = pr_slot_time;
 			pr_comm_time = 2*pr_slot_time + pr_ack_time; // Full communication time slot for each node
-			
+
 			for(int i = 0; i < 6; i++) {
 				pr_mac_addr[i] = src_mac[i];
 				pr_broadcast_addr[i] = 0xff;
@@ -132,7 +132,7 @@ class naive_tdma_impl : public naive_tdma {
 				while(pr_buff.size() <= 0 and !pr_is_skip) pr_frame_ready_cond.wait(lock0);
 
 				if(!pr_is_skip) pr_frame = pr_buff[0]; // If it is not true, pr_frame was got from "case FC_SYNC:"
-				
+
 				cdr = pmt::cdr(pr_frame);
 				h = (mac_header*)pmt::blob_data(cdr);
 				pr_frame_seq_nr = h->seq_nr;
@@ -150,7 +150,7 @@ class naive_tdma_impl : public naive_tdma {
 					pr_tx = false;
 
 					if(pr_acked) break;
-					
+
 					// Wait for my comm slot for tx
 					wait_time = pr_sync_time + pr_tx_order * pr_comm_time;
 					do {
@@ -254,13 +254,13 @@ class naive_tdma_impl : public naive_tdma {
 						if(pr_buff.size() > 0) { // There is a frame to be transmitted
 							pr_tx = true;
 							pr_tx_cond.notify_all();
-						} else { // No frame to be transmitted; transmit SKIP msg
+						} /*else { // No frame to be transmitted; transmit SKIP msg
 							uint8_t *msdu;
 							pr_frame = generate_frame(msdu, 0, FC_SKIP, 0x0000, h->addr2);
 							pr_is_skip = true;
 							pr_tx = true;
 							pr_frame_ready_cond.notify_all();
-						}
+						}*/
 					}
 				} break;
 
