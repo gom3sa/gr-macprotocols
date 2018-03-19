@@ -57,7 +57,7 @@ class naive_tdma_impl : public naive_tdma {
 
 			pr_act_nodes_count = 0;
 
-			pr_sync_time = 2*pr_slot_time;
+			pr_sync_time = pr_slot_time;
 			pr_ack_time = pr_slot_time;
 			pr_comm_time = 2*pr_slot_time + pr_ack_time; // Full communication time slot for each node
 
