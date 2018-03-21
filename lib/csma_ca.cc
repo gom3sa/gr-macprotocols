@@ -163,11 +163,14 @@ class csma_ca_impl : public csma_ca {
 						// Waiting for ack. Counting down for timeout.
 						timeout = pr_sifs + pr_slot_time + RxPHYDelay*pr_alpha;
 						if(pr_debug) std::cout << "Waiting for ack. Timeout = " << timeout << std::endl << std::flush;
+						usleep(timeout);
+						/* Busy waiting should not be an issue here
 						tic = clock::now();
 						do {
 							toc = clock::now();
 							dt = (float) std::chrono::duration_cast<std::chrono::microseconds>(toc - tic).count();
 						} while(dt < timeout);
+						*/
 
 					} else if(ch_busy == true and pr_acked == false) { // Randomize backoff, increment contention window (pr_cw).
 						// BackOffTime = Random() x aSlotTime, Random = [0, cw] where aCWmin <= cw <= aCWmax.
