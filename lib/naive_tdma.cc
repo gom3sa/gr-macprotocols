@@ -157,7 +157,6 @@ class naive_tdma_impl : public naive_tdma {
 						tnow = clock::now();
 						dt = (float) std::chrono::duration_cast<std::chrono::microseconds>(tnow - pr_sync0).count();
 					} while(dt < wait_time);
-					if(pr_debug) std::cout << "It should wait for " << wait_time << " us, it has waited for " << dt << std::endl << std::flush;
 
 					if(!pr_acked) {
 						message_port_pub(msg_port_frame_to_phy, pr_frame);
@@ -165,8 +164,9 @@ class naive_tdma_impl : public naive_tdma {
 
 						if(is_broadcast or pr_is_skip) {
 							pr_acked = true;
-							if(pr_debug) std::cout << "A broadcast frame was sent" << std::endl << std::flush;
 						}
+
+						if (pr_debug) std::cout << "Transmitted frame seq number: " << pr_frame_seq_nr << std::endl << std::flush;
 					}
 
 					usleep(pr_comm_time + GUARD_INTERVAL*0.8);
@@ -207,14 +207,13 @@ class naive_tdma_impl : public naive_tdma {
 
 			// Discard frame
 			if(!is_broadcast and !is_mine) {
-				if(pr_debug) std::cout << "Neither mine nor broadcast" << std::endl << std::flush;
 				return;
 			}
 
 			switch(h->frame_control) {
 				case FC_DATA: {
 					if(is_mine) {
-						if(pr_debug) std::cout << "Data frame belongs to me. Ack sent!" << std::endl << std::flush;
+						if(pr_debug) std::cout << "ACK was sent!" << std::endl << std::flush;
 						message_port_pub(msg_port_frame_to_phy, generate_ack_frame(frame));
 						message_port_pub(msg_port_frame_to_app, frame);
 					}
@@ -222,11 +221,11 @@ class naive_tdma_impl : public naive_tdma {
 
 				case FC_ACK: {
 					if(is_mine) {
-						if(pr_debug) std::cout << "ACK for me!" << std::endl << std::flush;
-
 						if((h->seq_nr == pr_frame_seq_nr) and !pr_acked and (pr_buff.size() > 0)) {
 							pr_acked = true;
 							if(pr_debug) std::cout << "Frame was acked properly!" << std::endl << std::flush;
+						} else {
+							if(pr_debug) std::cout << "ACK duplicated!" << std::endl << std::flush;
 						}
 					}
 				} break;
@@ -289,7 +288,7 @@ class naive_tdma_impl : public naive_tdma {
 			pr_tx_order = 0; // First slot is always allocated to coordinator 
 			while(true) {
 				// Super frame has just started
-				if(pr_debug) std::cout << "Super frame has just started!" << std::endl << std::flush;
+				if(pr_debug) std::cout << "Beginning of super frame." << std::endl << std::flush;
 				pr_sync0 = clock::now();
 
 				/* Build sync frame. It holds the tx order.
@@ -324,8 +323,6 @@ class naive_tdma_impl : public naive_tdma {
 			mac_header *header = (mac_header*)pmt::blob_data(cdr_frame);
 			uint8_t msdu[0];
 			pmt::pmt_t ack = generate_frame(msdu, 0, FC_ACK, header->seq_nr, header->addr2);
-
-			if (pr_debug) std::cout << "Seq num of rx frame = " << header->seq_nr << std::endl;
 
 			return ack;
 		}
