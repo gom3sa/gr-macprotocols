@@ -79,6 +79,9 @@ class frame_buffer_impl : public frame_buffer {
 			message_port_register_in(msg_port_broad);
 			set_msg_handler(msg_port_broad, boost::bind(&frame_buffer_impl::broad, this, _1));
 
+			message_port_register_in(msg_port_metrics);
+			set_msg_handler(msg_port_metrics, boost::bind(&frame_buffer_impl::metrics, this, _1));
+
 			// Output msg ports
 			message_port_register_out(msg_port_frame0);
 			message_port_register_out(msg_port_frame1);
@@ -196,6 +199,10 @@ class frame_buffer_impl : public frame_buffer {
 			pr_circ_buff.push_front(broad_frame);
 		}
 
+		void metrics(pmt::pmt_t metrics_frame) { // Metrics' frame, it bypasses the queue
+			pr_circ_buff.push_front(metrics_frame);
+		}
+
 	private:
 		// Internal variables
 		bool pr_arp, pr_debug;
@@ -212,6 +219,7 @@ class frame_buffer_impl : public frame_buffer {
 		pmt::pmt_t msg_port_req1 = pmt::mp("req in 1");
 		pmt::pmt_t msg_port_req2 = pmt::mp("req in 2");
 		pmt::pmt_t msg_port_broad = pmt::mp("broad in");
+		pmt::pmt_t msg_port_metrics = pmt::mp("metrics in");
 
 		// Output ports
 		pmt::pmt_t msg_port_frame0 = pmt::mp("frame out 0");
