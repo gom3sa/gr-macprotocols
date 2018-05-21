@@ -279,7 +279,7 @@ class csma_ca_impl : public csma_ca {
 						pmt::pmt_t ack = generate_ack_frame(frame);
 						message_port_pub(msg_port_frame_to_phy, ack);
 					}
-				}
+				} break;
 
 				case FC_PROTOCOL: {
 					// TODO
