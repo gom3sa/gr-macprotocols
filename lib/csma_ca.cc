@@ -101,7 +101,7 @@ class csma_ca_impl : public csma_ca {
 			while(true) {
 				if(pr_buff.size() < MAX_LOCAL_BUFF) {
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep(AVG_BLOCK_DELAY);
+					usleep(3 * AVG_BLOCK_DELAY);
 				} else {
 					usleep((pr_slot_time + pr_sifs + pr_difs) * (MAX_LOCAL_BUFF*0.8));
 				}

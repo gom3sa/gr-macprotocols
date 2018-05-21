@@ -118,10 +118,11 @@ class frame_buffer_impl : public frame_buffer {
 				}
 			}
 
-			if(pr_circ_buff.size() == pr_buff_size)
+			if(pr_circ_buff.size() >= pr_buff_size) {
 				if(pr_debug) std::cout << "BUFFER IS FULL!" << std::endl << std::flush;
-
-			pr_circ_buff.push_back(frame);
+			} else {
+				pr_circ_buff.push_back(frame);
+			}
 		}
 
 		bool lookup_arp(uint8_t *ip, uint8_t *mac) {

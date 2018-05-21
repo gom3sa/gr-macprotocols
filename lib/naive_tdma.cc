@@ -102,7 +102,7 @@ class naive_tdma_impl : public naive_tdma {
 			while(true) {
 				if(pr_buff.size() < MAX_LOCAL_BUFF) {
 					message_port_pub(msg_port_frame_request, pmt::string_to_symbol("get frame"));
-					usleep(AVG_BLOCK_DELAY);
+					usleep(3 * AVG_BLOCK_DELAY);
 				} else {
 					usleep((pr_sync_time + pr_comm_time) * (MAX_LOCAL_BUFF*0.8));
 				}
@@ -166,6 +166,8 @@ class naive_tdma_impl : public naive_tdma {
 						if(is_broadcast or pr_is_skip) {
 							pr_acked = true;
 						}
+
+						if(h->frame_control == FC_METRICS) std::cout << "Metric frame" << std::endl << std::flush;
 
 						if (pr_debug) std::cout << "Transmitted frame seq number: " << pr_frame_seq_nr << std::endl << std::flush;
 					}
@@ -272,8 +274,8 @@ class naive_tdma_impl : public naive_tdma {
 					
 				case FC_METRICS: {
 					if(is_mine) {
-						pmt::pmt_t ack = generate_ack_frame(frame);
-						message_port_pub(msg_port_frame_to_phy, ack);
+						if(pr_debug) std::cout << "ACK was sent! [Metric]" << std::endl << std::flush;
+						message_port_pub(msg_port_frame_to_phy, generate_ack_frame(frame));
 					}
 				} break;
 
