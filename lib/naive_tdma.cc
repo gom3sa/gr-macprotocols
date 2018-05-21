@@ -30,7 +30,7 @@
 #include <boost/circular_buffer.hpp>
 
 #define MAX_NUM_NODES 15
-#define GUARD_INTERVAL 50000 // 10ms, mostly on Gnu Radio (empirical)
+#define GUARD_INTERVAL 10000 // 10ms, mostly on Gnu Radio (empirical)
 #define MAX_RETRIES 5
 #define MAX_LOCAL_BUFF 3
 #define AVG_BLOCK_DELAY 1000 // us, so 1ms
@@ -166,8 +166,6 @@ class naive_tdma_impl : public naive_tdma {
 						if(is_broadcast or pr_is_skip) {
 							pr_acked = true;
 						}
-
-						if(h->frame_control == FC_METRICS) std::cout << "Metric frame" << std::endl << std::flush;
 
 						if (pr_debug) std::cout << "Transmitted frame seq number: " << pr_frame_seq_nr << std::endl << std::flush;
 					}

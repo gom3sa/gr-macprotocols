@@ -26,7 +26,7 @@ Author: André Gomes, andre.gomes@dcc.ufmg.br - Winet Lab, Federal University of
 
 #define MAX_LOCAL_BUFF 3
 #define AVG_BLOCK_DELAY 1000 // us, so 1ms
-#define MAX_RETRIES 5
+#define MAX_RETRIES 10
 #define RxPHYDelay 1 // (us) for max distance of 300m between nodes
 #define aCWmin 16 // aCWmin + 1
 #define aCWmax 1024 // aCWmax + 1
