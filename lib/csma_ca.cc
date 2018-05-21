@@ -34,6 +34,7 @@ Author: André Gomes, andre.gomes@dcc.ufmg.br - Winet Lab, Federal University of
 #define FC_ACK 0x2B00
 #define FC_DATA 0x0008
 #define FC_PROTOCOL 0x2900 // Active protocol on network
+#define FC_METRICS 0x2100
 
 /* aCWm** from www.revolutionwifi.net/revolutionwifi/2010/08/wireless-qos-part-5-contention-window.html
     802.11b    aCWmin 31    aCWmax 1023
@@ -272,6 +273,13 @@ class csma_ca_impl : public csma_ca {
 						if(pr_debug) std::cout << "Ack for me!" << std::endl << std::flush;
 					}			
 				} break;
+					
+				case FC_METRICS: {
+					if(is_mine) {
+						pmt::pmt_t ack = generate_ack_frame(frame);
+						message_port_pub(msg_port_frame_to_phy, ack);
+					}
+				}
 
 				case FC_PROTOCOL: {
 					// TODO
