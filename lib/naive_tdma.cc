@@ -42,6 +42,7 @@
 #define FC_SKIP 0x2C00 // If there is no frame to be transmitted, send a skip frame instead
 // Informs the protocol in use on the network
 #define FC_PROTOCOL 0x2900 // Active protocol on network
+#define FC_METRICS 0x2100
 
 using namespace gr::macprotocols;
 
@@ -267,7 +268,14 @@ class naive_tdma_impl : public naive_tdma {
 					if(is_mine) {
 						if(pr_debug) std::cout << "Skip frame was received" << std::endl << std::flush;
 					}
-				} break; 
+				} break;
+					
+				case FC_METRICS: {
+					if(is_mine) {
+						pmt::pmt_t ack = generate_ack_frame(frame);
+						message_port_pub(msg_port_frame_to_phy, ack);
+					}
+				} break;
 
 				case FC_PROTOCOL: {
 					// TODO
