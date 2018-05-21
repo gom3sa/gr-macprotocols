@@ -46,6 +46,7 @@
 #define FC_SKIP 0x2C00 // Frame Control for Skipping a slot during allocation (slot not allocated)
 // Informs the protocol in use on the network
 #define FC_PROTOCOL 0x2900 // Active protocol on network
+#define FC_METRICS 0x2100
 
 using namespace gr::macprotocols;
 
@@ -301,6 +302,13 @@ class tdma_impl : public tdma {
 						} else if (tx_order == -1) if(pr_debug) std::cout << "No COMM Slot allocated to me. Waiting for next super frame..." << std::endl << std::flush;
 					}
 				} break; 
+					
+				case FC_METRICS: {
+					if(is_mine) {
+						pmt::pmt_t ack = generate_ack_frame(frame);
+						message_port_pub(msg_port_frame_to_phy, ack);
+					}
+				} break;
 
 				case FC_PROTOCOL: { // Get the active protocol on network
 					// TODO
