@@ -29,7 +29,7 @@
 #include <boost/crc.hpp>
 #include <boost/circular_buffer.hpp>
 
-#define MAX_NUM_NODES 15
+#define MAX_NUM_NODES 12
 #define GUARD_INTERVAL 10000 // 10ms, mostly on Gnu Radio (empirical)
 #define MAX_RETRIES 5
 #define MAX_LOCAL_BUFF 3
