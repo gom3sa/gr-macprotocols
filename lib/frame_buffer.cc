@@ -256,8 +256,7 @@ class frame_buffer_impl : public frame_buffer {
       */
       float bsz = pr_circ_buff.size();
 
-      std::string str = std::to_string(bsz);
-      message_port_pub(msg_port_bsz_out, pmt::string_to_symbol(str));
+      message_port_pub(msg_port_bsz_out, pmt::from_float(bsz));
     }
 };
 
