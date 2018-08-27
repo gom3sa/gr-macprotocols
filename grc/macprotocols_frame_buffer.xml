@@ -120,6 +120,13 @@
     <optional>1</optional>
   </source>
 
+  <source>
+    <name>bsz out</name>
+    <type>message</type>
+    <optional>1</optional>
+  </source>
+
+
   <doc>
   This block has been extended in order to support a further project. If
 you are interested only in the MAC protocols, ignore ports/functions
