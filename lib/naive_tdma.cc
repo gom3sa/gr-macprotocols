@@ -30,7 +30,7 @@
 #include <boost/circular_buffer.hpp>
 
 #define MAX_NUM_NODES 12
-#define GUARD_INTERVAL 10000 // 10ms, mostly on Gnu Radio (empirical)
+#define GUARD_INTERVAL 1000 // 10ms, mostly on Gnu Radio (empirical)
 #define MAX_RETRIES 5
 #define MAX_LOCAL_BUFF 3
 #define AVG_BLOCK_DELAY 1000 // us, so 1ms
